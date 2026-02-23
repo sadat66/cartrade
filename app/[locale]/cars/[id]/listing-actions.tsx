@@ -1,10 +1,11 @@
 "use client";
 
 import { useTransition } from "react";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { Heart } from "lucide-react";
 import { saveListing, unsaveListing } from "@/app/actions/user";
 import { Button } from "@/components/ui/button";
+import { useTranslations } from "next-intl";
 
 type Props = {
   listingId: string;
@@ -21,6 +22,7 @@ export function ListingActions({
   isLoggedIn,
 }: Props) {
   const [pending, startTransition] = useTransition();
+  const t = useTranslations();
 
   const handleSave = () => {
     startTransition(async () => {
@@ -35,12 +37,12 @@ export function ListingActions({
         <Button asChild variant="outline" size="sm">
           <Link href={`/login?next=/cars/${listingId}`}>
             <Heart className="size-4 mr-1.5" />
-            Save
+            {t("listing.save")}
           </Link>
         </Button>
         {!isOwner && (
           <Button asChild size="sm" className="bg-blue-600 hover:bg-blue-700">
-            <Link href={`/login?next=/cars/${listingId}`}>Contact seller</Link>
+            <Link href={`/login?next=/cars/${listingId}`}>{t("listing.contactSeller")}</Link>
           </Button>
         )}
       </div>
@@ -59,11 +61,11 @@ export function ListingActions({
         <Heart
           className={`size-4 mr-1.5 ${isSaved ? "fill-current" : ""}`}
         />
-        {isSaved ? "Saved" : "Save"}
+        {isSaved ? t("common.saved") : t("listing.save")}
       </Button>
       {!isOwner && (
         <Button asChild size="sm" className="bg-blue-600 hover:bg-blue-700">
-          <Link href={`/cars/${listingId}/contact`}>Contact seller</Link>
+          <Link href={`/cars/${listingId}/contact`}>{t("listing.contactSeller")}</Link>
         </Button>
       )}
     </div>

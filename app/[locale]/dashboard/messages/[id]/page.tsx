@@ -1,10 +1,11 @@
-import { redirect } from "next/navigation";
+import { redirect } from "@/i18n/navigation";
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { getConversationWithMessages } from "@/app/actions/conversation";
 import { getCurrentUser } from "@/lib/auth";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { MessageForm } from "./message-form";
+import { getTranslations, getLocale } from "next-intl/server";
 
 export default async function ConversationPage({
   params,
@@ -13,12 +14,12 @@ export default async function ConversationPage({
 }) {
   const { id } = await params;
   const user = await getCurrentUser();
-  if (!user) redirect("/login?next=/dashboard/messages/" + id);
-
+  const locale = await getLocale();
+  if (!user) redirect({ href: "/login?next=/dashboard/messages/" + id, locale });
   const conv = await getConversationWithMessages(id);
-  if (!conv) redirect("/dashboard/messages");
-
-  const other = conv.buyerId === user.id ? conv.seller : conv.buyer;
+  if (!conv) redirect({ href: "/dashboard/messages", locale });
+  const t = await getTranslations();
+  const other = conv!.buyerId === user!.id ? conv!.seller : conv!.buyer;
 
   return (
     <div className="mx-auto max-w-2xl space-y-4">
@@ -26,7 +27,7 @@ export default async function ConversationPage({
         href="/dashboard/messages"
         className="text-sm font-medium text-primary hover:underline"
       >
-        ← Back to messages
+        ← {t("dashboard.messages.browseListings")}
       </Link>
 
       <Card>
@@ -36,7 +37,7 @@ export default async function ConversationPage({
               {other.image ? (
                 <Image
                   src={other.image}
-                  alt={other.name ?? "User"}
+                  alt={other.name ?? t("common.user")}
                   fill
                   className="object-cover"
                 />
@@ -47,20 +48,20 @@ export default async function ConversationPage({
               )}
             </div>
             <div>
-              <p className="font-semibold">{other.name ?? "Unknown"}</p>
+              <p className="font-semibold">{other.name ?? t("dashboard.messages.unknown")}</p>
               <Link
-                href={`/cars/${conv.listing.id}`}
+                href={`/cars/${conv!.listing.id}`}
                 className="text-muted-foreground text-sm hover:underline"
               >
-                Re: {conv.listing.title}
+                {t("dashboard.messages.re")} {conv!.listing.title}
               </Link>
             </div>
           </div>
         </CardHeader>
         <CardContent className="space-y-4 py-4">
           <div className="space-y-3">
-            {conv.messages.map((m) => {
-              const isMe = m.senderId === user.id;
+            {conv!.messages.map((m) => {
+              const isMe = m.senderId === user!.id;
               return (
                 <div
                   key={m.id}
@@ -79,7 +80,7 @@ export default async function ConversationPage({
               );
             })}
           </div>
-          <MessageForm conversationId={conv.id} />
+          <MessageForm conversationId={conv!.id} />
         </CardContent>
       </Card>
     </div>

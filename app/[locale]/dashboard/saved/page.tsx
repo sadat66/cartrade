@@ -1,14 +1,17 @@
-import Link from "next/link";
+import { redirect } from "@/i18n/navigation";
+import { Link } from "@/i18n/navigation";
 import Image from "next/image";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Heart } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 
 export default async function SavedListingsPage() {
   const user = await getCurrentUser();
   if (!user) return null;
+  const t = await getTranslations();
 
   const saved = await prisma.savedListing.findMany({
     where: { userId: user.id },
@@ -21,19 +24,19 @@ export default async function SavedListingsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold">Saved listings</h1>
+        <h1 className="text-2xl font-bold">{t("dashboard.saved.title")}</h1>
         <p className="text-muted-foreground">
-          {saved.length} {saved.length === 1 ? "car" : "cars"} saved
+          {t("dashboard.saved.carCount", { count: saved.length })}
         </p>
       </div>
 
       {saved.length === 0 ? (
         <p className="text-muted-foreground">
-          You haven&apos;t saved any listings yet. Browse{" "}
+          {t("dashboard.saved.empty")}{" "}
           <Link href="/" className="font-medium text-primary underline">
-            featured cars
+            {t("dashboard.saved.featuredCars")}
           </Link>{" "}
-          and click the heart to save.
+          {t("dashboard.saved.andClickHeart")}
         </p>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -51,7 +54,7 @@ export default async function SavedListingsPage() {
                     />
                   ) : (
                     <div className="flex h-full items-center justify-center text-muted-foreground">
-                      No image
+                      {t("common.noImage")}
                     </div>
                   )}
                   <span className="absolute right-2 top-2 rounded-full bg-background/80 p-1.5">

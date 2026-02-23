@@ -1,21 +1,24 @@
 import Image from "next/image";
-import Link from "next/link";
 import { Bell, Heart, LogOut, MessageCircle, User } from "lucide-react";
 import { getCurrentUser } from "@/lib/auth";
 import { signOut } from "@/app/actions/auth";
 import { Button } from "@/components/ui/button";
+import { Link } from "@/i18n/navigation";
+import { getTranslations } from "next-intl/server";
 import { cn } from "@/lib/utils";
+import { LocaleSwitcher } from "@/components/locale-switcher";
 
-const navLinks = [
-  { href: "/buy", label: "Buy" },
-  { href: "/sell", label: "Sell" },
-  { href: "/research", label: "Research" },
-  { href: "/dealerships", label: "Dealerships" },
-  { href: "/showroom", label: "Showroom" },
-];
+const navKeys = [
+  { href: "/buy", key: "header.buy" as const },
+  { href: "/sell", key: "header.sell" as const },
+  { href: "/research", key: "header.research" as const },
+  { href: "/dealerships", key: "header.dealerships" as const },
+  { href: "/showroom", key: "header.showroom" as const },
+] as const;
 
 export async function Header() {
   const user = await getCurrentUser();
+  const t = await getTranslations();
 
   return (
     <header
@@ -37,25 +40,26 @@ export async function Header() {
         </Link>
 
         <nav className="hidden items-center gap-6 md:flex">
-          {navLinks.map(({ href, label }) => (
+          {navKeys.map(({ href, key }) => (
             <Link
               key={href}
               href={href}
               className="text-sm font-medium text-white/90 transition-colors hover:text-white"
             >
-              {label}
+              {t(key)}
             </Link>
           ))}
         </nav>
 
         <div className="flex items-center gap-2 sm:gap-3">
+          <LocaleSwitcher />
           {user ? (
             <>
               <Button
                 variant="ghost"
                 size="icon"
                 className="text-white/90 hover:bg-white/10 hover:text-white"
-                aria-label="Notifications"
+                aria-label={t("header.notifications")}
               >
                 <Bell className="size-5" />
               </Button>
@@ -63,7 +67,7 @@ export async function Header() {
                 variant="ghost"
                 size="icon"
                 className="text-white/90 hover:bg-white/10 hover:text-white"
-                aria-label="Saved"
+                aria-label={t("header.saved")}
                 asChild
               >
                 <Link href="/dashboard/saved">
@@ -74,7 +78,7 @@ export async function Header() {
                 variant="ghost"
                 size="icon"
                 className="text-white/90 hover:bg-white/10 hover:text-white"
-                aria-label="Messages"
+                aria-label={t("header.messages")}
                 asChild
               >
                 <Link href="/dashboard/messages">
@@ -85,7 +89,7 @@ export async function Header() {
                 variant="ghost"
                 size="icon"
                 className="text-white/90 hover:bg-white/10 hover:text-white"
-                aria-label="Profile"
+                aria-label={t("header.profile")}
                 asChild
               >
                 <Link href="/dashboard/profile">
@@ -93,7 +97,7 @@ export async function Header() {
                 </Link>
               </Button>
               <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white">
-                <Link href="/dashboard/listings">Sell my car</Link>
+                <Link href="/dashboard/listings">{t("header.sellMyCar")}</Link>
               </Button>
               <form action={signOut}>
                 <Button
@@ -101,7 +105,7 @@ export async function Header() {
                   variant="ghost"
                   size="icon"
                   className="text-white/90 hover:bg-white/10 hover:text-white"
-                  aria-label="Log out"
+                  aria-label={t("header.logOut")}
                 >
                   <LogOut className="size-5" />
                 </Button>
@@ -113,7 +117,7 @@ export async function Header() {
                 variant="ghost"
                 size="icon"
                 className="text-white/90 hover:bg-white/10 hover:text-white"
-                aria-label="Notifications"
+                aria-label={t("header.notifications")}
               >
                 <Bell className="size-5" />
               </Button>
@@ -121,10 +125,10 @@ export async function Header() {
                 href="/login"
                 className="text-sm font-medium text-white/90 hover:text-white"
               >
-                Login
+                {t("header.login")}
               </Link>
               <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white">
-                <Link href="/login?next=/dashboard/listings">Sell my car</Link>
+                <Link href="/login?next=/dashboard/listings">{t("header.sellMyCar")}</Link>
               </Button>
             </>
           )}

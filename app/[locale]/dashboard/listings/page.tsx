@@ -1,13 +1,16 @@
-import Link from "next/link";
+import { redirect } from "@/i18n/navigation";
+import { Link } from "@/i18n/navigation";
 import Image from "next/image";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { getTranslations } from "next-intl/server";
 
 export default async function MyListingsPage() {
   const user = await getCurrentUser();
   if (!user) return null;
+  const t = await getTranslations();
 
   const listings = await prisma.listing.findMany({
     where: { userId: user.id },
@@ -18,24 +21,24 @@ export default async function MyListingsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">My listings</h1>
+          <h1 className="text-2xl font-bold">{t("dashboard.myListings.title")}</h1>
           <p className="text-muted-foreground">
-            {listings.length} {listings.length === 1 ? "listing" : "listings"}
+            {t("dashboard.myListings.listingCount", { count: listings.length })}
           </p>
         </div>
         <Button asChild className="bg-blue-600 hover:bg-blue-700">
-          <Link href="/dashboard/listings/new">Add listing</Link>
+          <Link href="/dashboard/listings/new">{t("dashboard.myListings.addListing")}</Link>
         </Button>
       </div>
 
       {listings.length === 0 ? (
         <p className="text-muted-foreground">
-          You haven&apos;t listed any cars yet.{" "}
+          {t("dashboard.myListings.noListingsYet")}{" "}
           <Link
             href="/dashboard/listings/new"
             className="font-medium text-primary underline"
           >
-            Create your first listing
+            {t("dashboard.myListings.createFirst")}
           </Link>
           .
         </p>
@@ -55,7 +58,7 @@ export default async function MyListingsPage() {
                     />
                   ) : (
                     <div className="flex h-full items-center justify-center text-muted-foreground">
-                      No image
+                      {t("common.noImage")}
                     </div>
                   )}
                   <span className="absolute right-2 top-2 rounded bg-background/80 px-2 py-0.5 text-xs font-medium">

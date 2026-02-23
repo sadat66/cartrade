@@ -6,9 +6,11 @@ import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useTranslations } from "next-intl";
 
 export function LoginForm({ next = "/dashboard", authError = false }: { next?: string; authError?: boolean }) {
   const router = useRouter();
+  const t = useTranslations();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isSignUp, setIsSignUp] = useState(false);
@@ -16,10 +18,10 @@ export function LoginForm({ next = "/dashboard", authError = false }: { next?: s
 
   useEffect(() => {
     if (authError) {
-      toast.error("Authentication failed. Please try again or confirm your email.");
+      toast.error(t("login.authFailed"));
       router.replace("/login" + (next && next !== "/dashboard" ? `?next=${encodeURIComponent(next)}` : ""));
     }
-  }, [authError, next, router]);
+  }, [authError, next, router, t]);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -33,7 +35,7 @@ export function LoginForm({ next = "/dashboard", authError = false }: { next?: s
 
     if (isForgotPassword) {
       if (!email) {
-        setError("Enter your email address");
+      setError(t("login.enterEmail"));
         setLoading(false);
         return;
       }
@@ -46,13 +48,13 @@ export function LoginForm({ next = "/dashboard", authError = false }: { next?: s
         toast.error(err.message);
         return;
       }
-      toast.success("Check your email for the password reset link.");
+      toast.success(t("login.checkEmailReset"));
       setIsForgotPassword(false);
       return;
     }
 
     if (!email || !password) {
-      setError("Email and password required");
+      setError(t("login.emailPasswordRequired"));
       setLoading(false);
       return;
     }
@@ -64,7 +66,7 @@ export function LoginForm({ next = "/dashboard", authError = false }: { next?: s
         setLoading(false);
         return;
       }
-      toast.success("Account created. Check your email to confirm your account.");
+      toast.success(t("login.accountCreated"));
       setError(null);
       setLoading(false);
       router.push(next);
@@ -86,13 +88,13 @@ export function LoginForm({ next = "/dashboard", authError = false }: { next?: s
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
         <label htmlFor="email" className="text-sm font-medium">
-          Email
+          {t("login.email")}
         </label>
         <Input
           id="email"
           name="email"
           type="email"
-          placeholder="you@example.com"
+          placeholder={t("login.emailPlaceholder")}
           className="mt-1"
           required
         />
@@ -100,13 +102,13 @@ export function LoginForm({ next = "/dashboard", authError = false }: { next?: s
       {!isForgotPassword && (
         <div>
           <label htmlFor="password" className="text-sm font-medium">
-            Password
-          </label>
+          {t("login.password")}
+        </label>
           <Input
             id="password"
             name="password"
             type="password"
-            placeholder="••••••••"
+            placeholder={t("login.passwordPlaceholder")}
             className="mt-1"
             required={!isForgotPassword}
           />
@@ -115,29 +117,29 @@ export function LoginForm({ next = "/dashboard", authError = false }: { next?: s
             className="mt-1 text-xs font-medium text-primary hover:underline"
             onClick={() => setIsForgotPassword(true)}
           >
-            Forgot password?
+            {t("login.forgotPassword")}
           </button>
         </div>
       )}
       {error && <p className="text-destructive text-sm">{error}</p>}
       <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700" disabled={loading}>
         {loading
-          ? "Please wait…"
+          ? t("common.loading")
           : isForgotPassword
-            ? "Send reset link"
+            ? t("login.sendResetLink")
             : isSignUp
-              ? "Sign up"
-              : "Log in"}
+              ? t("login.signUp")
+              : t("login.logIn")}
       </Button>
       {!isForgotPassword && (
         <p className="text-center text-muted-foreground text-sm">
-          {isSignUp ? "Already have an account?" : "Don't have an account?"}{" "}
+          {isSignUp ? t("login.alreadyHaveAccount") : t("login.dontHaveAccount")}{" "}
           <button
             type="button"
             className="font-medium text-primary hover:underline"
             onClick={() => setIsSignUp((v) => !v)}
           >
-            {isSignUp ? "Log in" : "Sign up"}
+            {isSignUp ? t("login.logIn") : t("login.signUp")}
           </button>
         </p>
       )}
@@ -148,7 +150,7 @@ export function LoginForm({ next = "/dashboard", authError = false }: { next?: s
             className="font-medium text-primary hover:underline"
             onClick={() => setIsForgotPassword(false)}
           >
-            Back to log in
+            {t("login.backToLogIn")}
           </button>
         </p>
       )}

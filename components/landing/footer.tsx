@@ -1,13 +1,15 @@
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
+import { getTranslations } from "next-intl/server";
 import { cn } from "@/lib/utils";
 
-const footerLinks = [
-  { href: "/privacy", label: "Privacy Policy" },
-  { href: "/terms", label: "Terms of Service" },
-  { href: "/contact", label: "Contact" },
-];
+const footerKeys = [
+  { href: "/privacy", key: "footer.privacy" as const },
+  { href: "/terms", key: "footer.terms" as const },
+  { href: "/contact", key: "footer.contact" as const },
+] as const;
 
-export function Footer() {
+export async function Footer() {
+  const t = await getTranslations();
   return (
     <footer
       className={cn(
@@ -17,16 +19,16 @@ export function Footer() {
     >
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-muted-foreground text-sm">
-          © {new Date().getFullYear()} Cartrade. All rights reserved.
+          {t("footer.rights", { year: new Date().getFullYear() })}
         </p>
         <nav className="flex flex-wrap gap-6">
-          {footerLinks.map(({ href, label }) => (
+          {footerKeys.map(({ href, key }) => (
             <Link
               key={href}
               href={href}
               className="text-sm font-medium text-primary hover:underline"
             >
-              {label}
+              {t(key)}
             </Link>
           ))}
         </nav>

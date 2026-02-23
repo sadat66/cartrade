@@ -1,0 +1,153 @@
+{
+  "common": {
+    "siteName": "Cartrade",
+    "loading": "Please wait…",
+    "redirecting": "Redirecting…",
+    "noImage": "No image",
+    "save": "Save",
+    "saved": "Saved",
+    "clearAll": "Clear all",
+    "search": "Search",
+    "back": "Back",
+    "user": "User",
+    "avatar": "Avatar",
+    "seller": "Seller",
+    "description": "Description",
+    "rego": "Registration number"
+  },
+  "metadata": {
+    "title": "Cartrade – Find Your Dream Car",
+    "description": "Buy and sell cars with confidence. Get instant cash offers, browse listings, and find local dealerships."
+  },
+  "header": {
+    "buy": "Buy",
+    "sell": "Sell",
+    "research": "Research",
+    "dealerships": "Dealerships",
+    "showroom": "Showroom",
+    "sellMyCar": "Sell my car",
+    "login": "Login",
+    "notifications": "Notifications",
+    "saved": "Saved",
+    "messages": "Messages",
+    "profile": "Profile",
+    "logOut": "Log out"
+  },
+  "footer": {
+    "rights": "© {year} Cartrade. All rights reserved.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "contact": "Contact"
+  },
+  "hero": {
+    "searchPlaceholder": "Find your next car",
+    "search": "Search",
+    "anyMake": "Any Make",
+    "anyModel": "Any Model",
+    "anyBodyType": "Any body type",
+    "allStates": "All States",
+    "minPrice": "Min price",
+    "maxPrice": "Max price",
+    "bodyTypes": {
+      "sedan": "Sedan",
+      "suv": "SUV",
+      "ute": "Ute",
+      "hatch": "Hatch",
+      "coupe": "Coupe",
+      "sports": "Sports",
+      "performance": "Performance",
+      "unique": "Unique"
+    }
+  },
+  "promo": {
+    "instantCashTitle": "Instant Cash Offer",
+    "instantCashDesc": "Receive an immediate, no-obligation offer for your car in minutes. Get a fair price and sell when you're ready.",
+    "enterRego": "Enter Rego",
+    "getOffer": "Get Offer",
+    "browseDealerships": "Browse Local Dealerships",
+    "browseDealershipsDesc": "Find dealerships near you and browse their inventory. Compare prices and book a test drive.",
+    "findDealerships": "Find Dealerships"
+  },
+  "featured": {
+    "title": "Featured Cars",
+    "noListings": "No listings yet. Be the first to",
+    "listYourCar": "list your car",
+    "km": "km"
+  },
+  "login": {
+    "title": "Sign in",
+    "subtitle": "Sign in to save listings, message sellers, and manage your profile",
+    "email": "Email",
+    "emailPlaceholder": "you@example.com",
+    "password": "Password",
+    "passwordPlaceholder": "••••••••",
+    "forgotPassword": "Forgot password?",
+    "logIn": "Log in",
+    "signUp": "Sign up",
+    "sendResetLink": "Send reset link",
+    "alreadyHaveAccount": "Already have an account?",
+    "dontHaveAccount": "Don't have an account?",
+    "backToLogIn": "Back to log in",
+    "authFailed": "Authentication failed. Please try again or confirm your email.",
+    "enterEmail": "Enter your email address",
+    "emailPasswordRequired": "Email and password required",
+    "checkEmailReset": "Check your email for the password reset link.",
+    "accountCreated": "Account created. Check your email to confirm your account."
+  },
+  "dashboard": {
+    "nav": {
+      "profile": "Profile",
+      "savedListings": "Saved listings",
+      "messages": "Messages",
+      "myListings": "My listings"
+    },
+    "myListings": {
+      "title": "My listings",
+      "listingCount": "{count} listing",
+      "listingCount_other": "{count} listings",
+      "addListing": "Add listing",
+      "noListingsYet": "You haven't listed any cars yet.",
+      "createFirst": "Create your first listing"
+    },
+    "saved": {
+      "title": "Saved listings",
+      "carCount": "{count} car saved",
+      "carCount_other": "{count} cars saved",
+      "empty": "You haven't saved any listings yet. Browse",
+      "featuredCars": "featured cars",
+      "andClickHeart": "and click the heart to save."
+    },
+    "messages": {
+      "title": "Messages",
+      "subtitle": "Your conversations with buyers and sellers",
+      "noConversations": "No conversations yet. Contact a seller from a listing to start.",
+      "browseListings": "Browse listings",
+      "unknown": "Unknown",
+      "re": "Re:"
+    },
+    "profile": {
+      "title": "Profile",
+      "subtitle": "Manage your account and visibility.",
+      "noNameSet": "No name set",
+      "name": "Name",
+      "namePlaceholder": "Your name",
+      "phone": "Phone",
+      "phonePlaceholder": "+880 ...",
+      "location": "Location",
+      "locationPlaceholder": "e.g. Dhaka",
+      "bio": "Bio",
+      "bioPlaceholder": "A short bio for buyers/sellers",
+      "profileUpdated": "Profile updated.",
+      "saveChanges": "Save changes"
+    },
+    "addListing": {
+      "title": "Add listing",
+      "subtitle": "List your car for sale. You can add photos later."
+    },
+    "emailConfirmed": "Email confirmed. You're all set!"
+  },
+  "listing": {
+    "contactSeller": "Contact seller",
+    "save": "Save"
+  }
+}

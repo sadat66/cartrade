@@ -4,6 +4,7 @@ import { useActionState } from "react";
 import { updateProfile } from "@/app/actions/user";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useTranslations } from "next-intl";
 
 function formReducer(
   _state: { success?: boolean; error?: string },
@@ -22,57 +23,58 @@ export function ProfileForm({
       const result = await updateProfile(formData);
       return result.error ? { error: result.error } : { success: true };
     },
-    {}
+    { success: false }
   );
+  const t = useTranslations("dashboard.profile");
 
   return (
     <form action={formAction} className="space-y-4">
       <div>
         <label htmlFor="name" className="text-sm font-medium">
-          Name
+          {t("name")}
         </label>
         <Input
           id="name"
           name="name"
           defaultValue={defaultValues.name}
-          placeholder="Your name"
+          placeholder={t("namePlaceholder")}
           className="mt-1"
         />
       </div>
       <div>
         <label htmlFor="phone" className="text-sm font-medium">
-          Phone
+          {t("phone")}
         </label>
         <Input
           id="phone"
           name="phone"
           type="tel"
           defaultValue={defaultValues.phone}
-          placeholder="+61 ..."
+          placeholder={t("phonePlaceholder")}
           className="mt-1"
         />
       </div>
       <div>
         <label htmlFor="location" className="text-sm font-medium">
-          Location
+          {t("location")}
         </label>
         <Input
           id="location"
           name="location"
           defaultValue={defaultValues.location}
-          placeholder="e.g. Sydney, NSW"
+          placeholder={t("locationPlaceholder")}
           className="mt-1"
         />
       </div>
       <div>
         <label htmlFor="bio" className="text-sm font-medium">
-          Bio
+          {t("bio")}
         </label>
         <textarea
           id="bio"
           name="bio"
           defaultValue={defaultValues.bio}
-          placeholder="A short bio for buyers/sellers"
+          placeholder={t("bioPlaceholder")}
           rows={3}
           className="border-input mt-1 w-full rounded-md border bg-transparent px-3 py-2 text-sm shadow-xs outline-none focus-visible:ring-2 focus-visible:ring-ring"
         />
@@ -81,9 +83,9 @@ export function ProfileForm({
         <p className="text-destructive text-sm">{state.error}</p>
       )}
       {state?.success && (
-        <p className="text-muted-foreground text-sm">Profile updated.</p>
+        <p className="text-muted-foreground text-sm">{t("profileUpdated")}</p>
       )}
-      <Button type="submit">Save changes</Button>
+      <Button type="submit">{t("saveChanges")}</Button>
     </form>
   );
 }
