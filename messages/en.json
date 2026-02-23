@@ -42,6 +42,7 @@
   "hero": {
     "searchPlaceholder": "Find your next car",
     "search": "Search",
+    "clearAll": "Clear all",
     "anyMake": "Any Make",
     "anyModel": "Any Model",
     "anyBodyType": "Any body type",
@@ -96,6 +97,7 @@
   },
   "dashboard": {
     "nav": {
+      "dashboard": "Dashboard",
       "profile": "Profile",
       "savedListings": "Saved listings",
       "messages": "Messages",

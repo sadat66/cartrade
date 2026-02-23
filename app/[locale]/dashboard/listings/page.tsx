@@ -1,4 +1,3 @@
-import { redirect } from "@/i18n/navigation";
 import { Link } from "@/i18n/navigation";
 import Image from "next/image";
 import { getCurrentUser } from "@/lib/auth";
@@ -6,11 +5,20 @@ import { prisma } from "@/lib/db";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { getTranslations } from "next-intl/server";
+import { routing } from "@/i18n/routing";
+import type { Locale } from "@/i18n/config";
 
-export default async function MyListingsPage() {
+type Props = { params: Promise<{ locale: string }> };
+
+export default async function MyListingsPage({ params }: Props) {
+  const { locale } = await params;
+  const validLocale: Locale =
+    locale && routing.locales.includes(locale as Locale)
+      ? (locale as Locale)
+      : routing.defaultLocale;
   const user = await getCurrentUser();
   if (!user) return null;
-  const t = await getTranslations();
+  const t = await getTranslations({ locale: validLocale });
 
   const listings = await prisma.listing.findMany({
     where: { userId: user.id },

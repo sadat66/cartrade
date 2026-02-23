@@ -5,13 +5,12 @@ import { updateSession } from "@/lib/supabase/proxy";
 
 const intlMiddleware = createMiddleware(routing);
 
-export async function proxy(request: NextRequest) {
+export default async function proxy(request: NextRequest) {
   const intlResponse = await intlMiddleware(request);
-  // If next-intl returned a redirect, return it
   if (intlResponse && !intlResponse.ok) {
     return intlResponse;
   }
-  return await updateSession(request);
+  return await updateSession(request, intlResponse ?? undefined);
 }
 
 export const config = {

@@ -5,20 +5,23 @@ import { getConversationWithMessages } from "@/app/actions/conversation";
 import { getCurrentUser } from "@/lib/auth";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { MessageForm } from "./message-form";
-import { getTranslations, getLocale } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
+import { routing } from "@/i18n/routing";
+import type { Locale } from "@/i18n/config";
 
-export default async function ConversationPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
+type Props = { params: Promise<{ locale: string; id: string }> };
+
+export default async function ConversationPage({ params }: Props) {
+  const { id, locale } = await params;
+  const validLocale: Locale =
+    locale && routing.locales.includes(locale as Locale)
+      ? (locale as Locale)
+      : routing.defaultLocale;
   const user = await getCurrentUser();
-  const locale = await getLocale();
-  if (!user) redirect({ href: "/login?next=/dashboard/messages/" + id, locale });
+  if (!user) redirect({ href: "/login?next=/dashboard/messages/" + id, locale: validLocale });
   const conv = await getConversationWithMessages(id);
-  if (!conv) redirect({ href: "/dashboard/messages", locale });
-  const t = await getTranslations();
+  if (!conv) redirect({ href: "/dashboard/messages", locale: validLocale });
+  const t = await getTranslations({ locale: validLocale });
   const other = conv!.buyerId === user!.id ? conv!.seller : conv!.buyer;
 
   return (

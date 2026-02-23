@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/card";
 import { getTranslations } from "next-intl/server";
 import { cn } from "@/lib/utils";
+import type { Locale } from "@/i18n/config";
 
 const PLACEHOLDER_IMAGE =
   "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=400&q=80";
@@ -22,8 +23,14 @@ type Listing = {
   imageUrls: string[];
 };
 
-export async function FeaturedCars({ listings }: { listings: Listing[] }) {
-  const t = await getTranslations("featured");
+export async function FeaturedCars({
+  listings,
+  locale,
+}: {
+  listings: Listing[];
+  locale: Locale;
+}) {
+  const t = await getTranslations({ locale, namespace: "featured" });
   const priceNum = (p: unknown) => (typeof p === "number" ? p : Number(p));
 
   if (listings.length === 0) {

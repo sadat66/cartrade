@@ -5,11 +5,20 @@ import { getConversationsForUser } from "@/app/actions/conversation";
 import { Card } from "@/components/ui/card";
 import { MessageCircle } from "lucide-react";
 import { getTranslations } from "next-intl/server";
+import { routing } from "@/i18n/routing";
+import type { Locale } from "@/i18n/config";
 
-export default async function MessagesPage() {
+type Props = { params: Promise<{ locale: string }> };
+
+export default async function MessagesPage({ params }: Props) {
+  const { locale } = await params;
+  const validLocale: Locale =
+    locale && routing.locales.includes(locale as Locale)
+      ? (locale as Locale)
+      : routing.defaultLocale;
   const user = await getCurrentUser();
   if (!user) return null;
-  const t = await getTranslations();
+  const t = await getTranslations({ locale: validLocale });
   const conversations = await getConversationsForUser();
 
   return (

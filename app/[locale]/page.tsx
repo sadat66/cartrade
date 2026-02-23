@@ -1,11 +1,22 @@
 import { prisma } from "@/lib/db";
-import { Header } from "@/components/landing/header";
 import { Hero } from "@/components/landing/hero";
 import { PromoCards } from "@/components/landing/promo-cards";
 import { FeaturedCars } from "@/components/landing/featured-cars";
 import { Footer } from "@/components/landing/footer";
+import { routing } from "@/i18n/routing";
+import type { Locale } from "@/i18n/config";
 
-export default async function Home() {
+type Props = {
+  params: Promise<{ locale: string }>;
+};
+
+export default async function Home({ params }: Props) {
+  const { locale } = await params;
+  const validLocale: Locale =
+    locale && routing.locales.includes(locale as Locale)
+      ? (locale as Locale)
+      : routing.defaultLocale;
+
   const listings = await prisma.listing.findMany({
     where: { status: "active" },
     orderBy: { createdAt: "desc" },
@@ -13,15 +24,14 @@ export default async function Home() {
   });
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <Header />
       <main className="flex-1 relative">
         <Hero />
         <section className="pt-32 md:pt-36">
-          <PromoCards />
-          <FeaturedCars listings={listings} />
+          <PromoCards locale={validLocale} />
+          <FeaturedCars listings={listings} locale={validLocale} />
         </section>
       </main>
-      <Footer />
+      <Footer locale={validLocale} />
     </div>
   );
 }

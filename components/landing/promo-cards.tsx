@@ -11,9 +11,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { getTranslations } from "next-intl/server";
+import type { Locale } from "@/i18n/config";
 
-export async function PromoCards() {
-  const t = await getTranslations();
+export async function PromoCards({ locale }: { locale: Locale }) {
+  const t = await getTranslations({ locale });
   return (
     <section className="container mx-auto px-4 py-12 md:px-6">
       <div className="grid gap-6 md:grid-cols-2">

@@ -3,12 +3,14 @@ import { NextResponse, type NextRequest } from "next/server";
 
 /**
  * Refreshes the Supabase auth session and forwards the request.
- * Call this from middleware so cookies stay in sync and tokens refresh.
+ * If `responseToMerge` is provided (e.g. from next-intl middleware), cookies are
+ * set on that response so locale and auth cookies are both preserved.
  */
-export async function updateSession(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({
-    request,
-  });
+export async function updateSession(
+  request: NextRequest,
+  responseToMerge?: NextResponse
+) {
+  let response = responseToMerge ?? NextResponse.next({ request });
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -22,19 +24,20 @@ export async function updateSession(request: NextRequest) {
           cookiesToSet.forEach(({ name, value }) =>
             request.cookies.set(name, value)
           );
-          supabaseResponse = NextResponse.next({
-            request,
-          });
+          if (!responseToMerge) {
+            response = NextResponse.next({
+              request,
+            });
+          }
           cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
+            response.cookies.set(name, value, options)
           );
         },
       },
     }
   );
 
-  // Refresh session (validates JWT and updates cookies). Required so users don't get logged out.
   await supabase.auth.getUser();
 
-  return supabaseResponse;
+  return response;
 }

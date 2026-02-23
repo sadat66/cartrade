@@ -1,6 +1,7 @@
 import { Link } from "@/i18n/navigation";
 import { getTranslations } from "next-intl/server";
 import { cn } from "@/lib/utils";
+import type { Locale } from "@/i18n/config";
 
 const footerKeys = [
   { href: "/privacy", key: "footer.privacy" as const },
@@ -8,8 +9,8 @@ const footerKeys = [
   { href: "/contact", key: "footer.contact" as const },
 ] as const;
 
-export async function Footer() {
-  const t = await getTranslations();
+export async function Footer({ locale }: { locale: Locale }) {
+  const t = await getTranslations({ locale });
   return (
     <footer
       className={cn(
