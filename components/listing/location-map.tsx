@@ -5,6 +5,9 @@ import { DHAKA_BOUNDS, DHAKA_CENTER } from "@/lib/dhaka-areas";
 
 const DHAKA_ZOOM = 12;
 
+import "leaflet/dist/leaflet.css";
+
+
 type LocationMapProps = {
   lat: number | null;
   lng: number | null;
@@ -49,7 +52,6 @@ export function LocationMap({
 
       import("leaflet").then((L) => {
         if (cancelled || !el.isConnected || mapRef.current) return;
-        import("leaflet/dist/leaflet.css");
 
         const DefaultIcon = L.icon({
           iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
