@@ -56,7 +56,7 @@ export default async function ListingPage({
           </div>
           {listing.imageUrls.length > 1 && (
             <div className="flex gap-2 overflow-x-auto pb-2">
-              {listing.imageUrls.slice(1, 5).map((url, i) => (
+              {listing.imageUrls.slice(1, 5).map((url: string, i) => (
                 <div
                   key={i}
                   className="relative h-20 w-28 shrink-0 overflow-hidden rounded-md bg-muted"
