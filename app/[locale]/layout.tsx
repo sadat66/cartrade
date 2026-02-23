@@ -1,7 +1,7 @@
+import { Navbar } from "@/components/landing/navbar";
 import { NextIntlClientProvider } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 import { routing } from "@/i18n/routing";
-import { Header } from "@/components/landing/header";
 import type { Locale } from "@/i18n/config";
 
 type Props = {
@@ -21,7 +21,7 @@ export default async function LocaleLayout({ children, params }: Props) {
 
   return (
     <NextIntlClientProvider locale={validLocale} messages={messages}>
-      <Header locale={validLocale} />
+      <Navbar locale={validLocale} />
       {children}
     </NextIntlClientProvider>
   );

@@ -1,6 +1,5 @@
 import { redirect } from "@/i18n/navigation";
 import { getCurrentUser } from "@/lib/auth";
-import { getTranslations } from "next-intl/server";
 import { routing } from "@/i18n/routing";
 import type { Locale } from "@/i18n/config";
 
@@ -9,7 +8,7 @@ type Props = {
   params: Promise<{ locale: string }>;
 };
 
-export default async function DashboardLayout({ children, params }: Props) {
+export default async function AuthenticatedLayout({ children, params }: Props) {
   const { locale } = await params;
   const validLocale: Locale =
     locale && routing.locales.includes(locale as Locale)
@@ -21,7 +20,7 @@ export default async function DashboardLayout({ children, params }: Props) {
 
   return (
     <div className="min-h-screen bg-muted/30">
-      <main className="container mx-auto py-6 px-4 md:px-6">{children}</main>
+      {children}
     </div>
   );
 }

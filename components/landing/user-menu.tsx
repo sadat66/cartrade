@@ -36,15 +36,15 @@ export function UserMenu({ user }: { user: NonNullable<CurrentUser> }) {
     <DropdownMenu>
       <DropdownMenuTrigger
         className={cn(
-          "rounded-full outline-none ring-0 focus-visible:ring-2 focus-visible:ring-white/50"
+          "rounded-full outline-none ring-0 focus-visible:ring-2 focus-visible:ring-white/50 cursor-pointer"
         )}
         aria-label={t("header.profile")}
       >
-        <Avatar className="h-8 w-8 border-2 border-white/20">
+        <Avatar className="h-10 w-10 border-2 border-white/20">
           {user.image ? (
             <AvatarImage src={user.image} alt={user.name ?? undefined} />
           ) : null}
-          <AvatarFallback className="bg-slate-600 text-sm text-white">
+          <AvatarFallback className="bg-slate-600 text-base text-white font-medium">
             {initials}
           </AvatarFallback>
         </Avatar>

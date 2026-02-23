@@ -23,7 +23,7 @@ const dashboardNavKeys = [
   { href: "/dashboard/profile", key: "dashboard.nav.profile" as const },
 ] as const;
 
-export async function Header({ locale }: { locale: Locale }) {
+export async function Navbar({ locale }: { locale: Locale }) {
   const user = await getCurrentUser();
   const t = await getTranslations({ locale });
 
@@ -34,14 +34,14 @@ export async function Header({ locale }: { locale: Locale }) {
         "bg-[#1e293b] text-white"
       )}
     >
-      <div className="container mx-auto flex h-14 items-center justify-between gap-4 px-4 md:px-6">
+      <div className="container mx-auto flex h-16 items-center justify-between gap-4 px-4 md:px-6">
         <Link href="/" className="flex items-center gap-2">
           <Image
             src="/logo/cartrageLOGO.png"
             alt="Cartrade"
-            width={140}
-            height={36}
-            className="h-8 w-auto object-contain"
+            width={160}
+            height={40}
+            className="h-9 w-auto object-contain"
             priority
           />
         </Link>

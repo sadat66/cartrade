@@ -8,20 +8,35 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useTranslations } from "next-intl";
 
-export function LoginForm({ next = "/dashboard", authError = false }: { next?: string; authError?: boolean }) {
+import { Link } from "@/i18n/navigation";
+
+export function LoginForm({ 
+  next = "/dashboard", 
+  authError = false,
+  initialIsSignUp = false 
+}: { 
+  next?: string; 
+  authError?: boolean;
+  initialIsSignUp?: boolean;
+}) {
   const router = useRouter();
   const t = useTranslations();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [isSignUp, setIsSignUp] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(initialIsSignUp);
   const [isForgotPassword, setIsForgotPassword] = useState(false);
+
+  useEffect(() => {
+    setIsSignUp(initialIsSignUp);
+  }, [initialIsSignUp]);
 
   useEffect(() => {
     if (authError) {
       toast.error(t("login.authFailed"));
-      router.replace("/login" + (next && next !== "/dashboard" ? `?next=${encodeURIComponent(next)}` : ""));
+      const base = isSignUp ? "/signup" : "/login";
+      router.replace(base + (next && next !== "/dashboard" ? `?next=${encodeURIComponent(next)}` : ""));
     }
-  }, [authError, next, router, t]);
+  }, [authError, next, router, t, isSignUp]);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -84,10 +99,12 @@ export function LoginForm({ next = "/dashboard", authError = false }: { next?: s
     router.refresh();
   }
 
+  const queryParams = next && next !== "/dashboard" ? `?next=${encodeURIComponent(next)}` : "";
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label htmlFor="email" className="text-sm font-medium">
+        <label htmlFor="email" className="text-sm font-medium text-slate-200">
           {t("login.email")}
         </label>
         <Input
@@ -95,13 +112,13 @@ export function LoginForm({ next = "/dashboard", authError = false }: { next?: s
           name="email"
           type="email"
           placeholder={t("login.emailPlaceholder")}
-          className="mt-1"
+          className="mt-1 bg-white/5 border-white/10 text-white placeholder:text-slate-500 focus:border-blue-500 transition-colors"
           required
         />
       </div>
       {!isForgotPassword && (
         <div>
-          <label htmlFor="password" className="text-sm font-medium">
+          <label htmlFor="password" className="text-sm font-medium text-slate-200">
           {t("login.password")}
         </label>
           <Input
@@ -109,12 +126,12 @@ export function LoginForm({ next = "/dashboard", authError = false }: { next?: s
             name="password"
             type="password"
             placeholder={t("login.passwordPlaceholder")}
-            className="mt-1"
+            className="mt-1 bg-white/5 border-white/10 text-white placeholder:text-slate-500 focus:border-blue-500 transition-colors"
             required={!isForgotPassword}
           />
           <button
             type="button"
-            className="mt-1 text-xs font-medium text-primary hover:underline"
+            className="mt-1 text-xs font-medium text-blue-400 hover:text-blue-300 hover:underline"
             onClick={() => setIsForgotPassword(true)}
           >
             {t("login.forgotPassword")}
@@ -132,22 +149,21 @@ export function LoginForm({ next = "/dashboard", authError = false }: { next?: s
               : t("login.logIn")}
       </Button>
       {!isForgotPassword && (
-        <p className="text-center text-muted-foreground text-sm">
+        <p className="text-center text-slate-400 text-sm">
           {isSignUp ? t("login.alreadyHaveAccount") : t("login.dontHaveAccount")}{" "}
-          <button
-            type="button"
-            className="font-medium text-primary hover:underline"
-            onClick={() => setIsSignUp((v) => !v)}
+          <Link
+            href={isSignUp ? `/login${queryParams}` : `/signup${queryParams}`}
+            className="font-medium text-blue-400 hover:text-blue-300 hover:underline transition-colors"
           >
             {isSignUp ? t("login.logIn") : t("login.signUp")}
-          </button>
+          </Link>
         </p>
       )}
       {isForgotPassword && (
-        <p className="text-center text-muted-foreground text-sm">
+        <p className="text-center text-slate-400 text-sm">
           <button
             type="button"
-            className="font-medium text-primary hover:underline"
+            className="font-medium text-blue-400 hover:text-blue-300 hover:underline transition-colors"
             onClick={() => setIsForgotPassword(false)}
           >
             {t("login.backToLogIn")}
