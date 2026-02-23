@@ -103,6 +103,19 @@
       "messages": "মেসেজ",
       "myListings": "আমার লিস্টিং"
     },
+    "overview": {
+      "title": "ড্যাশবোর্ড",
+      "subtitle": "আপনার লিস্টিং, মেসেজ এবং অ্যাকাউন্ট পরিচালনা করুন।",
+      "welcomeBack": "আবার স্বাগতম, {name}!",
+      "viewDetails": "বিস্তারিত দেখুন",
+      "viewAll": "সব দেখুন",
+      "viewAllSaved": "সব সেভ করা দেখুন",
+      "recentSearches": "সাম্প্রতিক খোঁজ",
+      "recentSearchesDesc": "সঠিক গাড়ি খুঁজতে খোঁজ পরিমার্জন করুন।",
+      "refineSearch": "খোঁজ পরিমার্জন করুন",
+      "viewAllMessages": "সব মেসেজ দেখুন",
+      "viewProfileSettings": "প্রোফাইল সেটিংস দেখুন"
+    },
     "myListings": {
       "title": "আমার লিস্টিং",
       "listingCount": "{count}টি লিস্টিং",

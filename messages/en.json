@@ -103,6 +103,19 @@
       "messages": "Messages",
       "myListings": "My listings"
     },
+    "overview": {
+      "title": "Dashboard",
+      "subtitle": "Manage your listings, messages, and account.",
+      "welcomeBack": "Welcome back, {name}!",
+      "viewDetails": "View details",
+      "viewAll": "View all",
+      "viewAllSaved": "View all saved",
+      "recentSearches": "Recent searches",
+      "recentSearchesDesc": "Refine your search to find the right car.",
+      "refineSearch": "Refine search",
+      "viewAllMessages": "View all messages",
+      "viewProfileSettings": "View profile settings"
+    },
     "myListings": {
       "title": "My listings",
       "listingCount": "{count} listing",
