@@ -48,7 +48,9 @@ export default async function SavedListingsPage({ params }: Props) {
         </p>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {saved.map(({ listing }) => (
+          {saved.map((item: (typeof saved)[number]) => {
+            const { listing } = item;
+            return (
             <Link key={listing.id} href={`/cars/${listing.id}`}>
               <Card className="overflow-hidden transition-shadow hover:shadow-md">
                 <div className="relative aspect-[4/3] bg-muted">
@@ -82,7 +84,8 @@ export default async function SavedListingsPage({ params }: Props) {
                 </CardFooter>
               </Card>
             </Link>
-          ))}
+          );
+          })}
         </div>
       )}
     </div>

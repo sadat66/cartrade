@@ -58,5 +58,5 @@ export async function getSavedListingIds(userId: string) {
     where: { userId },
     select: { listingId: true },
   });
-  return new Set(saved.map((s) => s.listingId));
+  return new Set(saved.map((s: (typeof saved)[number]) => s.listingId));
 }

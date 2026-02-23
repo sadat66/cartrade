@@ -52,7 +52,7 @@ export default async function MyListingsPage({ params }: Props) {
         </p>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {listings.map((listing) => (
+          {listings.map((listing: (typeof listings)[number]) => (
             <Link key={listing.id} href={`/cars/${listing.id}`}>
               <Card className="overflow-hidden transition-shadow hover:shadow-md">
                 <div className="relative aspect-[4/3] bg-muted">

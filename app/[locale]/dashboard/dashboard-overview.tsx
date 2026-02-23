@@ -21,6 +21,8 @@ type SavedListingWithListing = {
   };
 };
 
+type ConversationItem = Awaited<ReturnType<typeof getConversationsForUser>>[number];
+
 type Props = {
   user: NonNullable<CurrentUser>;
   locale: Locale;
@@ -219,7 +221,7 @@ export async function DashboardOverview({ user, locale }: Props) {
                 </p>
               ) : (
                 <ul className="space-y-2">
-                  {recentConversations.map((c) => {
+                  {recentConversations.map((c: ConversationItem) => {
                     const other = user.id === c.buyerId ? c.seller : c.buyer;
                     const last = c.messages[0];
                     return (

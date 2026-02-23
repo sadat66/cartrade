@@ -11,6 +11,8 @@ import type { Locale } from "@/i18n/config";
 
 type Props = { params: Promise<{ locale: string; id: string }> };
 
+type MessageItem = NonNullable<Awaited<ReturnType<typeof getConversationWithMessages>>>["messages"][number];
+
 export default async function ConversationPage({ params }: Props) {
   const { id, locale } = await params;
   const validLocale: Locale =
@@ -63,7 +65,7 @@ export default async function ConversationPage({ params }: Props) {
         </CardHeader>
         <CardContent className="space-y-4 py-4">
           <div className="space-y-3">
-            {conv!.messages.map((m) => {
+            {conv!.messages.map((m: MessageItem) => {
               const isMe = m.senderId === user!.id;
               return (
                 <div

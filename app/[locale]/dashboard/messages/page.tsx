@@ -8,6 +8,8 @@ import { getTranslations } from "next-intl/server";
 import { routing } from "@/i18n/routing";
 import type { Locale } from "@/i18n/config";
 
+type ConversationItem = Awaited<ReturnType<typeof getConversationsForUser>>[number];
+
 type Props = { params: Promise<{ locale: string }> };
 
 export default async function MessagesPage({ params }: Props) {
@@ -45,7 +47,7 @@ export default async function MessagesPage({ params }: Props) {
         </Card>
       ) : (
         <ul className="space-y-2">
-          {conversations.map((c) => {
+          {conversations.map((c: ConversationItem) => {
             const last = c.messages[0];
             const other = user.id === c.buyerId ? c.seller : c.buyer;
             const listing = c.listing;
