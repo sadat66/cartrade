@@ -19,7 +19,10 @@ export default async function DashboardPage({ searchParams, params }: Props) {
       : routing.defaultLocale;
 
   const user = await getCurrentUser();
-  if (!user) redirect({ href: "/login?next=/dashboard", locale: validLocale });
+  if (!user) {
+    redirect({ href: "/login?next=/dashboard", locale: validLocale });
+    return;
+  }
 
   return (
     <>
