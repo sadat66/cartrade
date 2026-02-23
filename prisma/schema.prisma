@@ -39,7 +39,9 @@ model Listing {
   year        Int
   mileage     Int?
   bodyType    String?  // Sedan, SUV, Ute, etc.
-  location    String?  // e.g. "NSW"
+  location    String?  // e.g. "Dhanmondi, Dhaka"
+  latitude    Float?   // for map pin (Dhaka city)
+  longitude   Float?   // for map pin (Dhaka city)
   status      String   @default("active") // draft | active | sold | expired
   imageUrls   String[]
   userId      String

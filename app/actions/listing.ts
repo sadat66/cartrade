@@ -16,6 +16,11 @@ export async function createListing(formData: FormData) {
   const mileage = mileageRaw ? parseInt(mileageRaw, 10) : null;
   const price = parseFloat((formData.get("price") as string) ?? "0");
   const description = (formData.get("description") as string)?.trim() ?? null;
+  const location = (formData.get("location") as string)?.trim() || null;
+  const latRaw = (formData.get("latitude") as string)?.trim();
+  const lngRaw = (formData.get("longitude") as string)?.trim();
+  const latitude = latRaw ? parseFloat(latRaw) : null;
+  const longitude = lngRaw ? parseFloat(lngRaw) : null;
 
   if (!title || !make || !model || !year || price <= 0) {
     return { error: "Title, make, model, year and price are required" };
@@ -31,6 +36,9 @@ export async function createListing(formData: FormData) {
       mileage,
       price,
       description,
+      location,
+      latitude,
+      longitude,
       imageUrls: [], // Add Cloudinary upload later
     },
   });
@@ -38,4 +46,23 @@ export async function createListing(formData: FormData) {
   revalidatePath("/dashboard/listings");
   revalidatePath("/");
   return { listingId: listing.id };
+}
+
+export async function deleteListing(formData: FormData) {
+  const user = await getCurrentUser();
+  if (!user) return { error: "Not signed in" };
+
+  const listingId = (formData.get("listingId") as string)?.trim();
+  if (!listingId) return { error: "Missing listing" };
+
+  const listing = await prisma.listing.findFirst({
+    where: { id: listingId, userId: user.id },
+  });
+  if (!listing) return { error: "Listing not found" };
+
+  await prisma.listing.delete({ where: { id: listingId } });
+
+  revalidatePath("/dashboard/listings");
+  revalidatePath("/");
+  return { success: true };
 }

@@ -1,9 +1,11 @@
 "use client";
 
+import { useEffect } from "react";
 import { useActionState } from "react";
+import { toast } from "sonner";
 import { updateProfile } from "@/app/actions/user";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { SubmitButton } from "@/components/ui/submit-button";
 import { useTranslations } from "next-intl";
 
 function formReducer(
@@ -26,6 +28,14 @@ export function ProfileForm({
     { success: false }
   );
   const t = useTranslations("dashboard.profile");
+  const tCommon = useTranslations("common.toast");
+
+  useEffect(() => {
+    if (state?.success) toast.success(tCommon("profileUpdated"));
+  }, [state?.success, tCommon]);
+  useEffect(() => {
+    if (state?.error) toast.error(tCommon("error"));
+  }, [state?.error, tCommon]);
 
   return (
     <form action={formAction} className="space-y-4">
@@ -82,10 +92,7 @@ export function ProfileForm({
       {state?.error && (
         <p className="text-destructive text-sm">{state.error}</p>
       )}
-      {state?.success && (
-        <p className="text-muted-foreground text-sm">{t("profileUpdated")}</p>
-      )}
-      <Button type="submit">{t("saveChanges")}</Button>
+      <SubmitButton loadingText={tCommon("saving")}>{t("saveChanges")}</SubmitButton>
     </form>
   );
 }

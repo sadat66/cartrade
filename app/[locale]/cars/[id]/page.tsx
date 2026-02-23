@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ListingActions } from "./listing-actions";
 import { getTranslations } from "next-intl/server";
+import { ListingLocationDisplay } from "@/components/listing/listing-location-display";
 
 export default async function ListingPage({
   params,
@@ -126,6 +127,18 @@ export default async function ListingPage({
                 <p className="mt-2 text-muted-foreground whitespace-pre-wrap">
                   {listing.description}
                 </p>
+              </CardContent>
+            </Card>
+          )}
+
+          {(listing.location || listing.latitude != null || listing.longitude != null) && (
+            <Card>
+              <CardContent className="pt-6">
+                <ListingLocationDisplay
+                  location={listing.location}
+                  latitude={listing.latitude}
+                  longitude={listing.longitude}
+                />
               </CardContent>
             </Card>
           )}

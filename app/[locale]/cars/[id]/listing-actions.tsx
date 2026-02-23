@@ -1,6 +1,7 @@
 "use client";
 
 import { useTransition } from "react";
+import { toast } from "sonner";
 import { Link } from "@/i18n/navigation";
 import { Heart } from "lucide-react";
 import { saveListing, unsaveListing } from "@/app/actions/user";
@@ -23,11 +24,20 @@ export function ListingActions({
 }: Props) {
   const [pending, startTransition] = useTransition();
   const t = useTranslations();
+  const tToast = useTranslations("common.toast");
 
   const handleSave = () => {
     startTransition(async () => {
-      if (isSaved) await unsaveListing(listingId);
-      else await saveListing(listingId);
+      const result = isSaved
+        ? await unsaveListing(listingId)
+        : await saveListing(listingId);
+      if (result?.error) {
+        toast.error(tToast("error"));
+        return;
+      }
+      toast.success(
+        isSaved ? tToast("listingRemoved") : tToast("listingSaved")
+      );
     });
   };
 

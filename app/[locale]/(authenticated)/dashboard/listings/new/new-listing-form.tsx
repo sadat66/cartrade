@@ -2,10 +2,14 @@
 
 import { useActionState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { createListing } from "@/app/actions/listing";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
+import { LocationPicker } from "@/components/listing/location-picker";
+import { SubmitButton } from "@/components/ui/submit-button";
+import { useTranslations } from "next-intl";
 
 function formReducer(
   _state: { error?: string },
@@ -16,11 +20,18 @@ function formReducer(
 
 export function NewListingForm() {
   const router = useRouter();
+  const t = useTranslations("common.toast");
   const [state, formAction] = useActionState(
     async (_prev: { error?: string }, formData: FormData) => {
       const result = await createListing(formData);
-      if (result.error) return { error: result.error };
-      if (result.listingId) router.push("/cars/" + result.listingId);
+      if (result.error) {
+        toast.error(t("error"));
+        return { error: result.error };
+      }
+      if (result.listingId) {
+        toast.success(t("listingCreated"));
+        router.push("/cars/" + result.listingId);
+      }
       return {};
     },
     {}
@@ -113,12 +124,16 @@ export function NewListingForm() {
               className="border-input mt-1 w-full rounded-md border bg-transparent px-3 py-2 text-sm shadow-xs outline-none focus-visible:ring-2 focus-visible:ring-ring"
             />
           </div>
+          <LocationPicker mapHeight="260px" />
           {state?.error && (
             <p className="text-destructive text-sm">{state.error}</p>
           )}
-          <Button type="submit" className="bg-blue-600 hover:bg-blue-700">
+          <SubmitButton
+            className="bg-blue-600 hover:bg-blue-700"
+            loadingText={t("creating")}
+          >
             Create listing
-          </Button>
+          </SubmitButton>
         </form>
       </CardContent>
     </Card>
