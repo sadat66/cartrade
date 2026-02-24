@@ -176,7 +176,9 @@
       "bio": "বায়ো",
       "bioPlaceholder": "ক্রেতা/বিক্রেতাদের জন্য সংক্ষিপ্ত বায়ো",
       "profileUpdated": "প্রোফাইল আপডেট হয়েছে।",
-      "saveChanges": "পরিবর্তন সেভ করুন"
+      "saveChanges": "পরিবর্তন সেভ করুন",
+      "changePicture": "ছবি পরিবর্তন করুন",
+      "pictureHint": "JPG, PNG বা GIF। সর্বোচ্চ ২ এমবি।"
     },
     "addListing": {
       "title": "লিস্টিং যোগ করুন",

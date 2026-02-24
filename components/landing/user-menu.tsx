@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { LogOut } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { signOut } from "@/app/actions/auth";
@@ -29,8 +30,20 @@ function getInitials(name: string | null, email: string) {
 }
 
 export function UserMenu({ user }: { user: NonNullable<CurrentUser> }) {
+  const [mounted, setMounted] = useState(false);
   const t = useTranslations();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const initials = getInitials(user.name, user.email ?? "");
+
+  if (!mounted) {
+    return (
+      <div className="h-10 w-10 h-10 w-10 rounded-full border-2 border-white/20 bg-slate-600" />
+    );
+  }
 
   return (
     <DropdownMenu>

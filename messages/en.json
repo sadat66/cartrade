@@ -176,7 +176,9 @@
       "bio": "Bio",
       "bioPlaceholder": "A short bio for buyers/sellers",
       "profileUpdated": "Profile updated.",
-      "saveChanges": "Save changes"
+      "saveChanges": "Save changes",
+      "changePicture": "Change picture",
+      "pictureHint": "JPG, PNG or GIF. Max 2MB."
     },
     "addListing": {
       "title": "Add listing",

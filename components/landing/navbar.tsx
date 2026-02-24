@@ -92,7 +92,6 @@ export async function Navbar({ locale }: { locale: Locale }) {
         </nav>
 
         <div className="flex items-center gap-2 sm:gap-3">
-          <LocaleSwitcher />
           {user ? (
             <>
               <Button
@@ -128,6 +127,7 @@ export async function Navbar({ locale }: { locale: Locale }) {
               </Button>
             </>
           )}
+          <LocaleSwitcher />
         </div>
       </div>
     </header>

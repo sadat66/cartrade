@@ -31,33 +31,15 @@ export default async function ProfilePage({ params }: Props) {
       </div>
 
       <Card>
-        <CardHeader className="flex flex-row items-center gap-4">
-          <div className="relative h-20 w-20 overflow-hidden rounded-full bg-muted">
-            {currentUser.image ? (
-              <Image
-                src={currentUser.image}
-                alt={currentUser.name ?? t("common.avatar")}
-                fill
-                className="object-cover"
-              />
-            ) : (
-              <span className="flex h-full w-full items-center justify-center text-2xl font-medium text-muted-foreground">
-                {(currentUser.name ?? currentUser.email).charAt(0).toUpperCase()}
-              </span>
-            )}
-          </div>
-          <div>
-            <CardTitle>{currentUser.name ?? t("dashboard.profile.noNameSet")}</CardTitle>
-            <CardDescription>{currentUser.email}</CardDescription>
-          </div>
-        </CardHeader>
-        <CardContent>
+        <CardContent className="pt-6">
           <ProfileForm
-            defaultValues={{
-              name: currentUser.name ?? "",
-              phone: currentUser.phone ?? "",
-              location: currentUser.location ?? "",
-              bio: currentUser.bio ?? "",
+            user={{
+              name: currentUser.name,
+              email: currentUser.email,
+              phone: currentUser.phone,
+              location: currentUser.location,
+              bio: currentUser.bio,
+              image: currentUser.image,
             }}
           />
         </CardContent>
