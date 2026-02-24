@@ -4,6 +4,7 @@ import { Hero } from "@/components/landing/hero";
 import { getTranslations } from "next-intl/server";
 import { Locale } from "@/i18n/config";
 import { Sparkles } from "lucide-react";
+import { Link } from "@/i18n/navigation";
 
 type Props = {
     params: Promise<{ locale: string }>;
@@ -65,33 +66,38 @@ export default async function CarsPage({ params, searchParams }: Props) {
     return (
         <div className="min-h-screen bg-background pb-20">
             <Hero />
-            <div className="container mx-auto px-4 mt-40 md:mt-48">
+            <div className="container mx-auto mt-44 px-4 md:mt-56">
                 {aiMessage && (
-                    <div className="mb-10 p-6 bg-purple-600/10 border border-purple-600/20 rounded-3xl flex items-center gap-4 animate-in fade-in slide-in-from-top-4 duration-500">
-                        <div className="p-3 bg-purple-600 rounded-2xl">
-                            <Sparkles className="size-6 text-white" />
+                    <div className="mb-8 flex items-center gap-4 rounded-xl border border-border bg-muted/30 p-4">
+                        <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-foreground text-primary-foreground">
+                            <Sparkles className="size-5" />
                         </div>
                         <div>
-                            <p className="text-sm font-bold text-purple-600 uppercase tracking-widest mb-1">AI Assistant</p>
-                            <p className="text-xl font-medium text-slate-900 dark:text-slate-100 italic">"{aiMessage}"</p>
+                            <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">AI Assistant</p>
+                            <p className="mt-0.5 text-sm font-medium italic text-foreground">"{aiMessage}"</p>
                         </div>
                     </div>
                 )}
 
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-                    <div>
-                        <h1 className="text-3xl font-bold tracking-tight">Search Results</h1>
-                        <p className="text-muted-foreground mt-1">Found {listings.length} cars matching your criteria</p>
-                    </div>
+                <div className="mb-6">
+                    <h1 className="text-2xl font-semibold tracking-tight md:text-3xl">Search Results</h1>
+                    <p className="mt-1 text-sm text-muted-foreground">
+                        {listings.length} {listings.length === 1 ? "car" : "cars"} found
+                    </p>
                 </div>
 
                 {listings.length === 0 ? (
-                    <div className="text-center py-20 bg-muted/30 rounded-3xl border-2 border-dashed border-muted">
-                        <p className="text-xl font-medium text-muted-foreground">No cars found matching your search.</p>
-                        <button className="mt-4 text-blue-600 font-semibold hover:underline">Clear all filters</button>
+                    <div className="rounded-xl border border-dashed border-border bg-muted/20 py-16 text-center">
+                        <p className="text-muted-foreground">No cars match your search.</p>
+                        <Link
+                            href="/cars"
+                            className="mt-3 inline-block text-sm font-medium text-foreground underline hover:no-underline"
+                        >
+                            Clear filters
+                        </Link>
                     </div>
                 ) : (
-                    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                         {listings.map((listing) => (
                             <ListingCard key={listing.id} listing={listing} kmLabel={t("km")} />
                         ))}

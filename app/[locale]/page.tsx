@@ -26,7 +26,7 @@ export default async function Home({ params }: Props) {
     <div className="min-h-screen flex flex-col bg-background">
       <main className="flex-1 relative">
         <Hero />
-        <section className="pt-32 md:pt-36">
+        <section className="pt-44 md:pt-56">
           <PromoCards locale={validLocale} />
           <FeaturedCars listings={listings} locale={validLocale} />
         </section>

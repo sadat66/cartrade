@@ -37,7 +37,9 @@ const BODY_TYPE_IMAGES: Record<(typeof BODY_TYPE_KEYS)[number], string> = {
   sports: "/herocar/hero6.png",
   performance: "/herocar/hero7.png",
   unique: "/herocar/hero1.png",
-}; type HeroSearchFormProps = {
+};
+
+type HeroSearchFormProps = {
   selectedBodyType?: string | null;
   onBodyTypeChange?: (type: string | null) => void;
 };
@@ -65,8 +67,8 @@ export function HeroSearchForm({
   const selectedBody = onBodyTypeChange ? controlledBody ?? null : internalBody;
   const setSelectedBody = onBodyTypeChange
     ? (t: string | null) => {
-      onBodyTypeChange(t);
-    }
+        onBodyTypeChange(t);
+      }
     : setInternalBody;
   const t = useTranslations("hero");
 
@@ -101,22 +103,22 @@ export function HeroSearchForm({
   };
 
   return (
-    <div className="w-full backdrop-blur-xl bg-white/80 dark:bg-slate-950/80 border border-white/40 dark:border-slate-800/40 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.2)] overflow-hidden">
+    <div className="w-full rounded-2xl border border-border bg-card shadow-sm min-h-[320px]">
       <Tabs defaultValue="classic" value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <div className="flex items-center justify-between px-6 pt-6 border-b border-white/20 dark:border-slate-800/20">
-          <TabsList className="bg-transparent gap-6 h-auto p-0">
+        <div className="flex items-center justify-between border-b border-border px-6 pt-5 pb-1">
+          <TabsList className="h-auto gap-8 rounded-none border-0 bg-transparent p-0">
             <TabsTrigger
               value="classic"
-              className="px-0 py-3 rounded-none border-b-2 border-transparent data-[state=active]:bg-transparent data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 text-base font-semibold transition-all flex items-center gap-2"
+              className="flex items-center gap-2 rounded-none border-b-2 border-transparent px-0 py-4 text-base font-medium text-muted-foreground transition-colors data-[state=active]:font-bold data-[state=active]:text-foreground data-[state=active]:shadow-none"
             >
-              <CarFront className="size-4" />
+              <CarFront className="size-5" />
               {t("search")}
             </TabsTrigger>
             <TabsTrigger
               value="ai"
-              className="px-0 py-3 rounded-none border-b-2 border-transparent data-[state=active]:bg-transparent data-[state=active]:border-purple-600 data-[state=active]:text-purple-600 text-base font-semibold transition-all flex items-center gap-2"
+              className="flex items-center gap-2 rounded-none border-b-2 border-transparent px-0 py-4 text-base font-medium text-muted-foreground transition-colors data-[state=active]:font-bold data-[state=active]:text-foreground data-[state=active]:shadow-none"
             >
-              <Sparkles className="size-4" />
+              <Sparkles className="size-5" />
               AI Search
             </TabsTrigger>
           </TabsList>
@@ -124,28 +126,28 @@ export function HeroSearchForm({
           <Button
             variant="ghost"
             size="sm"
-            className="text-muted-foreground hover:text-foreground mb-3"
+            className="mb-3 text-muted-foreground hover:text-foreground"
             onClick={clearAll}
           >
-            <SlidersHorizontal className="size-3 mr-2" />
+            <SlidersHorizontal className="mr-2 size-4" />
             {t("clearAll")}
           </Button>
         </div>
 
-        <div className="p-6">
-          <TabsContent value="classic" className="mt-0 space-y-6 animate-in fade-in duration-300">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div className="relative group">
-                <Search className="text-muted-foreground absolute left-3 top-1/2 size-4 -translate-y-1/2 group-focus-within:text-blue-600 transition-colors" />
+        <div className="min-h-[380px] px-6 pt-6 pb-4 md:px-8 md:pt-8 md:pb-5">
+          <TabsContent value="classic" className="mt-0 h-full min-h-[340px] space-y-6">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+              <div className="relative">
+                <Search className="absolute left-4 top-1/2 size-5 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   type="search"
                   placeholder={t("searchPlaceholder")}
-                  className="pl-9 h-12 bg-white/50 dark:bg-slate-900/50 border-white/40 dark:border-slate-800/40 rounded-xl focus:ring-2 focus:ring-blue-600/20"
+                  className="h-12 pl-11 text-base"
                 />
               </div>
 
               <Select value={make} onValueChange={setMake}>
-                <SelectTrigger className="h-12 bg-white/50 dark:bg-slate-900/50 border-white/40 dark:border-slate-800/40 rounded-xl">
+                <SelectTrigger className="h-12 text-base">
                   <SelectValue placeholder={t("anyMake")} />
                 </SelectTrigger>
                 <SelectContent>
@@ -157,7 +159,7 @@ export function HeroSearchForm({
               </Select>
 
               <Select>
-                <SelectTrigger className="h-12 bg-white/50 dark:bg-slate-900/50 border-white/40 dark:border-slate-800/40 rounded-xl">
+                <SelectTrigger className="h-12 text-base">
                   <SelectValue placeholder={t("anyModel")} />
                 </SelectTrigger>
                 <SelectContent>
@@ -166,7 +168,7 @@ export function HeroSearchForm({
               </Select>
 
               <Select>
-                <SelectTrigger className="h-12 bg-white/50 dark:bg-slate-900/50 border-white/40 dark:border-slate-800/40 rounded-xl">
+                <SelectTrigger className="h-12 text-base">
                   <SelectValue placeholder={t("allStates")} />
                 </SelectTrigger>
                 <SelectContent>
@@ -178,48 +180,48 @@ export function HeroSearchForm({
             </div>
 
             <div className="flex flex-col gap-6">
-              <div className="flex flex-wrap items-center gap-6">
+              <div className="flex flex-wrap items-center gap-5">
                 <div className="flex items-center gap-3">
-                  <span className="text-sm font-medium text-muted-foreground whitespace-nowrap">{t("minPrice")}</span>
+                  <span className="text-sm font-medium text-muted-foreground">{t("minPrice")}</span>
                   <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
                     <Input
                       type="number"
                       placeholder="0"
                       value={minPrice}
                       onChange={(e) => setMinPrice(e.target.value)}
-                      className="w-28 pl-6 h-10 bg-white/50 dark:bg-slate-900/50 border-white/40 dark:border-slate-800/40 rounded-lg"
+                      className="h-11 w-28 pl-7 text-base"
                     />
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="text-sm font-medium text-muted-foreground whitespace-nowrap">{t("maxPrice")}</span>
+                  <span className="text-sm font-medium text-muted-foreground">{t("maxPrice")}</span>
                   <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
                     <Input
                       type="number"
                       placeholder="100,000+"
                       value={maxPrice}
                       onChange={(e) => setMaxPrice(e.target.value)}
-                      className="w-32 pl-6 h-10 bg-white/50 dark:bg-slate-900/50 border-white/40 dark:border-slate-800/40 rounded-lg"
+                      className="h-11 w-32 pl-7 text-base"
                     />
                   </div>
                 </div>
 
-                <div className="ml-auto w-full md:w-auto">
-                  <Button
-                    type="button"
-                    onClick={onClassicSearch}
-                    className="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white px-10 h-12 rounded-xl text-base font-semibold shadow-lg shadow-blue-600/20 transition-all active:scale-95"
-                  >
-                    {t("search")}
-                  </Button>
-                </div>
+                <Button
+                  type="button"
+                  onClick={onClassicSearch}
+                  className="ml-auto h-12 px-8 text-base font-medium"
+                >
+                  {t("search")}
+                </Button>
               </div>
 
-              <div className="pt-2 border-t border-white/20 dark:border-slate-800/20">
-                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-4">Browse by Body Type</p>
-                <div className="grid grid-cols-4 md:grid-cols-8 gap-3">
+              <div className="border-t border-border pt-6">
+                <p className="mb-4 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                  Body type
+                </p>
+                <div className="grid grid-cols-4 gap-3 md:grid-cols-8">
                   {BODY_TYPE_KEYS.map((key) => {
                     const isSelected = selectedBody === key;
                     return (
@@ -228,13 +230,13 @@ export function HeroSearchForm({
                         type="button"
                         onClick={() => setSelectedBody(isSelected ? null : key)}
                         className={cn(
-                          "group flex flex-col items-center gap-2 p-2 rounded-2xl transition-all duration-300",
+                          "flex flex-col items-center gap-2 rounded-lg border p-3 transition-colors duration-150",
                           isSelected
-                            ? "bg-blue-600 text-white shadow-lg shadow-blue-600/40 scale-105"
-                            : "bg-muted/30 hover:bg-muted/50 text-muted-foreground"
+                            ? "border-foreground bg-foreground text-primary-foreground"
+                            : "border-border bg-muted/50 text-muted-foreground hover:border-muted-foreground/40 hover:bg-muted"
                         )}
                       >
-                        <div className="relative size-12 overflow-hidden rounded-lg brightness-90 group-hover:brightness-100 transition-all">
+                        <div className="relative size-12 overflow-hidden rounded-md">
                           <Image
                             src={BODY_TYPE_IMAGES[key]}
                             alt=""
@@ -243,7 +245,7 @@ export function HeroSearchForm({
                             sizes="48px"
                           />
                         </div>
-                        <span className="text-[10px] font-bold uppercase tracking-tighter">
+                        <span className="text-[11px] font-medium uppercase tracking-tight">
                           {t(`bodyTypes.${key}`)}
                         </span>
                       </button>
@@ -254,59 +256,57 @@ export function HeroSearchForm({
             </div>
           </TabsContent>
 
-          <TabsContent value="ai" className="mt-0 animate-in slide-in-from-right-4 duration-300">
-            <div className="space-y-6">
-              <div className="flex items-center gap-4 p-4 bg-purple-500/10 border border-purple-500/20 rounded-2xl">
-                <Sparkles className="size-6 text-purple-600 shrink-0" />
-                <p className="text-sm text-purple-900 dark:text-purple-200">
-                  Search with natural language. Describe your dream car and our AI will find it for you!
-                </p>
-              </div>
+          <TabsContent value="ai" className="mt-0 h-full min-h-[340px] space-y-5">
+            <div className="flex items-center gap-4 rounded-lg border border-border bg-muted/30 p-5">
+              <Sparkles className="size-6 shrink-0 text-foreground" />
+              <p className="text-base text-muted-foreground">
+                Search with natural language. Describe your dream car and our AI will find it.
+              </p>
+            </div>
 
-              <div className="relative">
-                <textarea
-                  value={aiQuery}
-                  onChange={(e) => setAiQuery(e.target.value)}
-                  placeholder="e.g. Find me a white Toyota SUV under $40,000 with low mileage and sunroof..."
-                  className="w-full min-h-[120px] p-4 bg-white/50 dark:bg-slate-900/50 border-2 border-dashed border-purple-500/30 rounded-2xl focus:border-purple-500 focus:ring-2 focus:ring-purple-600/10 transition-all text-lg resize-none"
-                />
-                <Button
-                  onClick={onAiSearch}
-                  disabled={isAiSearching || !aiQuery.trim()}
-                  className="absolute bottom-4 right-4 bg-purple-600 hover:bg-purple-700 text-white rounded-xl px-6 h-11"
-                >
-                  {isAiSearching ? (
-                    <Loader2 className="size-4 mr-2 animate-spin" />
-                  ) : (
-                    <Sparkles className="size-4 mr-2" />
-                  )}
-                  {isAiSearching ? "Let me search for you..." : "Ask AI"}
-                </Button>
-              </div>
+            <div className="relative">
+              <textarea
+                value={aiQuery}
+                onChange={(e) => setAiQuery(e.target.value)}
+                placeholder="e.g. White Toyota SUV under $40,000, low mileage, sunroof..."
+                className="min-h-[140px] w-full resize-none rounded-lg border border-input bg-background p-5 text-base focus:outline-none focus:ring-2 focus:ring-ring"
+              />
+              <Button
+                onClick={onAiSearch}
+                disabled={isAiSearching || !aiQuery.trim()}
+                className="absolute bottom-4 right-4 h-11 px-5 text-base"
+              >
+                {isAiSearching ? (
+                  <Loader2 className="mr-2 size-4 animate-spin" />
+                ) : (
+                  <Sparkles className="mr-2 size-4" />
+                )}
+                {isAiSearching ? "Searching…" : "Ask AI"}
+              </Button>
+            </div>
 
-              <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
-                <span>Try:</span>
-                <button
-                  onClick={() => setAiQuery("Luxury sedan with red interior")}
-                  className="hover:text-purple-600 transition-colors uppercase font-semibold"
-                >
-                  "Luxury sedan with red interior"
-                </button>
-                <span>•</span>
-                <button
-                  onClick={() => setAiQuery("Reliable family SUV for long trips")}
-                  className="hover:text-purple-600 transition-colors uppercase font-semibold"
-                >
-                  "Reliable family SUV for long trips"
-                </button>
-                <span>•</span>
-                <button
-                  onClick={() => setAiQuery("Sports coupe under 50k km")}
-                  className="hover:text-purple-600 transition-colors uppercase font-semibold"
-                >
-                  "Sports coupe under 50k km"
-                </button>
-              </div>
+            <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+              <span>Try:</span>
+              <button
+                onClick={() => setAiQuery("Luxury sedan with red interior")}
+                className="hover:text-foreground font-medium transition-colors"
+              >
+                Luxury sedan with red interior
+              </button>
+              <span>·</span>
+              <button
+                onClick={() => setAiQuery("Reliable family SUV for long trips")}
+                className="hover:text-foreground font-medium transition-colors"
+              >
+                Family SUV for long trips
+              </button>
+              <span>·</span>
+              <button
+                onClick={() => setAiQuery("Sports coupe under 50k km")}
+                className="hover:text-foreground font-medium transition-colors"
+              >
+                Sports coupe under 50k km
+              </button>
             </div>
           </TabsContent>
         </div>

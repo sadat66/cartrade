@@ -25,28 +25,28 @@ export function Hero() {
   const t = useTranslations("hero");
 
   return (
-    <section className="relative min-h-[500px] w-full bg-slate-900 md:min-h-[600px] flex flex-col items-center justify-center overflow-visible">
-      {/* Full-bleed background image */}
+    <section className="relative flex min-h-[500px] w-full flex-col items-center justify-center md:min-h-[600px]">
+      {/* Background */}
       <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-700 hover:scale-105"
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: "url(/background/backgroundHero.png)" }}
       />
-      {/* Dynamic Overlay */}
+      {/* See-through transition: dark at top, fades to page background at bottom */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-background" />
 
-      {/* Hero Content */}
-      <div className="container mx-auto relative z-10 px-4 pt-20 pb-12 text-center text-white">
-        <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-4 drop-shadow-lg">
+      {/* Content – tight hierarchy, high contrast */}
+      <div className="container relative z-10 mx-auto px-4 pt-16 pb-6 text-center">
+        <h1 className="text-3xl font-semibold tracking-tight text-white md:text-5xl md:font-bold">
           {t("title")}
         </h1>
-        <p className="text-lg md:text-xl text-slate-200 max-w-2xl mx-auto mb-10 drop-shadow-md">
+        <p className="mx-auto mt-3 max-w-xl text-base text-neutral-300 md:text-lg">
           {t("subtitle")}
         </p>
       </div>
 
-      {/* Floating search card – overlaps hero bottom */}
-      <div className="container mx-auto relative z-20 px-4 md:px-6">
-        <div className="w-full max-w-5xl mx-auto -mb-32 md:-mb-40">
+      {/* Search card – overlaps into next section so full filter (incl. body type) is visible */}
+      <div className="container relative z-20 mx-auto px-4 md:px-6">
+        <div className="mx-auto w-full max-w-5xl -mb-40 md:-mb-52">
           <HeroSearchForm
             selectedBodyType={selectedBodyType}
             onBodyTypeChange={setSelectedBodyType}
