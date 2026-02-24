@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { Search, Sparkles, CarFront, SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -48,21 +48,64 @@ import { useLocale } from "next-intl";
 import { aiSearchAction } from "@/app/actions/ai-search";
 import { Loader2 } from "lucide-react";
 
+function getFiltersFromSearchParams(searchParams: URLSearchParams) {
+  const get = (key: string) => searchParams.get(key) ?? "";
+  return {
+    make: get("make") || "any",
+    model: get("model"),
+    location: get("location"),
+    bodyType: get("bodyType") || null,
+    minPrice: get("minPrice"),
+    maxPrice: get("maxPrice"),
+    minYear: get("minYear"),
+    maxYear: get("maxYear"),
+    minMileage: get("minMileage"),
+    maxMileage: get("maxMileage"),
+  };
+}
+
 export function HeroSearchForm({
   selectedBodyType: controlledBody,
   onBodyTypeChange,
 }: HeroSearchFormProps = {}) {
-  const [internalBody, setInternalBody] = useState<string | null>(null);
+  const searchParams = useSearchParams();
+  const [internalBody, setInternalBody] = useState<string | null>(() => {
+    const body = searchParams.get("bodyType");
+    return body && body !== "any" ? body : null;
+  });
   const [activeTab, setActiveTab] = useState("classic");
   const [aiQuery, setAiQuery] = useState("");
   const [isAiSearching, setIsAiSearching] = useState(false);
 
-  const [make, setMake] = useState<string>("any");
-  const [minPrice, setMinPrice] = useState<string>("");
-  const [maxPrice, setMaxPrice] = useState<string>("");
+  const [make, setMake] = useState<string>(() => getFiltersFromSearchParams(searchParams).make);
+  const [model, setModel] = useState<string>(() => getFiltersFromSearchParams(searchParams).model);
+  const [location, setLocation] = useState<string>(() => getFiltersFromSearchParams(searchParams).location);
+  const [minPrice, setMinPrice] = useState<string>(() => getFiltersFromSearchParams(searchParams).minPrice);
+  const [maxPrice, setMaxPrice] = useState<string>(() => getFiltersFromSearchParams(searchParams).maxPrice);
+  const [minYear, setMinYear] = useState<string>(() => getFiltersFromSearchParams(searchParams).minYear);
+  const [maxYear, setMaxYear] = useState<string>(() => getFiltersFromSearchParams(searchParams).maxYear);
+  const [minMileage, setMinMileage] = useState<string>(() => getFiltersFromSearchParams(searchParams).minMileage);
+  const [maxMileage, setMaxMileage] = useState<string>(() => getFiltersFromSearchParams(searchParams).maxMileage);
 
   const locale = useLocale();
   const router = useRouter();
+
+  // Keep form in sync with URL (e.g. after search navigation or back/forward)
+  useEffect(() => {
+    const f = getFiltersFromSearchParams(searchParams);
+    setMake(f.make);
+    setModel(f.model);
+    setLocation(f.location);
+    setMinPrice(f.minPrice);
+    setMaxPrice(f.maxPrice);
+    setMinYear(f.minYear);
+    setMaxYear(f.maxYear);
+    setMinMileage(f.minMileage);
+    setMaxMileage(f.maxMileage);
+    if (!onBodyTypeChange) {
+      setInternalBody(f.bodyType);
+    }
+  }, [searchParams, onBodyTypeChange]);
 
   const selectedBody = onBodyTypeChange ? controlledBody ?? null : internalBody;
   const setSelectedBody = onBodyTypeChange
@@ -76,8 +119,14 @@ export function HeroSearchForm({
     setSelectedBody(null);
     setAiQuery("");
     setMake("any");
+    setModel("");
+    setLocation("");
     setMinPrice("");
     setMaxPrice("");
+    setMinYear("");
+    setMaxYear("");
+    setMinMileage("");
+    setMaxMileage("");
   };
 
   const onAiSearch = async () => {
@@ -96,8 +145,14 @@ export function HeroSearchForm({
     const params = new URLSearchParams();
     if (selectedBody && selectedBody !== "any") params.append("bodyType", selectedBody);
     if (make && make !== "any") params.append("make", make);
+    if (model.trim()) params.append("model", model.trim());
+    if (location.trim()) params.append("location", location.trim());
     if (minPrice) params.append("minPrice", minPrice);
     if (maxPrice) params.append("maxPrice", maxPrice);
+    if (minYear) params.append("minYear", minYear);
+    if (maxYear) params.append("maxYear", maxYear);
+    if (minMileage) params.append("minMileage", minMileage);
+    if (maxMileage) params.append("maxMileage", maxMileage);
 
     router.push(`/${locale}/cars?${params.toString()}`);
   };
@@ -136,13 +191,17 @@ export function HeroSearchForm({
 
         <div className="min-h-[380px] px-6 pt-6 pb-4 md:px-8 md:pt-8 md:pb-5">
           <TabsContent value="classic" className="mt-0 h-full min-h-[340px] space-y-6">
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+            {/* Row 1: Model (search), Make, Location – aligned with listing fields */}
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
               <div className="relative">
                 <Search className="absolute left-4 top-1/2 size-5 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   type="search"
-                  placeholder={t("searchPlaceholder")}
+                  placeholder={t("anyModel")}
+                  value={model}
+                  onChange={(e) => setModel(e.target.value)}
                   className="h-12 pl-11 text-base"
+                  aria-label={t("anyModel")}
                 />
               </div>
 
@@ -155,67 +214,109 @@ export function HeroSearchForm({
                   <SelectItem value="toyota">Toyota</SelectItem>
                   <SelectItem value="ford">Ford</SelectItem>
                   <SelectItem value="honda">Honda</SelectItem>
+                  <SelectItem value="mazda">Mazda</SelectItem>
+                  <SelectItem value="hyundai">Hyundai</SelectItem>
+                  <SelectItem value="nissan">Nissan</SelectItem>
+                  <SelectItem value="volkswagen">Volkswagen</SelectItem>
+                  <SelectItem value="bmw">BMW</SelectItem>
+                  <SelectItem value="mercedes">Mercedes</SelectItem>
                 </SelectContent>
               </Select>
 
-              <Select>
-                <SelectTrigger className="h-12 text-base">
-                  <SelectValue placeholder={t("anyModel")} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="any">{t("anyModel")}</SelectItem>
-                </SelectContent>
-              </Select>
-
-              <Select>
-                <SelectTrigger className="h-12 text-base">
-                  <SelectValue placeholder={t("allStates")} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">{t("allStates")}</SelectItem>
-                  <SelectItem value="nsw">NSW</SelectItem>
-                  <SelectItem value="vic">VIC</SelectItem>
-                </SelectContent>
-              </Select>
+              <Input
+                type="text"
+                placeholder={t("locationPlaceholder")}
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+                className="h-12 text-base"
+                aria-label={t("locationPlaceholder")}
+              />
             </div>
 
-            <div className="flex flex-col gap-6">
-              <div className="flex flex-wrap items-center gap-5">
-                <div className="flex items-center gap-3">
-                  <span className="text-sm font-medium text-muted-foreground">{t("minPrice")}</span>
+            {/* Row 2: Price, Year, Mileage ranges – same as create listing */}
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-wrap items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium text-muted-foreground whitespace-nowrap">{t("minPrice")}</span>
                   <div className="relative">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">$</span>
                     <Input
                       type="number"
                       placeholder="0"
                       value={minPrice}
                       onChange={(e) => setMinPrice(e.target.value)}
-                      className="h-11 w-28 pl-7 text-base"
+                      className="h-11 w-24 pl-7 text-base"
                     />
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <span className="text-sm font-medium text-muted-foreground">{t("maxPrice")}</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium text-muted-foreground whitespace-nowrap">{t("maxPrice")}</span>
                   <div className="relative">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">$</span>
                     <Input
                       type="number"
                       placeholder="100,000+"
                       value={maxPrice}
                       onChange={(e) => setMaxPrice(e.target.value)}
-                      className="h-11 w-32 pl-7 text-base"
+                      className="h-11 w-28 pl-7 text-base"
                     />
                   </div>
                 </div>
-
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium text-muted-foreground whitespace-nowrap">{t("minYear")}</span>
+                  <Input
+                    type="number"
+                    placeholder="e.g. 2018"
+                    min={1990}
+                    max={2100}
+                    value={minYear}
+                    onChange={(e) => setMinYear(e.target.value)}
+                    className="h-11 w-24 text-base"
+                  />
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium text-muted-foreground whitespace-nowrap">{t("maxYear")}</span>
+                  <Input
+                    type="number"
+                    placeholder="e.g. 2024"
+                    min={1990}
+                    max={2100}
+                    value={maxYear}
+                    onChange={(e) => setMaxYear(e.target.value)}
+                    className="h-11 w-24 text-base"
+                  />
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium text-muted-foreground whitespace-nowrap">{t("minMileage")}</span>
+                  <Input
+                    type="number"
+                    placeholder="0"
+                    min={0}
+                    value={minMileage}
+                    onChange={(e) => setMinMileage(e.target.value)}
+                    className="h-11 w-24 text-base"
+                  />
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium text-muted-foreground whitespace-nowrap">{t("maxMileage")}</span>
+                  <Input
+                    type="number"
+                    placeholder="200000"
+                    min={0}
+                    value={maxMileage}
+                    onChange={(e) => setMaxMileage(e.target.value)}
+                    className="h-11 w-24 text-base"
+                  />
+                </div>
                 <Button
                   type="button"
                   onClick={onClassicSearch}
-                  className="ml-auto h-12 px-8 text-base font-medium"
+                  className="ml-auto h-11 px-6 text-base font-medium"
                 >
                   {t("search")}
                 </Button>
               </div>
+            </div>
 
               <div className="border-t border-border pt-6">
                 <p className="mb-4 text-xs font-medium uppercase tracking-wider text-muted-foreground">
@@ -253,7 +354,6 @@ export function HeroSearchForm({
                   })}
                 </div>
               </div>
-            </div>
           </TabsContent>
 
           <TabsContent value="ai" className="mt-0 h-full min-h-[340px] space-y-5">

@@ -18,14 +18,18 @@ export default async function NewListingPage({ params }: Props) {
   const t = await getTranslations({ locale: validLocale });
 
   return (
-    <div className="mx-auto max-w-2xl space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold">{t("dashboard.addListing.title")}</h1>
-        <p className="text-muted-foreground">
+    <div className="mx-auto max-w-2xl space-y-8">
+      <div className="animate-in fade-in-0 slide-in-from-bottom-2 duration-300">
+        <h1 className="text-2xl font-bold tracking-tight md:text-3xl">
+          {t("dashboard.addListing.title")}
+        </h1>
+        <p className="mt-1.5 text-muted-foreground">
           {t("dashboard.addListing.subtitle")}
         </p>
       </div>
-      <NewListingForm />
+      <div className="animate-in fade-in-0 slide-in-from-bottom-2 duration-300 fill-mode-both" style={{ animationDelay: "80ms" }}>
+        <NewListingForm />
+      </div>
     </div>
   );
 }

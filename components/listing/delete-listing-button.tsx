@@ -4,7 +4,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
-import { Trash2 } from "lucide-react";
+import { Loader2, Trash2 } from "lucide-react";
 import { deleteListing } from "@/app/actions/listing";
 import {
   AlertDialog,
@@ -69,7 +69,14 @@ export function DeleteListingButton({ listingId }: Props) {
             onClick={handleDelete}
             disabled={pending}
           >
-            {pending ? tToast("saving") : t("delete")}
+            {pending ? (
+              <>
+                <Loader2 className="mr-2 size-4 animate-spin" />
+                {tToast("saving")}
+              </>
+            ) : (
+              t("delete")
+            )}
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>

@@ -61,8 +61,13 @@
     "anyModel": "Any Model",
     "anyBodyType": "Any body type",
     "allStates": "All States",
+    "locationPlaceholder": "e.g. Sydney, NSW",
     "minPrice": "Min price",
     "maxPrice": "Max price",
+    "minYear": "Min year",
+    "maxYear": "Max year",
+    "minMileage": "Min km",
+    "maxMileage": "Max km",
     "bodyTypes": {
       "sedan": "Sedan",
       "suv": "SUV",

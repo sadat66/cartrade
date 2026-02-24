@@ -61,8 +61,13 @@
     "anyModel": "যেকোনো মডেল",
     "anyBodyType": "যেকোনো বডি টাইপ",
     "allStates": "সব অঞ্চল",
+    "locationPlaceholder": "যেমন: সিডনি, এনএসডব্লিউ",
     "minPrice": "ন্যূনতম দাম",
     "maxPrice": "সর্বোচ্চ দাম",
+    "minYear": "ন্যূনতম বছর",
+    "maxYear": "সর্বোচ্চ বছর",
+    "minMileage": "ন্যূনতম কিমি",
+    "maxMileage": "সর্বোচ্চ কিমি",
     "bodyTypes": {
       "sedan": "সেডান",
       "suv": "এসইউভি",

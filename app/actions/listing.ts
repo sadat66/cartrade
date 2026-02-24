@@ -21,6 +21,7 @@ export async function createListing(formData: FormData) {
   const lngRaw = (formData.get("longitude") as string)?.trim();
   const latitude = latRaw ? parseFloat(latRaw) : null;
   const longitude = lngRaw ? parseFloat(lngRaw) : null;
+  const bodyType = (formData.get("bodyType") as string)?.trim() || null;
 
   if (!title || !make || !model || !year || price <= 0) {
     return { error: "Title, make, model, year and price are required" };
@@ -39,6 +40,7 @@ export async function createListing(formData: FormData) {
       location,
       latitude,
       longitude,
+      bodyType: bodyType || undefined,
       imageUrls: [], // Add Cloudinary upload later
     },
   });

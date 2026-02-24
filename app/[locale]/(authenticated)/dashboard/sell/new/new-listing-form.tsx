@@ -1,26 +1,60 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
+import { useFormStatus } from "react-dom";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { createListing } from "@/app/actions/listing";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { LocationPicker } from "@/components/listing/location-picker";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { useTranslations } from "next-intl";
+import { cn } from "@/lib/utils";
+import { Loader2 } from "lucide-react";
 
-function formReducer(
-  _state: { error?: string },
-  payload: { error?: string } | null
-) {
-  return payload ?? {};
+const BODY_TYPE_KEYS = [
+  "sedan",
+  "suv",
+  "ute",
+  "hatch",
+  "coupe",
+  "sports",
+  "performance",
+  "unique",
+] as const;
+
+function FormLoadingOverlay() {
+  const { pending } = useFormStatus();
+  if (!pending) return null;
+  return (
+    <div
+      className={cn(
+        "absolute inset-0 z-10 flex items-center justify-center rounded-xl bg-background/80 backdrop-blur-[2px]",
+        "animate-in fade-in-0 duration-150"
+      )}
+    >
+      <div className="flex flex-col items-center gap-3">
+        <Loader2 className="size-8 animate-spin text-primary" />
+        <p className="text-sm font-medium text-muted-foreground">Creating listing…</p>
+      </div>
+    </div>
+  );
 }
 
 export function NewListingForm() {
   const router = useRouter();
   const t = useTranslations("common.toast");
+  const tHero = useTranslations("hero");
+  const [bodyType, setBodyType] = useState<string>("");
   const [state, formAction] = useActionState(
     async (_prev: { error?: string }, formData: FormData) => {
       const result = await createListing(formData);
@@ -38,9 +72,10 @@ export function NewListingForm() {
   );
 
   return (
-    <Card>
-      <CardContent className="pt-6">
-        <form action={formAction} className="space-y-4">
+    <Card className="overflow-hidden transition-shadow duration-200 hover:shadow-md">
+      <CardContent className="relative pt-6">
+        <form action={formAction} className="relative space-y-5">
+          <FormLoadingOverlay />
           <div>
             <label htmlFor="title" className="text-sm font-medium">
               Title
@@ -113,6 +148,25 @@ export function NewListingForm() {
             />
           </div>
           <div>
+            <label htmlFor="bodyType" className="text-sm font-medium">
+              Body type
+            </label>
+            <Select value={bodyType || "none"} onValueChange={(v) => setBodyType(v === "none" ? "" : v)}>
+              <SelectTrigger id="bodyType" className={cn("mt-1", !bodyType && "text-muted-foreground")}>
+                <SelectValue placeholder={tHero("anyBodyType")} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none">{tHero("anyBodyType")}</SelectItem>
+                {BODY_TYPE_KEYS.map((key) => (
+                  <SelectItem key={key} value={key}>
+                    {tHero(`bodyTypes.${key}`)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <input type="hidden" name="bodyType" value={bodyType} />
+          </div>
+          <div>
             <label htmlFor="description" className="text-sm font-medium">
               Description
             </label>
@@ -129,7 +183,7 @@ export function NewListingForm() {
             <p className="text-destructive text-sm">{state.error}</p>
           )}
           <SubmitButton
-            className="bg-blue-600 hover:bg-blue-700"
+            className="w-full sm:w-auto bg-primary hover:bg-primary/90"
             loadingText={t("creating")}
           >
             Create listing
