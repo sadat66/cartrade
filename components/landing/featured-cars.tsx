@@ -41,7 +41,7 @@ export async function FeaturedCars({
         </h2>
         <p className="mt-4 text-muted-foreground">
           {t("noListings")}{" "}
-          <Link href="/dashboard/listings/new" className="font-medium text-primary underline">
+          <Link href="/dashboard/sell/new" className="font-medium text-primary underline">
             {t("listYourCar")}
           </Link>
           .

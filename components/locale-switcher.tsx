@@ -9,36 +9,34 @@ import { cn } from "@/lib/utils";
 export function LocaleSwitcher({ className }: { className?: string }) {
   const locale = useLocale() as Locale;
   const pathname = usePathname();
-  const otherLocale = locales.find((loc) => loc !== locale) ?? locale;
 
-  const handleToggle = () => {
-    const newLocale = otherLocale;
+  const switchLocale = (newLocale: Locale) => {
     if (newLocale === locale) return;
     const newPath = `/${newLocale}${pathname === "/" ? "" : pathname}`;
     window.location.href = newPath;
   };
 
   return (
-    <Button
-      type="button"
-      variant="ghost"
-      size="sm"
-      onClick={handleToggle}
+    <div
       className={cn(
-        "h-7 min-w-0 gap-1 px-2 text-xs font-medium text-white/90 hover:bg-white/10 hover:text-white",
+        "flex h-8 items-center gap-0.5 rounded-lg bg-white/10 p-1 border border-white/5",
         className
       )}
-      aria-label={`Switch to ${localeNames[otherLocale]}`}
     >
-      <span className={locale === "en" ? "text-white" : "text-white/60"}>
-        EN
-      </span>
-      <span className="text-white/50" aria-hidden>
-        |
-      </span>
-      <span className={locale === "bn" ? "text-white" : "text-white/60"}>
-        BN
-      </span>
-    </Button>
+      {locales.map((loc) => (
+        <button
+          key={loc}
+          onClick={() => switchLocale(loc)}
+          className={cn(
+            "flex h-full items-center px-2 rounded-md text-[10px] font-bold uppercase tracking-wider transition-all duration-200",
+            locale === loc
+              ? "bg-blue-600 text-white shadow-lg"
+              : "text-white/50 hover:text-white/80 hover:bg-white/5"
+          )}
+        >
+          {loc}
+        </button>
+      ))}
+    </div>
   );
 }

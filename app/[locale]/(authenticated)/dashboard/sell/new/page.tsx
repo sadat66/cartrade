@@ -14,7 +14,7 @@ export default async function NewListingPage({ params }: Props) {
       ? (locale as Locale)
       : routing.defaultLocale;
   const user = await getCurrentUser();
-  if (!user) redirect({ href: "/login?next=/dashboard/listings/new", locale: validLocale });
+  if (!user) redirect({ href: "/login?next=/dashboard/sell/new", locale: validLocale });
   const t = await getTranslations({ locale: validLocale });
 
   return (

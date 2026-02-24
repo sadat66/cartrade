@@ -52,9 +52,11 @@
     "contact": "যোগাযোগ"
   },
   "hero": {
-    "searchPlaceholder": "আপনার পরবর্তী গাড়ি খুঁজুন",
-    "search": "খুঁজুন",
-    "clearAll": "সব সাফ করুন",
+    "title": "আপনার স্বপ্নের গাড়িটি খুঁজুন",
+    "subtitle": "হাজার হাজার ভেরিফাইড গাড়ি থেকে বেছে নিন অথবা আপনার গাড়িটি দ্রুত বিক্রি করুন।",
+    "searchPlaceholder": "আপনার পছন্দের গাড়িটি খুঁজুন",
+    "search": "অনুসন্ধান করুন",
+    "clearAll": "সব মুছে ফেলুন",
     "anyMake": "যেকোনো ব্র্যান্ড",
     "anyModel": "যেকোনো মডেল",
     "anyBodyType": "যেকোনো বডি টাইপ",
@@ -113,7 +115,7 @@
       "profile": "প্রোফাইল",
       "savedListings": "সেভ করা লিস্টিং",
       "messages": "মেসেজ",
-      "myListings": "আমার লিস্টিং"
+      "myListings": "বিক্রয়"
     },
     "overview": {
       "title": "ড্যাশবোর্ড",
@@ -129,7 +131,7 @@
       "viewProfileSettings": "প্রোফাইল সেটিংস দেখুন"
     },
     "myListings": {
-      "title": "আমার লিস্টিং",
+      "title": "বিক্রয়",
       "listingCount": "{count}টি লিস্টিং",
       "listingCount_other": "{count}টি লিস্টিং",
       "addListing": "লিস্টিং যোগ করুন",

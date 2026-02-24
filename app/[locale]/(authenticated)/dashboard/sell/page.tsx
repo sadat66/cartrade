@@ -36,7 +36,7 @@ export default async function MyListingsPage({ params }: Props) {
           </p>
         </div>
         <Button asChild size="sm" className="bg-blue-600 hover:bg-blue-700">
-          <Link href="/dashboard/listings/new">{t("dashboard.myListings.addListing")}</Link>
+          <Link href="/dashboard/sell/new">{t("dashboard.myListings.addListing")}</Link>
         </Button>
       </div>
 
@@ -44,7 +44,7 @@ export default async function MyListingsPage({ params }: Props) {
         <p className="text-muted-foreground text-sm">
           {t("dashboard.myListings.noListingsYet")}{" "}
           <Link
-            href="/dashboard/listings/new"
+            href="/dashboard/sell/new"
             className="font-medium text-primary underline"
           >
             {t("dashboard.myListings.createFirst")}

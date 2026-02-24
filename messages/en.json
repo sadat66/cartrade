@@ -52,6 +52,8 @@
     "contact": "Contact"
   },
   "hero": {
+    "title": "Find Your Perfect Drive",
+    "subtitle": "Browse thousands of verified cars or sell yours in minutes.",
     "searchPlaceholder": "Find your next car",
     "search": "Search",
     "clearAll": "Clear all",
@@ -113,7 +115,7 @@
       "profile": "Profile",
       "savedListings": "Saved listings",
       "messages": "Messages",
-      "myListings": "My listings"
+      "myListings": "Sell"
     },
     "overview": {
       "title": "Dashboard",
@@ -129,7 +131,7 @@
       "viewProfileSettings": "View profile settings"
     },
     "myListings": {
-      "title": "My listings",
+      "title": "Sell",
       "listingCount": "{count} listing",
       "listingCount_other": "{count} listings",
       "addListing": "Add listing",

@@ -43,7 +43,7 @@ export async function createListing(formData: FormData) {
     },
   });
 
-  revalidatePath("/dashboard/listings");
+  revalidatePath("/dashboard/sell");
   revalidatePath("/");
   return { listingId: listing.id };
 }
@@ -62,7 +62,7 @@ export async function deleteListing(formData: FormData) {
 
   await prisma.listing.delete({ where: { id: listingId } });
 
-  revalidatePath("/dashboard/listings");
+  revalidatePath("/dashboard/sell");
   revalidatePath("/");
   return { success: true };
 }
