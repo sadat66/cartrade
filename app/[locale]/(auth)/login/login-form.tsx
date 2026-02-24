@@ -104,7 +104,7 @@ export function LoginForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label htmlFor="email" className="text-sm font-medium text-slate-200">
+        <label htmlFor="email" className="text-sm font-medium text-slate-700">
           {t("login.email")}
         </label>
         <Input
@@ -112,13 +112,13 @@ export function LoginForm({
           name="email"
           type="email"
           placeholder={t("login.emailPlaceholder")}
-          className="mt-1 bg-white/5 border-white/10 text-white placeholder:text-slate-500 focus:border-blue-500 transition-colors"
+          className="mt-1 bg-white border-slate-200 text-slate-800 placeholder:text-slate-400 focus:border-[#ff385c] focus:ring-[#ff385c]/20 transition-colors"
           required
         />
       </div>
       {!isForgotPassword && (
         <div>
-          <label htmlFor="password" className="text-sm font-medium text-slate-200">
+          <label htmlFor="password" className="text-sm font-medium text-slate-700">
           {t("login.password")}
         </label>
           <Input
@@ -126,12 +126,12 @@ export function LoginForm({
             name="password"
             type="password"
             placeholder={t("login.passwordPlaceholder")}
-            className="mt-1 bg-white/5 border-white/10 text-white placeholder:text-slate-500 focus:border-blue-500 transition-colors"
+            className="mt-1 bg-white border-slate-200 text-slate-800 placeholder:text-slate-400 focus:border-[#ff385c] focus:ring-[#ff385c]/20 transition-colors"
             required={!isForgotPassword}
           />
           <button
             type="button"
-            className="mt-1 text-xs font-medium text-blue-400 hover:text-blue-300 hover:underline"
+            className="mt-1 text-xs font-medium text-[#ff385c] hover:text-[#e03150] hover:underline"
             onClick={() => setIsForgotPassword(true)}
           >
             {t("login.forgotPassword")}
@@ -139,7 +139,7 @@ export function LoginForm({
         </div>
       )}
       {error && <p className="text-destructive text-sm">{error}</p>}
-      <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700" disabled={loading}>
+      <Button type="submit" className="w-full bg-[#ff385c] hover:bg-[#e03150] text-white" disabled={loading}>
         {loading
           ? t("common.loading")
           : isForgotPassword
@@ -149,21 +149,21 @@ export function LoginForm({
               : t("login.logIn")}
       </Button>
       {!isForgotPassword && (
-        <p className="text-center text-slate-400 text-sm">
+        <p className="text-center text-slate-500 text-sm">
           {isSignUp ? t("login.alreadyHaveAccount") : t("login.dontHaveAccount")}{" "}
           <Link
             href={isSignUp ? `/login${queryParams}` : `/signup${queryParams}`}
-            className="font-medium text-blue-400 hover:text-blue-300 hover:underline transition-colors"
+            className="font-medium text-[#ff385c] hover:text-[#e03150] hover:underline transition-colors"
           >
             {isSignUp ? t("login.logIn") : t("login.signUp")}
           </Link>
         </p>
       )}
       {isForgotPassword && (
-        <p className="text-center text-slate-400 text-sm">
+        <p className="text-center text-slate-500 text-sm">
           <button
             type="button"
-            className="font-medium text-blue-400 hover:text-blue-300 hover:underline transition-colors"
+            className="font-medium text-[#ff385c] hover:text-[#e03150] hover:underline transition-colors"
             onClick={() => setIsForgotPassword(false)}
           >
             {t("login.backToLogIn")}

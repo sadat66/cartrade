@@ -11,8 +11,8 @@ export default async function LoginPage({
   return (
     <div className="w-full max-w-sm space-y-6">
       <div className="text-center">
-        <h1 className="text-2xl font-bold text-white">{t("title")}</h1>
-        <p className="text-slate-400 text-sm">
+        <h1 className="text-2xl font-bold text-slate-800">{t("title")}</h1>
+        <p className="text-slate-500 text-sm">
           {t("subtitle")}
         </p>
       </div>

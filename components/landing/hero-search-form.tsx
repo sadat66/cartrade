@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import Image from "next/image";
 import { Search, Sparkles, CarFront, SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,34 +14,8 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useTranslations } from "next-intl";
-import { cn } from "@/lib/utils";
 
-const BODY_TYPE_KEYS = [
-  "sedan",
-  "suv",
-  "ute",
-  "hatch",
-  "coupe",
-  "sports",
-  "performance",
-  "unique",
-] as const;
-
-const BODY_TYPE_IMAGES: Record<(typeof BODY_TYPE_KEYS)[number], string> = {
-  sedan: "/herocar/hero1.png",
-  suv: "/herocar/hero2.png",
-  ute: "/herocar/hero3.png",
-  hatch: "/herocar/hero4.png",
-  coupe: "/herocar/hero5.png",
-  sports: "/herocar/hero6.png",
-  performance: "/herocar/hero7.png",
-  unique: "/herocar/hero1.png",
-};
-
-type HeroSearchFormProps = {
-  selectedBodyType?: string | null;
-  onBodyTypeChange?: (type: string | null) => void;
-};
+type HeroSearchFormProps = Record<string, never>;
 
 import { useLocale } from "next-intl";
 import { aiSearchAction } from "@/app/actions/ai-search";
@@ -64,15 +37,10 @@ function getFiltersFromSearchParams(searchParams: URLSearchParams) {
   };
 }
 
-export function HeroSearchForm({
-  selectedBodyType: controlledBody,
-  onBodyTypeChange,
-}: HeroSearchFormProps = {}) {
+export function HeroSearchForm(
+  {}: HeroSearchFormProps = {}
+) {
   const searchParams = useSearchParams();
-  const [internalBody, setInternalBody] = useState<string | null>(() => {
-    const body = searchParams.get("bodyType");
-    return body && body !== "any" ? body : null;
-  });
   const [activeTab, setActiveTab] = useState("classic");
   const [aiQuery, setAiQuery] = useState("");
   const [isAiSearching, setIsAiSearching] = useState(false);
@@ -89,6 +57,7 @@ export function HeroSearchForm({
 
   const locale = useLocale();
   const router = useRouter();
+  const t = useTranslations("hero");
 
   // Keep form in sync with URL (e.g. after search navigation or back/forward)
   useEffect(() => {
@@ -102,21 +71,9 @@ export function HeroSearchForm({
     setMaxYear(f.maxYear);
     setMinMileage(f.minMileage);
     setMaxMileage(f.maxMileage);
-    if (!onBodyTypeChange) {
-      setInternalBody(f.bodyType);
-    }
-  }, [searchParams, onBodyTypeChange]);
-
-  const selectedBody = onBodyTypeChange ? controlledBody ?? null : internalBody;
-  const setSelectedBody = onBodyTypeChange
-    ? (t: string | null) => {
-        onBodyTypeChange(t);
-      }
-    : setInternalBody;
-  const t = useTranslations("hero");
+  }, [searchParams]);
 
   const clearAll = () => {
-    setSelectedBody(null);
     setAiQuery("");
     setMake("any");
     setModel("");
@@ -143,7 +100,8 @@ export function HeroSearchForm({
 
   const onClassicSearch = () => {
     const params = new URLSearchParams();
-    if (selectedBody && selectedBody !== "any") params.append("bodyType", selectedBody);
+    const bodyFromUrl = searchParams.get("bodyType");
+    if (bodyFromUrl && bodyFromUrl !== "any") params.append("bodyType", bodyFromUrl);
     if (make && make !== "any") params.append("make", make);
     if (model.trim()) params.append("model", model.trim());
     if (location.trim()) params.append("location", location.trim());
@@ -318,43 +276,7 @@ export function HeroSearchForm({
               </div>
             </div>
 
-              <div className="border-t border-border pt-6">
-                <p className="mb-4 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                  Body type
-                </p>
-                <div className="grid grid-cols-4 gap-3 md:grid-cols-8">
-                  {BODY_TYPE_KEYS.map((key) => {
-                    const isSelected = selectedBody === key;
-                    return (
-                      <button
-                        key={key}
-                        type="button"
-                        onClick={() => setSelectedBody(isSelected ? null : key)}
-                        className={cn(
-                          "flex flex-col items-center gap-2 rounded-lg border p-3 transition-colors duration-150",
-                          isSelected
-                            ? "border-foreground bg-foreground text-primary-foreground"
-                            : "border-border bg-muted/50 text-muted-foreground hover:border-muted-foreground/40 hover:bg-muted"
-                        )}
-                      >
-                        <div className="relative size-12 overflow-hidden rounded-md">
-                          <Image
-                            src={BODY_TYPE_IMAGES[key]}
-                            alt=""
-                            fill
-                            className="object-contain"
-                            sizes="48px"
-                          />
-                        </div>
-                        <span className="text-[11px] font-medium uppercase tracking-tight">
-                          {t(`bodyTypes.${key}`)}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-          </TabsContent>
+            </TabsContent>
 
           <TabsContent value="ai" className="mt-0 h-full min-h-[340px] space-y-5">
             <div className="flex items-center gap-4 rounded-lg border border-border bg-muted/30 p-5">

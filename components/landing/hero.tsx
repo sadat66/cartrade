@@ -4,24 +4,7 @@ import { useState } from "react";
 import { HeroSearchForm } from "./hero-search-form";
 import { useTranslations } from "next-intl";
 
-const BODY_TYPE_TO_HERO_INDEX: Record<string, number> = {
-  sedan: 1,
-  suv: 2,
-  ute: 3,
-  hatch: 4,
-  coupe: 5,
-  sports: 6,
-  performance: 7,
-  unique: 1,
-};
-
-function getHeroImageIndex(bodyType: string | null): number {
-  if (!bodyType) return 1;
-  return BODY_TYPE_TO_HERO_INDEX[bodyType.toLowerCase()] ?? 1;
-}
-
-export function Hero() {
-  const [selectedBodyType, setSelectedBodyType] = useState<string | null>(null);
+export function Hero({ showSearch = true }: { showSearch?: boolean }) {
   const t = useTranslations("hero");
 
   return (
@@ -44,15 +27,13 @@ export function Hero() {
         </p>
       </div>
 
-      {/* Search card – overlaps into next section so full filter (incl. body type) is visible */}
-      <div className="container relative z-20 mx-auto px-4 md:px-6">
-        <div className="mx-auto w-full max-w-5xl -mb-40 md:-mb-52">
-          <HeroSearchForm
-            selectedBodyType={selectedBodyType}
-            onBodyTypeChange={setSelectedBodyType}
-          />
+      {showSearch && (
+        <div className="container relative z-20 mx-auto px-4 md:px-6">
+          <div className="mx-auto w-full max-w-5xl -mb-40 md:-mb-52">
+            <HeroSearchForm />
+          </div>
         </div>
-      </div>
+      )}
     </section>
   );
 }

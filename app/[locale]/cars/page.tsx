@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/db";
 import { ListingCard } from "@/components/listing/listing-card";
 import { Hero } from "@/components/landing/hero";
+import { BodyTypeFilter } from "@/components/landing/body-type-filter";
 import { getTranslations } from "next-intl/server";
 import { Locale } from "@/i18n/config";
 import { Sparkles } from "lucide-react";
@@ -36,7 +37,13 @@ export default async function CarsPage({ params, searchParams }: Props) {
 
     if (make) where.make = { contains: String(make), mode: "insensitive" };
     if (model) where.model = { contains: String(model), mode: "insensitive" };
-    if (bodyType && bodyType !== "any") where.bodyType = String(bodyType);
+    if (bodyType && bodyType !== "any") {
+        const bt = String(bodyType);
+        // Map filter labels to DB values for backwards compatibility
+        if (bt === "offroad") where.bodyType = "sports";
+        else if (bt === "electric") where.bodyType = "coupe";
+        else where.bodyType = bt;
+    }
 
     if (minPrice || maxPrice) {
         where.price = {};
@@ -67,6 +74,7 @@ export default async function CarsPage({ params, searchParams }: Props) {
         <div className="min-h-screen bg-background pb-20">
             <Hero />
             <div className="container mx-auto mt-44 px-4 md:mt-56">
+                <BodyTypeFilter />
                 {aiMessage && (
                     <div className="mb-8 flex items-center gap-4 rounded-xl border border-border bg-muted/30 p-4">
                         <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-foreground text-primary-foreground">

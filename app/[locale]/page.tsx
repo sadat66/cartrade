@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/db";
 import { Hero } from "@/components/landing/hero";
+import { BodyTypeFilter } from "@/components/landing/body-type-filter";
 import { PromoCards } from "@/components/landing/promo-cards";
 import { FeaturedCars } from "@/components/landing/featured-cars";
 import { Footer } from "@/components/landing/footer";
@@ -28,6 +29,7 @@ export default async function Home({ params }: Props) {
         <Hero />
         <section className="pt-44 md:pt-56">
           <PromoCards locale={validLocale} />
+          <BodyTypeFilter />
           <FeaturedCars listings={listings} locale={validLocale} />
         </section>
       </main>

@@ -32,9 +32,11 @@
     "description": "Buy and sell cars with confidence. Get instant cash offers, browse listings, and find local dealerships."
   },
   "header": {
-    "buy": "Buy",
-    "sell": "Sell",
-    "research": "Research",
+    "buy": "Find your car",
+    "sell": "Sell or trade in",
+    "research": "Car finance",
+    "dealership": "Dealership",
+    "whyCartrade": "Why Cartrade?",
     "dealerships": "Dealerships",
     "showroom": "Showroom",
     "sellMyCar": "Sell my car",
@@ -51,6 +53,17 @@
     "terms": "Terms of Service",
     "contact": "Contact"
   },
+  "whyCartrade": {
+    "title": "Why Cartrade?",
+    "subtitle": "The smarter way to buy and sell cars. Trust, transparency, and convenience in one place.",
+    "reason1Title": "Verified listings",
+    "reason1Desc": "Every car on Cartrade is listed with key details so you know what you're getting. Browse with confidence.",
+    "reason2Title": "Sell in minutes",
+    "reason2Desc": "Get an instant cash offer or list your car yourself. You choose how you want to sell.",
+    "reason3Title": "Local dealerships",
+    "reason3Desc": "Find dealerships near you, compare prices, and book test drives—all in one place.",
+    "browseCars": "Browse cars"
+  },
   "hero": {
     "title": "Find Your Perfect Drive",
     "subtitle": "Browse thousands of verified cars or sell yours in minutes.",
@@ -60,6 +73,7 @@
     "anyMake": "Any Make",
     "anyModel": "Any Model",
     "anyBodyType": "Any body type",
+    "bodyTypeHeading": "Looking for a specific size?",
     "allStates": "All States",
     "locationPlaceholder": "e.g. Sydney, NSW",
     "minPrice": "Min price",
