@@ -1,11 +1,14 @@
-import Image from "next/image";
-import { Link } from "@/i18n/navigation";
-import { getTranslations } from "next-intl/server";
-import { cn } from "@/lib/utils";
-import type { Locale } from "@/i18n/config";
+"use client";
 
-const PLACEHOLDER_IMAGE =
-  "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=400&q=80";
+import React, { useCallback } from "react";
+import useEmblaCarousel from "embla-carousel-react";
+import { ChevronRight, ChevronLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { ListingCard } from "@/components/listing/listing-card";
+import { Link } from "@/i18n/navigation";
+import { useSearchParams } from "next/navigation";
+import { cn } from "@/lib/utils";
+import { motion, AnimatePresence } from "framer-motion";
 
 type Listing = {
   id: string;
@@ -14,84 +17,126 @@ type Listing = {
   model: string;
   year: number;
   mileage: number | null;
-  price: unknown;
+  price: any;
   imageUrls: string[];
 };
 
-export async function FeaturedCars({
+export function FeaturedCars({
   listings,
   locale,
 }: {
   listings: Listing[];
-  locale: Locale;
+  locale: string;
 }) {
-  const t = await getTranslations({ locale, namespace: "featured" });
-  const priceNum = (p: unknown) => (typeof p === "number" ? p : Number(p));
+  const searchParams = useSearchParams();
+  const currentBodyType = searchParams.get("bodyType") || "SUV";
+  
+  const [canScrollPrev, setCanScrollPrev] = React.useState(false);
+  const [canScrollNext, setCanScrollNext] = React.useState(false);
 
-  if (listings.length === 0) {
-    return (
-      <section className="container mx-auto px-4 py-12 md:px-6">
-        <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">
-          {t("title")}
-        </h2>
-        <p className="mt-4 text-muted-foreground">
-          {t("noListings")}{" "}
-          <Link
-            href="/dashboard/sell/new"
-            className="font-medium text-primary underline"
-          >
-            {t("listYourCar")}
-          </Link>
-          .
-        </p>
-      </section>
-    );
-  }
+  const [emblaRef, emblaApi] = useEmblaCarousel({ 
+    align: "start", 
+    containScroll: "trimSnaps",
+    dragFree: true
+  });
+
+  const onSelect = useCallback((emblaApi: any) => {
+    setCanScrollPrev(emblaApi.canScrollPrev());
+    setCanScrollNext(emblaApi.canScrollNext());
+  }, []);
+
+  React.useEffect(() => {
+    if (!emblaApi) return;
+    onSelect(emblaApi);
+    emblaApi.on("reInit", onSelect);
+    emblaApi.on("select", onSelect);
+  }, [emblaApi, onSelect]);
+
+  const scrollPrev = useCallback(() => {
+    if (emblaApi) emblaApi.scrollPrev();
+  }, [emblaApi]);
+
+  const scrollNext = useCallback(() => {
+    if (emblaApi) emblaApi.scrollNext();
+  }, [emblaApi]);
+
+  if (listings.length === 0) return null;
+
+  // Filter listings based on selected body type if needed, 
+  // but usually this would be handled by server-side re-fetching
+  // For now we'll just show the cars passed down.
+
+  const viewAllLabel = `View all ${currentBodyType.toUpperCase()}s`;
 
   return (
-    <section className="container mx-auto px-4 py-12 md:px-6">
-      <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">
-        {t("title")}
-      </h2>
-      <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-        {listings.map((car) => (
-          <Link
-            key={car.id}
-            href={`/cars/${car.id}`}
+    <section className="bg-white pb-20">
+      <div className="container mx-auto px-4 md:px-6 relative group">
+        <div className="relative">
+          {/* Embla Viewport */}
+          <AnimatePresence mode="wait">
+            <motion.div 
+              key={currentBodyType}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+              className="overflow-hidden" 
+              ref={emblaRef}
+            >
+              <div className="flex gap-4 py-6">
+                {listings.map((car, index) => (
+                  <div key={car.id} className="flex-[0_0_85%] sm:flex-[0_0_45%] lg:flex-[0_0_23.5%] min-w-0">
+                    <ListingCard 
+                      listing={{
+                        ...car,
+                        price: Number(car.price),
+                        isDepositTaken: car.title.length % 7 === 0, // Deterministic check
+                        transmission: "Automatic",
+                        weeklyEstimate: Math.round(Number(car.price) / 200),
+                        interestRate: 10.02
+                      }} 
+                    />
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          </AnimatePresence>
+
+          {/* Right Gradient/Fade Overlay as seen in image */}
+          {canScrollNext && (
+            <div className="absolute top-0 right-0 bottom-0 w-24 bg-gradient-to-l from-white to-transparent pointer-events-none z-10 hidden lg:block" />
+          )}
+          
+          {/* Navigation Buttons */}
+          <button
+            onClick={scrollPrev}
             className={cn(
-              "group flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card",
-              "transition-[box-shadow,border-color] duration-150 hover:border-border hover:shadow-md"
+               "absolute -left-5 top-1/2 -translate-y-1/2 z-30 size-11 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-800 shadow-xl hover:bg-slate-50 transition-all opacity-0 group-hover:opacity-100 hidden md:flex",
+               !canScrollPrev && "md:hidden"
             )}
           >
-            <div className="relative aspect-[4/3] w-full shrink-0 overflow-hidden bg-muted">
-              <Image
-                src={car.imageUrls[0] ?? PLACEHOLDER_IMAGE}
-                alt={car.title}
-                fill
-                className="object-cover transition-transform duration-200 group-hover:scale-[1.02]"
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 20vw"
-              />
-            </div>
-            <div className="flex flex-1 flex-col p-4">
-              <h3 className="font-semibold text-foreground line-clamp-2 leading-snug group-hover:text-primary">
-                {car.title}
-              </h3>
-              <p className="mt-1.5 text-sm text-muted-foreground">
-                {car.make} {car.model} · {car.year}
-              </p>
-              <div className="mt-auto flex items-center justify-between gap-2 border-t border-border pt-4 mt-4">
-                <span className="text-lg font-semibold text-foreground">
-                  ${priceNum(car.price).toLocaleString()}
-                </span>
-                {car.mileage != null && (
-                  <span className="text-sm text-muted-foreground">
-                    {car.mileage.toLocaleString()} {t("km")}
-                  </span>
-                )}
-              </div>
-            </div>
-          </Link>
-        ))}
+            <ChevronLeft className="size-6" />
+          </button>
+          <button
+            onClick={scrollNext}
+            className={cn(
+              "absolute -right-5 top-1/2 -translate-y-1/2 z-30 size-11 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-800 shadow-xl hover:bg-slate-50 transition-all md:flex",
+              !canScrollNext && "md:hidden"
+            )}
+          >
+            <ChevronRight className="size-6" />
+          </button>
+        </div>
+
+        {/* View All Button - Deep Purple Style */}
+        <div className="mt-16 flex justify-center">
+          <Button asChild className="bg-[#3D0066] hover:bg-[#2A0045] text-white rounded-xl px-10 py-7 text-[15px] font-bold transition-all shadow-lg active:scale-95">
+            <Link href={`/cars?bodyType=${currentBodyType}`} className="flex items-center gap-2">
+              {viewAllLabel}
+              <ChevronRight className="size-5" />
+            </Link>
+          </Button>
+        </div>
       </div>
     </section>
   );

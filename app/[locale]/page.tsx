@@ -10,29 +10,38 @@ import type { Locale } from "@/i18n/config";
 
 type Props = {
   params: Promise<{ locale: string }>;
+  searchParams: Promise<{ bodyType?: string }>;
 };
 
-export default async function Home({ params }: Props) {
+export default async function Home({ params, searchParams }: Props) {
   const { locale } = await params;
+  const { bodyType } = await searchParams;
+  
   const validLocale: Locale =
     locale && routing.locales.includes(locale as Locale)
       ? (locale as Locale)
       : routing.defaultLocale;
 
   const listings = await prisma.listing.findMany({
-    where: { status: "active" },
+    where: { 
+      status: "active",
+      ...(bodyType ? { bodyType: { equals: bodyType, mode: 'insensitive' } } : {})
+    },
     orderBy: { createdAt: "desc" },
-    take: 10,
+    take: 12,
   });
-  const resolvedListings = listings.map(resolveListing);
+  const resolvedListings = listings.map((l: any) => ({
+    ...resolveListing(l),
+    price: Number(l.price)
+  }));
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <main className="flex-1 relative">
         <Hero />
-        <section className="pt-44 md:pt-56">
-          <PromoCards locale={validLocale} />
+        <section className="pt-16 md:pt-20">
+          {/* <PromoCards locale={validLocale} /> */}
           <BodyTypeFilter />
-          <FeaturedCars listings={resolvedListings} locale={validLocale} />
+          <FeaturedCars listings={resolvedListings} locale={validLocale as string} />
         </section>
       </main>
       <Footer locale={validLocale} />
