@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { resolveListing } from "@/lib/listing-images";
 
 export async function getOrCreateConversation(listingId: string) {
   const user = await getCurrentUser();
@@ -27,7 +28,13 @@ export async function getOrCreateConversation(listingId: string) {
   });
 
   if (existing) {
-    return { conversationId: existing.id, conversation: existing };
+    return {
+      conversationId: existing.id,
+      conversation: {
+        ...existing,
+        listing: resolveListing(existing.listing),
+      },
+    };
   }
 
   const created = await prisma.conversation.create({
@@ -44,7 +51,13 @@ export async function getOrCreateConversation(listingId: string) {
   });
 
   revalidatePath("/dashboard/messages");
-  return { conversationId: created.id, conversation: created };
+  return {
+    conversationId: created.id,
+    conversation: {
+      ...created,
+      listing: resolveListing(created.listing),
+    },
+  };
 }
 
 export async function sendMessage(conversationId: string, content: string) {
@@ -96,7 +109,10 @@ export async function getConversationsForUser() {
     orderBy: { updatedAt: "desc" },
   });
 
-  return conversations;
+  return conversations.map((c) => ({
+    ...c,
+    listing: resolveListing(c.listing),
+  }));
 }
 
 export async function getConversationWithMessages(conversationId: string) {
@@ -116,5 +132,5 @@ export async function getConversationWithMessages(conversationId: string) {
     },
   });
 
-  return conv;
+  return conv ? { ...conv, listing: resolveListing(conv.listing) } : null;
 }

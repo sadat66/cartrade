@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/db";
 import { ListingCard } from "@/components/listing/listing-card";
+import { resolveListing } from "@/lib/listing-images";
 import { Hero } from "@/components/landing/hero";
 import { BodyTypeFilter } from "@/components/landing/body-type-filter";
 import { getTranslations } from "next-intl/server";
@@ -69,6 +70,7 @@ export default async function CarsPage({ params, searchParams }: Props) {
         where,
         orderBy: { createdAt: "desc" },
     });
+    const resolvedListings = listings.map(resolveListing);
 
     return (
         <div className="min-h-screen bg-background pb-20">
@@ -90,11 +92,11 @@ export default async function CarsPage({ params, searchParams }: Props) {
                 <div className="mb-6">
                     <h1 className="text-2xl font-semibold tracking-tight md:text-3xl">Search Results</h1>
                     <p className="mt-1 text-sm text-muted-foreground">
-                        {listings.length} {listings.length === 1 ? "car" : "cars"} found
+                        {resolvedListings.length} {resolvedListings.length === 1 ? "car" : "cars"} found
                     </p>
                 </div>
 
-                {listings.length === 0 ? (
+                {resolvedListings.length === 0 ? (
                     <div className="rounded-xl border border-dashed border-border bg-muted/20 py-16 text-center">
                         <p className="text-muted-foreground">No cars match your search.</p>
                         <Link
@@ -106,7 +108,7 @@ export default async function CarsPage({ params, searchParams }: Props) {
                     </div>
                 ) : (
                     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                        {listings.map((listing) => (
+                        {resolvedListings.map((listing) => (
                             <ListingCard key={listing.id} listing={listing} kmLabel={t("km")} />
                         ))}
                     </div>

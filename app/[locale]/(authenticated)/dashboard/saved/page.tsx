@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Heart } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { routing } from "@/i18n/routing";
+import { resolveListing } from "@/lib/listing-images";
 import type { Locale } from "@/i18n/config";
 
 type Props = { params: Promise<{ locale: string }> };
@@ -28,17 +29,21 @@ export default async function SavedListingsPage({ params }: Props) {
     },
     orderBy: { createdAt: "desc" },
   });
+  const savedWithResolved = saved.map((item) => ({
+    ...item,
+    listing: resolveListing(item.listing),
+  }));
 
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold">{t("dashboard.saved.title")}</h1>
         <p className="text-muted-foreground">
-          {t("dashboard.saved.carCount", { count: saved.length })}
+          {t("dashboard.saved.carCount", { count: savedWithResolved.length })}
         </p>
       </div>
 
-      {saved.length === 0 ? (
+      {savedWithResolved.length === 0 ? (
         <p className="text-muted-foreground">
           {t("dashboard.saved.empty")}{" "}
           <Link href="/" className="font-medium text-primary underline">
@@ -48,7 +53,7 @@ export default async function SavedListingsPage({ params }: Props) {
         </p>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {saved.map((item: (typeof saved)[number]) => {
+          {savedWithResolved.map((item: (typeof savedWithResolved)[number]) => {
             const { listing } = item;
             return (
             <Link key={listing.id} href={`/cars/${listing.id}`}>

@@ -8,6 +8,7 @@ import type { Locale } from "@/i18n/config";
 import type { CurrentUser } from "@/lib/auth";
 import { getConversationsForUser } from "@/app/actions/conversation";
 import { prisma } from "@/lib/db";
+import { resolveListing } from "@/lib/listing-images";
 
 type SavedListingWithListing = {
   listing: {
@@ -39,6 +40,10 @@ export async function DashboardOverview({ user, locale }: Props) {
     }),
     getConversationsForUser(),
   ]);
+  const savedWithResolved = saved.map((item) => ({
+    ...item,
+    listing: resolveListing(item.listing),
+  }));
   const recentConversations = conversations.slice(0, 5);
 
   return (
@@ -87,16 +92,16 @@ export async function DashboardOverview({ user, locale }: Props) {
                   {t("dashboard.saved.title")}
                 </CardTitle>
                 <CardDescription>
-                  {t("dashboard.saved.carCount", { count: saved.length })}
+                  {t("dashboard.saved.carCount", { count: savedWithResolved.length })}
                 </CardDescription>
               </div>
-              {saved.length > 0 && (
+              {savedWithResolved.length > 0 && (
                 <Button variant="ghost" size="sm" asChild>
                   <Link href="/dashboard/saved">{t("dashboard.overview.viewAll")}</Link>
                 </Button>
               )}
             </CardHeader>
-            {saved.length === 0 ? (
+            {savedWithResolved.length === 0 ? (
               <CardContent>
                 <p className="text-muted-foreground text-sm">
                   {t("dashboard.saved.empty")}{" "}
@@ -110,7 +115,7 @@ export async function DashboardOverview({ user, locale }: Props) {
               <>
                 <CardContent>
                   <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                    {saved.map(({ listing }: SavedListingWithListing) => (
+                    {savedWithResolved.map(({ listing }: { listing: SavedListingWithListing["listing"] }) => (
                       <Link key={listing.id} href={`/cars/${listing.id}`}>
                         <div className="group overflow-hidden rounded-lg border bg-card transition-shadow hover:shadow-md">
                           <div className="relative aspect-[4/3] bg-muted">

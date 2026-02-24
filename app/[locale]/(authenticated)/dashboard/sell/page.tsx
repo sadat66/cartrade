@@ -3,6 +3,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { Button } from "@/components/ui/button";
 import { getTranslations } from "next-intl/server";
+import { resolveListing } from "@/lib/listing-images";
 import { routing } from "@/i18n/routing";
 import type { Locale } from "@/i18n/config";
 import { MyListingsGrid } from "./my-listings-grid";
@@ -26,7 +27,7 @@ export default async function MyListingsPage({ params }: Props) {
   });
 
   const serializedListings = listings.map((listing) => ({
-    ...listing,
+    ...resolveListing(listing),
     price: Number(listing.price),
   }));
 

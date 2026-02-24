@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { ListingActions } from "./listing-actions";
 import { getTranslations } from "next-intl/server";
 import { ListingLocationDisplay } from "@/components/listing/listing-location-display";
+import { resolveListing } from "@/lib/listing-images";
 
 export default async function ListingPage({
   params,
@@ -30,9 +31,10 @@ export default async function ListingPage({
 
   if (!listing) notFound();
 
+  const resolvedListing = resolveListing(listing);
   const t = await getTranslations();
-  const isSaved = savedIds.has(listing.id);
-  const isOwner = user?.id === listing.userId;
+  const isSaved = savedIds.has(resolvedListing.id);
+  const isOwner = user?.id === resolvedListing.userId;
   const isLoggedIn = !!user;
 
   return (
@@ -40,10 +42,10 @@ export default async function ListingPage({
       <div className="grid gap-8 md:grid-cols-5">
         <div className="md:col-span-3 space-y-4">
           <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg bg-muted">
-            {listing.imageUrls[0] ? (
+            {resolvedListing.imageUrls[0] ? (
               <Image
-                src={listing.imageUrls[0]}
-                alt={listing.title}
+                src={resolvedListing.imageUrls[0]}
+                alt={resolvedListing.title}
                 fill
                 className="object-cover"
                 priority
@@ -55,9 +57,9 @@ export default async function ListingPage({
               </div>
             )}
           </div>
-          {listing.imageUrls.length > 1 && (
+          {resolvedListing.imageUrls.length > 1 && (
             <div className="flex gap-2 overflow-x-auto pb-2">
-              {listing.imageUrls.slice(1, 5).map((url: string, i: number) => (
+              {resolvedListing.imageUrls.slice(1, 5).map((url: string, i: number) => (
                 <div
                   key={i}
                   className="relative h-20 w-28 shrink-0 overflow-hidden rounded-md bg-muted"
@@ -77,22 +79,22 @@ export default async function ListingPage({
 
         <div className="md:col-span-2 space-y-6">
           <div>
-            <h1 className="text-2xl font-bold">{listing.title}</h1>
+            <h1 className="text-2xl font-bold">{resolvedListing.title}</h1>
             <p className="text-muted-foreground">
-              {listing.make} {listing.model} · {listing.year}
-              {listing.mileage != null && ` · ${listing.mileage.toLocaleString()} km`}
+              {resolvedListing.make} {resolvedListing.model} · {resolvedListing.year}
+              {resolvedListing.mileage != null && ` · ${resolvedListing.mileage.toLocaleString()} km`}
             </p>
             <p className="mt-2 text-2xl font-bold">
-              ${Number(listing.price).toLocaleString()}
+              ${Number(resolvedListing.price).toLocaleString()}
             </p>
           </div>
 
           <ListingActions
-            listingId={listing.id}
+            listingId={resolvedListing.id}
             isSaved={isSaved}
             isOwner={isOwner}
             isLoggedIn={isLoggedIn}
-            sellerId={listing.userId}
+            sellerId={resolvedListing.userId}
           />
 
           <Card>
@@ -101,43 +103,43 @@ export default async function ListingPage({
             </CardHeader>
             <CardContent className="flex items-center gap-3 pt-0">
               <div className="relative h-10 w-10 overflow-hidden rounded-full bg-muted">
-                {listing.user.image ? (
+                {resolvedListing.user.image ? (
                   <Image
-                    src={listing.user.image}
-                    alt={listing.user.name ?? t("common.seller")}
+                    src={resolvedListing.user.image}
+                    alt={resolvedListing.user.name ?? t("common.seller")}
                     fill
                     className="object-cover"
                   />
                 ) : (
                   <span className="flex h-full w-full items-center justify-center text-sm font-medium text-muted-foreground">
-                    {(listing.user.name ?? "?").charAt(0).toUpperCase()}
+                    {(resolvedListing.user.name ?? "?").charAt(0).toUpperCase()}
                   </span>
                 )}
               </div>
               <div>
-                <p className="font-medium">{listing.user.name ?? t("common.seller")}</p>
+                <p className="font-medium">{resolvedListing.user.name ?? t("common.seller")}</p>
               </div>
             </CardContent>
           </Card>
 
-          {listing.description && (
+          {resolvedListing.description && (
             <Card>
               <CardContent className="pt-6">
                 <h2 className="font-semibold">{t("common.description")}</h2>
                 <p className="mt-2 text-muted-foreground whitespace-pre-wrap">
-                  {listing.description}
+                  {resolvedListing.description}
                 </p>
               </CardContent>
             </Card>
           )}
 
-          {(listing.location || listing.latitude != null || listing.longitude != null) && (
+          {(resolvedListing.location || resolvedListing.latitude != null || resolvedListing.longitude != null) && (
             <Card>
               <CardContent className="pt-6">
                 <ListingLocationDisplay
-                  location={listing.location}
-                  latitude={listing.latitude}
-                  longitude={listing.longitude}
+                  location={resolvedListing.location}
+                  latitude={resolvedListing.latitude}
+                  longitude={resolvedListing.longitude}
                 />
               </CardContent>
             </Card>

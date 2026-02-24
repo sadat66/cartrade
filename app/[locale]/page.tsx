@@ -3,6 +3,7 @@ import { Hero } from "@/components/landing/hero";
 import { BodyTypeFilter } from "@/components/landing/body-type-filter";
 import { PromoCards } from "@/components/landing/promo-cards";
 import { FeaturedCars } from "@/components/landing/featured-cars";
+import { resolveListing } from "@/lib/listing-images";
 import { Footer } from "@/components/landing/footer";
 import { routing } from "@/i18n/routing";
 import type { Locale } from "@/i18n/config";
@@ -23,6 +24,7 @@ export default async function Home({ params }: Props) {
     orderBy: { createdAt: "desc" },
     take: 10,
   });
+  const resolvedListings = listings.map(resolveListing);
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <main className="flex-1 relative">
@@ -30,7 +32,7 @@ export default async function Home({ params }: Props) {
         <section className="pt-44 md:pt-56">
           <PromoCards locale={validLocale} />
           <BodyTypeFilter />
-          <FeaturedCars listings={listings} locale={validLocale} />
+          <FeaturedCars listings={resolvedListings} locale={validLocale} />
         </section>
       </main>
       <Footer locale={validLocale} />
