@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import type { CurrentUser } from "@/lib/auth";
 import { UserMenu } from "./user-menu";
-import { LocaleSwitcher } from "@/components/locale-switcher";
+import { LocaleSwitcher } from "@/components/shared/locale-switcher";
 
 interface NavbarClientProps {
     user: CurrentUser | null;
@@ -83,35 +83,37 @@ export function NavbarClient({ user, translations: t }: NavbarClientProps) {
                             </Link>
                         </Button>
 
+                        <div className="hidden md:block border-l border-slate-200 h-6 mx-1" />
+
+                        <div className="hidden md:block">
+                            <LocaleSwitcher />
+                        </div>
+
                         {user ? (
-                            <div className="flex items-center gap-4">
-                                <Button asChild className="hidden md:flex bg-[#ff385c] hover:bg-[#e03150] text-white rounded-full px-6">
+                            <div className="flex items-center gap-3">
+                                <Button asChild className="hidden md:flex bg-[#ff385c] hover:bg-[#e03150] text-white rounded-full px-6 font-bold">
                                     <Link href="/dashboard/sell">{t.sellMyCar}</Link>
                                 </Button>
                                 <UserMenu user={user} />
                             </div>
                         ) : (
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-3">
+                                <Link
+                                    href="/login"
+                                    className="hidden lg:block text-[15px] font-bold text-slate-800 hover:text-[#ff385c]"
+                                >
+                                    {t.login}
+                                </Link>
+                                <Button asChild className="hidden md:flex bg-[#ff385c] hover:bg-[#e03150] text-white rounded-full px-6 font-bold">
+                                    <Link href="/login?next=/dashboard/sell">{t.sellMyCar}</Link>
+                                </Button>
                                 <Button variant="ghost" size="icon" asChild className="text-slate-700 hover:bg-slate-100 lg:hidden">
                                     <Link href="/login">
                                         <User className="size-5" />
                                     </Link>
                                 </Button>
-                                <Link
-                                    href="/login"
-                                    className="hidden lg:block text-[15px] font-semibold text-slate-800 hover:text-[#ff385c]"
-                                >
-                                    {t.login}
-                                </Link>
-                                <Button asChild className="hidden md:flex bg-[#ff385c] hover:bg-[#e03150] text-white rounded-full px-6">
-                                    <Link href="/login?next=/dashboard/sell">{t.sellMyCar}</Link>
-                                </Button>
                             </div>
                         )}
-
-                        <div className="hidden md:block">
-                            <LocaleSwitcher />
-                        </div>
 
                         {/* Mobile Menu Toggle */}
                         <Button
