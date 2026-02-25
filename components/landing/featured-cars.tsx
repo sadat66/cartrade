@@ -4,7 +4,7 @@ import React, { useCallback } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { ChevronRight, ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ListingCard } from "@/components/listing/listing-card";
+import { ListingCard, ListingCardSkeleton } from "@/components/listing/listing-card";
 import { Link } from "@/i18n/navigation";
 import { useSearchParams } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -60,12 +60,6 @@ export function FeaturedCars({
     if (emblaApi) emblaApi.scrollNext();
   }, [emblaApi]);
 
-  if (listings.length === 0) return null;
-
-  // Filter listings based on selected body type if needed, 
-  // but usually this would be handled by server-side re-fetching
-  // For now we'll just show the cars passed down.
-
   const viewAllLabel = `View all ${currentBodyType.toUpperCase()}s`;
 
   return (
@@ -83,21 +77,31 @@ export function FeaturedCars({
               className="overflow-hidden" 
               ref={emblaRef}
             >
-              <div className="flex gap-4 py-6">
-                {listings.map((car, index) => (
-                  <div key={car.id} className="flex-[0_0_85%] sm:flex-[0_0_45%] lg:flex-[0_0_23.5%] min-w-0">
-                    <ListingCard 
-                      listing={{
-                        ...car,
-                        price: Number(car.price),
-                        isDepositTaken: car.title.length % 7 === 0, // Deterministic check
-                        transmission: "Automatic",
-                        weeklyEstimate: Math.round(Number(car.price) / 200),
-                        interestRate: 10.02
-                      }} 
-                    />
+              <div className="flex gap-4 py-6 min-h-[400px]">
+                {listings.length > 0 ? (
+                  listings.map((car, index) => (
+                    <div key={car.id} className="flex-[0_0_85%] sm:flex-[0_0_45%] lg:flex-[0_0_23.5%] min-w-0">
+                      <ListingCard 
+                        listing={{
+                          ...car,
+                          price: Number(car.price),
+                          isDepositTaken: car.title.length % 7 === 0,
+                          transmission: "Automatic",
+                          weeklyEstimate: Math.round(Number(car.price) / 200),
+                          interestRate: 10.02
+                        }} 
+                      />
+                    </div>
+                  ))
+                ) : (
+                  <div className="flex flex-col items-center justify-center w-full py-12 text-center bg-slate-50/50 rounded-2xl border border-dashed border-slate-200">
+                    <div className="size-16 bg-slate-100 rounded-full flex items-center justify-center mb-4 text-slate-400">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                    </div>
+                    <h3 className="text-xl font-bold text-slate-800">No {currentBodyType}s found</h3>
+                    <p className="text-slate-500 mt-2 max-w-sm">We don't have any cars in this category right now. Please check back later or try a different size.</p>
                   </div>
-                ))}
+                )}
               </div>
             </motion.div>
           </AnimatePresence>

@@ -29,7 +29,7 @@ export function Hero({ showSearch = true }: { showSearch?: boolean }) {
       </div>
 
       {showSearch && (
-        <div className="absolute bottom-0 left-0 z-20 w-full translate-y-1/2">
+        <div className="absolute bottom-0 left-0 z-20 w-full translate-y-[65%]">
           <div className="container mx-auto px-4 md:px-6">
             <div className="mx-auto w-full max-w-5xl">
               <HeroSearchForm />

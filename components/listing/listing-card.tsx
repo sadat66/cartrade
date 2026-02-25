@@ -80,3 +80,21 @@ export function ListingCard({ listing, kmLabel = "km" }: ListingCardProps) {
     </div>
   );
 }
+export function ListingCardSkeleton() {
+  return (
+    <div className="flex h-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+      <div className="relative aspect-[4/3] w-full shrink-0 bg-slate-100 animate-pulse" />
+      <div className="flex flex-1 flex-col p-4 space-y-4">
+        <div className="space-y-2">
+          <div className="h-4 w-3/4 bg-slate-100 rounded animate-pulse" />
+          <div className="h-3 w-1/2 bg-slate-100 rounded animate-pulse" />
+        </div>
+        <div className="h-4 w-2/3 bg-slate-100 rounded animate-pulse" />
+        <div className="pt-4 border-t border-slate-100">
+          <div className="h-6 w-1/3 bg-slate-100 rounded animate-pulse" />
+          <div className="mt-2 h-3 w-1/2 bg-slate-100 rounded animate-pulse" />
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -8,6 +8,8 @@ import { Footer } from "@/components/landing/footer";
 import { routing } from "@/i18n/routing";
 import type { Locale } from "@/i18n/config";
 
+import { BudgetSection } from "@/components/landing/budget-section";
+
 type Props = {
   params: Promise<{ locale: string }>;
   searchParams: Promise<{ bodyType?: string }>;
@@ -22,18 +24,23 @@ export default async function Home({ params, searchParams }: Props) {
       ? (locale as Locale)
       : routing.defaultLocale;
 
-  const listings = await prisma.listing.findMany({
-    where: { 
-      status: "active",
-      ...(bodyType ? { bodyType: { equals: bodyType, mode: 'insensitive' } } : {})
-    },
+  // Fetch all active listings to be used in both sections
+  const allActiveListings = await prisma.listing.findMany({
+    where: { status: "active" },
     orderBy: { createdAt: "desc" },
-    take: 12,
+    take: 50,
   });
-  const resolvedListings = listings.map((l: any) => ({
+
+  const resolvedAllListings = allActiveListings.map((l: any) => ({
     ...resolveListing(l),
     price: Number(l.price)
   }));
+
+  // Featured listings based on bodyType filter
+  const featuredListings = bodyType 
+    ? resolvedAllListings.filter(l => l.bodyType?.toLowerCase() === bodyType.toLowerCase())
+    : resolvedAllListings.slice(0, 12);
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <main className="flex-1 relative">
@@ -41,7 +48,8 @@ export default async function Home({ params, searchParams }: Props) {
         <section className="pt-16 md:pt-20">
           {/* <PromoCards locale={validLocale} /> */}
           <BodyTypeFilter />
-          <FeaturedCars listings={resolvedListings} locale={validLocale as string} />
+          <FeaturedCars listings={featuredListings} locale={validLocale as string} />
+          <BudgetSection listings={resolvedAllListings} />
         </section>
       </main>
       <Footer locale={validLocale} />
