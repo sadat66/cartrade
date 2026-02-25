@@ -9,6 +9,7 @@ import { ProfileForm } from "./profile-form";
 import { getTranslations } from "next-intl/server";
 import { routing } from "@/i18n/routing";
 import type { Locale } from "@/i18n/config";
+import { Breadcrumb } from "@/components/shared/breadcrumb";
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -24,26 +25,35 @@ export default async function ProfilePage({ params }: Props) {
   const currentUser = user!;
 
   return (
-    <div className="mx-auto max-w-2xl space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold">{t("dashboard.profile.title")}</h1>
-        <p className="text-muted-foreground">{t("dashboard.profile.subtitle")}</p>
-      </div>
+    <div className="container mx-auto px-4 md:px-6 py-6 pt-8 lg:pt-14 space-y-6">
+      <Breadcrumb
+        items={[
+          { label: t("cars.breadcrumb.home"), href: "/" },
+          { label: t("dashboard.nav.dashboard"), href: "/dashboard" },
+          { label: t("dashboard.profile.title") }
+        ]}
+      />
+      <div className="mx-auto max-w-2xl space-y-6">
+        <div>
+          <h1 className="text-2xl font-bold">{t("dashboard.profile.title")}</h1>
+          <p className="text-muted-foreground">{t("dashboard.profile.subtitle")}</p>
+        </div>
 
-      <Card>
-        <CardContent className="pt-6">
-          <ProfileForm
-            user={{
-              name: currentUser.name,
-              email: currentUser.email,
-              phone: currentUser.phone,
-              location: currentUser.location,
-              bio: currentUser.bio,
-              image: currentUser.image,
-            }}
-          />
-        </CardContent>
-      </Card>
+        <Card>
+          <CardContent className="pt-6">
+            <ProfileForm
+              user={{
+                name: currentUser.name,
+                email: currentUser.email,
+                phone: currentUser.phone,
+                location: currentUser.location,
+                bio: currentUser.bio,
+                image: currentUser.image,
+              }}
+            />
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

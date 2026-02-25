@@ -50,7 +50,7 @@ export function MessagesLayoutClient({
                                         <Link href={`/dashboard/messages/${c.id}`} className="block w-full outline-none">
                                             <div className={cn(
                                                 "flex items-start gap-4 p-4 transition-all duration-200 hover:bg-slate-100/80 cursor-pointer w-full relative",
-                                                isActive ? "bg-red-50/50 hover:bg-red-50/80 before:absolute before:left-0 before:top-0 before:h-full before:w-1.5 before:bg-[#ff385c]" : "bg-white"
+                                                isActive ? "bg-purple-50/50 hover:bg-purple-50/80 before:absolute before:left-0 before:top-0 before:h-full before:w-1.5 before:bg-[#3D0066]" : "bg-white"
                                             )}>
                                                 <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full border-2 border-slate-100 shadow-sm bg-slate-50">
                                                     {other.image ? (
@@ -70,7 +70,7 @@ export function MessagesLayoutClient({
                                                             </span>
                                                         )}
                                                     </div>
-                                                    <p className="text-[#ff385c] text-[11px] font-bold uppercase tracking-wider truncate mb-1">
+                                                    <p className="text-[#3D0066] text-[11px] font-bold uppercase tracking-wider truncate mb-1">
                                                         {t.re} {listing.title}
                                                     </p>
                                                     {last && (

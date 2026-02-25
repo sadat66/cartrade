@@ -77,7 +77,7 @@ export async function DashboardOverview({ user, locale }: Props) {
                 <CardTitle>{t("dashboard.overview.welcomeBack", { name: user.name ?? user.email })}</CardTitle>
                 <CardDescription>{user.email}</CardDescription>
               </div>
-              <Button asChild className="shrink-0 bg-blue-600 hover:bg-blue-700 text-white">
+              <Button asChild className="shrink-0 bg-[#3D0066] hover:bg-[#2A0045] text-white rounded-full px-6 font-bold shadow-lg shadow-purple-900/10 transition-all active:scale-95">
                 <Link href="/dashboard/profile">{t("dashboard.overview.viewDetails")}</Link>
               </Button>
             </CardHeader>
@@ -197,8 +197,8 @@ export async function DashboardOverview({ user, locale }: Props) {
               />
             </CardHeader>
             <CardFooter>
-              <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white" asChild>
-                <Link href="/dashboard/sell/new">{t("promo.getOffer")}</Link>
+              <Button className="w-full bg-[#3D0066] hover:bg-[#2A0045] text-white rounded-xl font-bold transition-all shadow-md active:scale-[0.98]" asChild>
+                <Link href="/sell/new">{t("promo.getOffer")}</Link>
               </Button>
             </CardFooter>
           </Card>

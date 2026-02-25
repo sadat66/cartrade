@@ -7,6 +7,7 @@ import { Heart } from "lucide-react";
 import { saveListing, unsaveListing } from "@/app/actions/user";
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
+import { cn } from "@/lib/utils";
 
 type Props = {
   listingId: string;
@@ -51,7 +52,7 @@ export function ListingActions({
           </Link>
         </Button>
         {!isOwner && (
-          <Button asChild size="sm" className="bg-blue-600 hover:bg-blue-700">
+          <Button asChild size="sm" className="bg-[#3D0066] hover:bg-[#2A0045] text-white rounded-lg px-6 font-bold shadow-md shadow-purple-900/10 transition-all active:scale-95">
             <Link href={`/login?next=/cars/${listingId}`}>{t("listing.contactSeller")}</Link>
           </Button>
         )}
@@ -67,14 +68,18 @@ export function ListingActions({
         size="sm"
         onClick={handleSave}
         disabled={pending}
+        className={cn(
+          "rounded-lg px-4 transition-all",
+          isSaved && "bg-slate-900 text-white hover:bg-slate-800 border-transparent shadow-md"
+        )}
       >
         <Heart
-          className={`size-4 mr-1.5 ${isSaved ? "fill-current" : ""}`}
+          className={cn("size-4 mr-1.5", isSaved && "fill-current")}
         />
         {isSaved ? t("common.saved") : t("listing.save")}
       </Button>
       {!isOwner && (
-        <Button asChild size="sm" className="bg-blue-600 hover:bg-blue-700">
+        <Button asChild size="sm" className="bg-[#3D0066] hover:bg-[#2A0045] text-white rounded-lg px-6 font-bold shadow-md shadow-purple-900/10 transition-all active:scale-95">
           <Link href={`/cars/${listingId}/contact`}>{t("listing.contactSeller")}</Link>
         </Button>
       )}

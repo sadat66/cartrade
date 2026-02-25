@@ -113,7 +113,7 @@ export default async function ListingPage({
             <Card className="border border-slate-200/60 shadow-md overflow-hidden bg-white/80 backdrop-blur-sm rounded-2xl">
               <CardContent className="p-6 md:p-8">
                 <h2 className="text-2xl font-bold mb-6 text-slate-800 flex items-center gap-2">
-                  <FileText className="size-6 text-[#ff385c]" />
+                  <FileText className="size-6 text-[#3D0066]" />
                   {t("common.description")}
                 </h2>
                 <div className="prose prose-slate max-w-none text-slate-700 leading-relaxed whitespace-pre-wrap text-base md:text-lg">
@@ -130,7 +130,7 @@ export default async function ListingPage({
 
           <Card className="border-0 shadow-xl overflow-hidden rounded-3xl bg-white ring-1 ring-slate-200/50">
             {/* Price Header */}
-            <div className="bg-slate-900 border-b-4 border-[#ff385c] text-white p-6 pb-8 shadow-sm">
+            <div className="bg-slate-900 border-b-4 border-[#3D0066] text-white p-6 pb-8 shadow-sm">
               <p className="text-sm text-slate-400 font-bold uppercase tracking-wider mb-2">Asking Price</p>
               <div className="text-4xl lg:text-5xl font-extrabold tracking-tight">
                 ${Number(resolvedListing.price).toLocaleString()}
@@ -180,8 +180,8 @@ export default async function ListingPage({
                   )}
                 </div>
                 <div className="min-w-0">
-                  <p className="text-xs font-bold text-[#ff385c] uppercase tracking-wider mb-0.5">{t("common.seller")}</p>
-                  <h3 className="text-lg font-bold text-slate-900 group-hover:text-[#ff385c] transition-colors truncate">{resolvedListing.user.name ?? t("common.seller")}</h3>
+                  <p className="text-xs font-bold text-[#3D0066] uppercase tracking-wider mb-0.5">{t("common.seller")}</p>
+                  <h3 className="text-lg font-bold text-slate-900 group-hover:text-[#3D0066] transition-colors truncate">{resolvedListing.user.name ?? t("common.seller")}</h3>
                 </div>
               </div>
             </CardContent>
@@ -192,7 +192,7 @@ export default async function ListingPage({
             <Card className="border-none shadow-md rounded-3xl overflow-hidden ring-1 ring-slate-200/50">
               <CardHeader className="bg-slate-50 border-b border-slate-100 pb-4 px-6 pt-5">
                 <h3 className="font-bold text-slate-800 flex items-center gap-2">
-                  <MapPin className="size-5 text-[#ff385c]" />
+                  <MapPin className="size-5 text-[#3D0066]" />
                   Location
                 </h3>
               </CardHeader>
