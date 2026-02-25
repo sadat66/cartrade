@@ -5,6 +5,7 @@ import { Link } from "@/i18n/navigation";
 import { FilterSidebar } from "./filter-sidebar";
 import { SortSelect } from "./sort-select";
 import { CarsControls } from "./cars-controls";
+import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { ChevronRight, CarFront, RotateCcw, Search } from "lucide-react";
 
 type SearchParams = { [key: string]: string | undefined };
@@ -18,6 +19,7 @@ export default async function CarsPage({ params, searchParams }: Props) {
     const sParams = await searchParams;
 
     const {
+        q,
         make,
         model,
         minPrice,
@@ -38,6 +40,15 @@ export default async function CarsPage({ params, searchParams }: Props) {
 
     // --- Build Prisma Query ---
     const where: any = { status: "active" };
+
+    if (q) {
+        where.OR = [
+            { title: { contains: String(q), mode: "insensitive" } },
+            { make: { contains: String(q), mode: "insensitive" } },
+            { model: { contains: String(q), mode: "insensitive" } },
+            { bodyType: { contains: String(q), mode: "insensitive" } },
+        ];
+    }
 
     if (make) {
         where.make = { contains: String(make), mode: "insensitive" };
@@ -146,12 +157,13 @@ export default async function CarsPage({ params, searchParams }: Props) {
     return (
         <div className="min-h-screen lg:h-[calc(100vh-80px)] lg:overflow-hidden bg-[#F8FAFC]">
             <div className="container mx-auto px-4 md:px-6 h-full flex flex-col py-6 pt-8 lg:pt-14">
-                {/* Breadcrumbs */}
-                <nav className="flex items-center gap-2 text-xs font-bold text-slate-400 mb-6 uppercase tracking-widest shrink-0">
-                  <Link href="/" className="hover:text-slate-900 transition-colors">Home</Link>
-                  <ChevronRight className="size-3" />
-                  <span className="text-slate-900">Cars</span>
-                </nav>
+                <Breadcrumb 
+                  items={[
+                    { label: "Home", href: "/" },
+                    { label: "Cars" }
+                  ]}
+                  className="mb-6"
+                />
 
                 <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-start lg:flex-1 lg:min-h-0">
                     {/* Sidebar - Desktop Only */}

@@ -11,17 +11,17 @@ import { aiSearchAction } from "@/app/actions/ai-search";
 
 export function HeroSearchForm() {
   const searchParams = useSearchParams();
+  const [searchQuery, setSearchQuery] = useState(searchParams.get("q") || searchParams.get("model") || "");
   const [aiQuery, setAiQuery] = useState("");
   const [isAiSearching, setIsAiSearching] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState(searchParams.get("model") || "");
 
   const locale = useLocale();
   const router = useRouter();
   const t = useTranslations("hero");
 
   useEffect(() => {
-    setSearchQuery(searchParams.get("model") || "");
+    setSearchQuery(searchParams.get("q") || searchParams.get("model") || "");
   }, [searchParams]);
 
   const onAiSearch = async () => {
@@ -39,7 +39,7 @@ export function HeroSearchForm() {
 
   const onSearch = () => {
     const params = new URLSearchParams();
-    if (searchQuery.trim()) params.append("model", searchQuery.trim());
+    if (searchQuery.trim()) params.append("q", searchQuery.trim());
     router.push(`/${locale}/cars?${params.toString()}`);
   };
 
