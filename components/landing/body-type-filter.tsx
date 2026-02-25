@@ -17,12 +17,13 @@ const BODY_TYPES = [
   { key: "unique", label: "Unique", image: "/herocar/Unique.png" },
 ] as const;
 
-export function BodyTypeFilter() {
-  const locale = useLocale();
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const currentBodyType = searchParams.get("bodyType") || "suv";
-  
+export function BodyTypeFilter({ 
+  activeBodyType, 
+  onBodyTypeChange 
+}: { 
+  activeBodyType: string;
+  onBodyTypeChange: (type: string) => void;
+}) {
   const [indicatorProps, setIndicatorProps] = useState({ left: 0, width: 0, opacity: 0 });
   const tabsRef = useRef<HTMLDivElement>(null);
   const activeTabRef = useRef<HTMLButtonElement>(null);
@@ -40,20 +41,13 @@ export function BodyTypeFilter() {
   }, []);
 
   useEffect(() => {
-    // Small delay to ensure browser has painted and refs are populated
     const timer = setTimeout(updateIndicator, 50);
     window.addEventListener('resize', updateIndicator);
     return () => {
       clearTimeout(timer);
       window.removeEventListener('resize', updateIndicator);
     };
-  }, [currentBodyType, updateIndicator]);
-
-  const handleSelect = (key: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("bodyType", key);
-    router.push(`?${params.toString()}`, { scroll: false });
-  };
+  }, [activeBodyType, updateIndicator]);
 
   return (
     <div className="bg-white pt-12 pb-2">
@@ -63,13 +57,13 @@ export function BodyTypeFilter() {
         <div className="relative border-b border-slate-100 mb-8">
           <div ref={tabsRef} className="flex flex-wrap items-end gap-x-8 md:gap-x-12 relative pb-4">
             {BODY_TYPES.map((type) => {
-              const isSelected = currentBodyType === type.key;
+              const isSelected = activeBodyType === type.key;
               return (
                 <button
                   key={type.key}
                   ref={isSelected ? activeTabRef : null}
                   type="button"
-                  onClick={() => handleSelect(type.key)}
+                  onClick={() => onBodyTypeChange(type.key)}
                   className={cn(
                     "flex flex-col items-center group relative min-w-[50px] transition-all duration-500 ease-out",
                     isSelected ? "opacity-100 scale-105" : "opacity-35 hover:opacity-100 grayscale"
