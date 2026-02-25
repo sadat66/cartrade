@@ -3,11 +3,11 @@ import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { getConversationWithMessages } from "@/app/actions/conversation";
 import { getCurrentUser } from "@/lib/auth";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { MessageForm } from "./message-form";
 import { getTranslations } from "next-intl/server";
 import { routing } from "@/i18n/routing";
 import type { Locale } from "@/i18n/config";
+import { ArrowLeft, ExternalLink } from "lucide-react";
 
 type Props = { params: Promise<{ locale: string; id: string }> };
 
@@ -19,75 +19,105 @@ export default async function ConversationPage({ params }: Props) {
     locale && routing.locales.includes(locale as Locale)
       ? (locale as Locale)
       : routing.defaultLocale;
+
   const user = await getCurrentUser();
-  if (!user) redirect({ href: "/login?next=/dashboard/messages/" + id, locale: validLocale });
+  if (!user) return redirect({ href: "/login?next=/dashboard/messages/" + id, locale: validLocale });
+
   const conv = await getConversationWithMessages(id);
-  if (!conv) redirect({ href: "/dashboard/messages", locale: validLocale });
+  if (!conv) return redirect({ href: "/dashboard/messages", locale: validLocale });
+
   const t = await getTranslations({ locale: validLocale });
-  const other = conv!.buyerId === user!.id ? conv!.seller : conv!.buyer;
+  const other = conv.buyerId === user.id ? conv.seller : conv.buyer;
 
   return (
-    <div className="mx-auto max-w-2xl space-y-4">
-      <Link
-        href="/dashboard/messages"
-        className="text-sm font-medium text-primary hover:underline"
-      >
-        ← {t("dashboard.messages.browseListings")}
-      </Link>
+    <div className="flex flex-col h-full w-full bg-slate-50 relative animate-in fade-in-0 duration-300">
 
-      <Card>
-        <CardHeader className="border-b py-4">
-          <div className="flex items-center gap-3">
-            <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full bg-muted">
-              {other.image ? (
-                <Image
-                  src={other.image}
-                  alt={other.name ?? t("common.user")}
-                  fill
-                  className="object-cover"
-                />
-              ) : (
-                <span className="flex h-full w-full items-center justify-center text-sm font-medium text-muted-foreground">
-                  {(other.name ?? "?").charAt(0).toUpperCase()}
-                </span>
-              )}
+      {/* Header */}
+      <div className="flex items-center gap-4 border-b border-slate-200 bg-white/95 p-4 px-6 backdrop-blur-md shadow-sm z-10 shrink-0">
+        {/* Mobile Back Button */}
+        <Link href="/dashboard/messages" className="md:hidden p-2 -ml-2 text-slate-500 hover:text-slate-800 transition-colors">
+          <ArrowLeft className="size-5" />
+        </Link>
+        <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full border border-slate-200 shadow-sm bg-slate-50">
+          {other.image ? (
+            <Image src={other.image} alt={other.name ?? t("common.user")} fill className="object-cover" sizes="48px" />
+          ) : (
+            <span className="flex h-full w-full items-center justify-center text-lg font-bold text-slate-400">
+              {(other.name ?? "?").charAt(0).toUpperCase()}
+            </span>
+          )}
+        </div>
+        <div className="min-w-0 flex-1 pt-0.5">
+          <p className="text-[17px] font-bold text-slate-900 truncate">{other.name ?? t("dashboard.messages.unknown")}</p>
+          <Link href={`/cars/${conv.listing.id}`} className="text-[#ff385c] hover:text-[#e03150] text-xs font-bold uppercase tracking-wider hover:underline flex items-center gap-1.5 truncate transition-colors">
+            {t("dashboard.messages.re")} {conv.listing.title} <ExternalLink className="size-3" />
+          </Link>
+        </div>
+      </div>
+
+      {/* Messages Scroll Area */}
+      <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-6 flex flex-col justify-end bg-slate-50/50">
+        <div className="flex flex-col space-y-4 pt-10">
+          {conv.messages.length === 0 && (
+            <div className="flex h-full items-center justify-center pt-20">
+              <p className="text-sm font-medium text-slate-400 italic">No messages yet. Send a message to start the conversation.</p>
             </div>
-            <div>
-              <p className="font-semibold">{other.name ?? t("dashboard.messages.unknown")}</p>
-              <Link
-                href={`/cars/${conv!.listing.id}`}
-                className="text-muted-foreground text-sm hover:underline"
-              >
-                {t("dashboard.messages.re")} {conv!.listing.title}
-              </Link>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-4 py-4">
-          <div className="space-y-3">
-            {conv!.messages.map((m: MessageItem) => {
-              const isMe = m.senderId === user!.id;
-              return (
-                <div
-                  key={m.id}
-                  className={`flex ${isMe ? "justify-end" : "justify-start"}`}
-                >
-                  <div
-                    className={`max-w-[85%] rounded-lg px-3 py-2 text-sm ${
-                      isMe
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-muted"
-                    }`}
-                  >
-                    {m.content}
+          )}
+
+          {conv.messages.map((m: MessageItem) => {
+            const isMe = m.senderId === user!.id;
+            const senderImage = isMe ? user!.image : other.image;
+            const senderName = isMe ? user!.name : other.name;
+            const fallbackChar = (senderName ?? "?").charAt(0).toUpperCase();
+
+            return (
+              <div key={m.id} className={`flex w-full ${isMe ? "justify-end" : "justify-start"} items-end gap-2 group`}>
+                {!isMe && (
+                  <div className="relative h-8 w-8 shrink-0 overflow-hidden rounded-full border border-slate-200 bg-slate-100 mb-1 shadow-sm">
+                    {senderImage ? (
+                      <Image src={senderImage} alt={senderName ?? "User"} fill className="object-cover" sizes="32px" />
+                    ) : (
+                      <span className="flex h-full w-full items-center justify-center text-xs font-bold text-slate-400">
+                        {fallbackChar}
+                      </span>
+                    )}
                   </div>
+                )}
+
+                <div
+                  className={`relative max-w-[75%] md:max-w-[70%] px-5 py-3 text-[15px] shadow-sm leading-relaxed ${isMe
+                    ? "bg-[#ff385c] text-white rounded-2xl rounded-br-sm shadow-[#ff385c]/10"
+                    : "bg-white border border-slate-100 text-slate-800 rounded-2xl rounded-bl-sm shadow-slate-200/40"
+                    }`}
+                >
+                  {m.content}
+                  <span className={`block text-[10px] font-bold uppercase tracking-wider mt-1.5 ${isMe ? 'text-red-100 text-right' : 'text-slate-400 text-left'}`}>
+                    {new Date(m.createdAt).toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' })}
+                  </span>
                 </div>
-              );
-            })}
-          </div>
-          <MessageForm conversationId={conv!.id} />
-        </CardContent>
-      </Card>
+
+                {isMe && (
+                  <div className="relative h-8 w-8 shrink-0 overflow-hidden rounded-full border border-red-200 bg-[#ff385c] mb-1 shadow-sm">
+                    {senderImage ? (
+                      <Image src={senderImage} alt={senderName ?? "User"} fill className="object-cover" sizes="32px" />
+                    ) : (
+                      <span className="flex h-full w-full items-center justify-center text-xs font-bold text-white">
+                        {fallbackChar}
+                      </span>
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Input Area */}
+      <div className="p-4 md:px-6 md:py-5 bg-white border-t border-slate-200 shrink-0 shadow-[0_-4px_25px_-15px_rgba(0,0,0,0.1)] relative z-20">
+        <MessageForm conversationId={conv.id} />
+      </div>
+
     </div>
   );
 }
