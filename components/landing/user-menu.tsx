@@ -25,7 +25,7 @@ function getInitials(name: string | null, email: string) {
     }
     return name.slice(0, 2).toUpperCase();
   }
-  if (email) return email.slice(0, 2).toUpperCase();
+  if (email?.trim()) return email.trim().charAt(0).toUpperCase();
   return "?";
 }
 

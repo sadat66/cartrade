@@ -99,8 +99,8 @@ export async function getConversationsForUser() {
     },
     include: {
       listing: { select: { id: true, title: true, imageUrls: true } },
-      buyer: { select: { id: true, name: true, image: true } },
-      seller: { select: { id: true, name: true, image: true } },
+      buyer: { select: { id: true, name: true, image: true, email: true } },
+      seller: { select: { id: true, name: true, image: true, email: true } },
       messages: {
         orderBy: { createdAt: "desc" },
         take: 1,

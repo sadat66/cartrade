@@ -243,7 +243,7 @@ export async function DashboardOverview({ user, locale }: Props) {
                                 />
                               ) : (
                                 <span className="flex h-full w-full items-center justify-center text-sm font-medium text-muted-foreground">
-                                  {(other.name ?? "?").charAt(0).toUpperCase()}
+                                  {(other.name ?? other.email ?? "?").charAt(0).toUpperCase()}
                                 </span>
                               )}
                             </div>

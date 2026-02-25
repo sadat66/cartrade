@@ -43,7 +43,7 @@ export default async function ConversationPage({ params }: Props) {
             <Image src={other.image} alt={other.name ?? t("common.user")} fill className="object-cover" sizes="48px" />
           ) : (
             <span className="flex h-full w-full items-center justify-center text-lg font-bold text-slate-400">
-              {(other.name ?? "?").charAt(0).toUpperCase()}
+              {(other.name ?? other.email ?? "?").charAt(0).toUpperCase()}
             </span>
           )}
         </div>
@@ -68,7 +68,8 @@ export default async function ConversationPage({ params }: Props) {
             const isMe = m.senderId === user!.id;
             const senderImage = isMe ? user!.image : other.image;
             const senderName = isMe ? user!.name : other.name;
-            const fallbackChar = (senderName ?? "?").charAt(0).toUpperCase();
+            const senderEmail = isMe ? user!.email : other.email;
+            const fallbackChar = (senderName ?? senderEmail ?? "?").charAt(0).toUpperCase();
 
             return (
               <div key={m.id} className={`flex w-full ${isMe ? "justify-end" : "justify-start"} items-end gap-2 group`}>
