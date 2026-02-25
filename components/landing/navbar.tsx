@@ -24,6 +24,7 @@ export async function Navbar({ locale }: { locale: Locale }) {
       messages: t("header.messages"),
       notifications: t("header.notifications"),
       saved: t("header.saved"),
+      language: t("header.language"),
     };
   } catch (error) {
     console.error("Failed to get translations in Navbar:", error);
@@ -38,6 +39,7 @@ export async function Navbar({ locale }: { locale: Locale }) {
       messages: "Messages",
       notifications: "Notifications",
       saved: "Saved",
+      language: "Language",
     };
   }
 

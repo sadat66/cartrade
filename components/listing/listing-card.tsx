@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 import { Heart, Info } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 const PLACEHOLDER_IMAGE =
   "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=400&q=80";
@@ -24,15 +25,20 @@ type ListingCardProps = {
   kmLabel?: string;
 };
 
-export function ListingCard({ listing, kmLabel = "km" }: ListingCardProps) {
+export function ListingCard({ listing, kmLabel }: ListingCardProps) {
+  const t = useTranslations("listing");
+  const tc = useTranslations("cars.transmissions");
+  const tcom = useTranslations("common");
+  
   const price = typeof listing.price === "number" ? listing.price : Number(listing.price);
+  const activeKmLabel = kmLabel || tcom("km") || "km";
   
   return (
     <div className="group relative flex h-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition-all hover:shadow-md">
       {/* Absolute Badge */}
       {listing.isDepositTaken && (
         <div className="absolute left-3 top-3 z-10 rounded-full bg-slate-400/80 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white backdrop-blur-sm">
-          DEPOSIT TAKEN
+          {t("depositTaken")}
         </div>
       )}
 
@@ -60,11 +66,11 @@ export function ListingCard({ listing, kmLabel = "km" }: ListingCardProps) {
           </h3>
         </Link>
         <p className="text-[11px] font-medium text-slate-500 mt-0.5">
-          {listing.title.split('-')[1]?.trim() || "VARIENT (FWD)"}
+          {listing.title.split('-')[1]?.trim() || t("variantFallback")}
         </p>
         
         <div className="mt-2 text-[12px] font-medium text-slate-400">
-          {listing.mileage?.toLocaleString() || "0"} {kmLabel} <span className="mx-1">•</span> {listing.transmission || "Automatic"}
+          {listing.mileage?.toLocaleString() || "0"} {activeKmLabel} <span className="mx-1">•</span> {listing.transmission ? (tc.has(listing.transmission.toLowerCase()) ? tc(listing.transmission.toLowerCase()) : listing.transmission) : tc("automatic")}
         </div>
 
         <div className="mt-4">
@@ -72,7 +78,7 @@ export function ListingCard({ listing, kmLabel = "km" }: ListingCardProps) {
             ${price.toLocaleString()}
           </div>
           <div className="mt-2 flex items-center gap-1 text-[10px] font-medium text-slate-500">
-            est. ${listing.weeklyEstimate || Math.round(price / 200)}/wk based on {listing.interestRate || "10.02"}% p.a.
+            {t("weeklyEstimate", { amount: (listing.weeklyEstimate || Math.round(price / 200)).toLocaleString(), rate: listing.interestRate || "10.02" })}
             <Info className="size-3 opacity-50" />
           </div>
         </div>

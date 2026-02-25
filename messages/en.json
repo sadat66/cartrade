@@ -14,6 +14,7 @@
     "seller": "Seller",
     "description": "Description",
     "rego": "Registration number",
+    "km": "km",
     "toast": {
       "saving": "Saving…",
       "creating": "Creating…",
@@ -45,7 +46,8 @@
     "saved": "Saved",
     "messages": "Messages",
     "profile": "Profile",
-    "logOut": "Log out"
+    "logOut": "Log out",
+    "language": "Language"
   },
   "footer": {
     "rights": "© {year} Cartrade. All rights reserved.",
@@ -67,7 +69,19 @@
   "hero": {
     "title": "Find Your Perfect Drive",
     "subtitle": "Browse thousands of verified cars or sell yours in minutes.",
-    "searchPlaceholder": "Find your next car",
+    "heading": "Find your next car",
+    "quickSearch": "Quick search",
+    "newBadge": "NEW",
+    "aiTitle": "Quick Search & AI Assistant",
+    "aiDesc": "Search with natural language. Describe your dream car and our AI will find it.",
+    "aiPlaceholder": "e.g. White Toyota SUV under $40,000, low mileage, sunroof...",
+    "searching": "Searching…",
+    "askAi": "Ask AI",
+    "try": "Try",
+    "suggest1": "Luxury sedan with red interior",
+    "suggest2": "Family SUV for long trips",
+    "mainSearchPlaceholder": "Search make, model, or keywords...",
+    "mainSearchBtn": "Search cars",
     "search": "Search",
     "clearAll": "Clear all",
     "anyMake": "Any Make",
@@ -93,6 +107,66 @@
       "unique": "Unique"
     }
   },
+  "cars": {
+    "breadcrumb": {
+      "home": "Home",
+      "cars": "Cars"
+    },
+    "controls": {
+      "title": "Our cars",
+      "results": "{count} results",
+      "filters": "Filters"
+    },
+    "sort": {
+      "label": "Sort by",
+      "recommended": "Recommended",
+      "price_asc": "Price: Low to High",
+      "price_desc": "Price: High to Low",
+      "year_desc": "Newest Year"
+    },
+    "empty": {
+      "title": "No matches found",
+      "subtitle": "We couldn't find any results matching your filters. Try adjusting your search criteria.",
+      "reset": "Reset all filters"
+    },
+    "filters": {
+      "title": "Filters",
+      "clearAll": "CLEAR ALL",
+      "makeModel": "Make & Model",
+      "searchMake": "Search make...",
+      "priceRange": "Price Range",
+      "minPrice": "Min Price",
+      "maxPrice": "Max Price",
+      "kilometers": "Kilometers",
+      "minKm": "Min KM",
+      "maxKm": "Max KM",
+      "fuelType": "Fuel type",
+      "transmission": "Transmission",
+      "drivetrain": "Drivetrain",
+      "colour": "Colour",
+      "availableOnly": "Available Only",
+      "hideSold": "Hide sold cars",
+      "reset": "Reset",
+      "showResults": "Show results"
+    },
+    "fuelTypes": {
+      "petrol": "Petrol",
+      "diesel": "Diesel",
+      "electric": "Electric",
+      "hybrid": "Hybrid"
+    },
+    "transmissions": {
+      "automatic": "Automatic",
+      "manual": "Manual"
+    },
+    "colours": {
+      "white": "White",
+      "black": "Black",
+      "silver": "Silver",
+      "blue": "Blue",
+      "red": "Red"
+    }
+  },
   "promo": {
     "instantCashTitle": "Instant Cash Offer",
     "instantCashDesc": "Receive an immediate, no-obligation offer for your car in minutes. Get a fair price and sell when you're ready.",
@@ -105,8 +179,13 @@
   "featured": {
     "title": "Featured Cars",
     "noListings": "No listings yet. Be the first to",
-    "listYourCar": "list your car",
-    "km": "km"
+    "listYourCar": "list your car"
+  },
+  "newCars": {
+    "title": "New cars every day",
+    "noListings": "No new cars available",
+    "checkBack": "Check back soon for new listings!",
+    "browseAll": "Browse all cars"
   },
   "login": {
     "title": "Sign in",
@@ -202,6 +281,9 @@
   },
   "listing": {
     "contactSeller": "Contact seller",
-    "save": "Save"
+    "save": "Save",
+    "depositTaken": "Deposit Taken",
+    "variantFallback": "Variant (FWD)",
+    "weeklyEstimate": "est. ${amount}/wk based on {rate}% p.a."
   }
 }

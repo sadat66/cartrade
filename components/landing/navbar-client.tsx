@@ -22,6 +22,7 @@ interface NavbarClientProps {
         messages: string;
         notifications: string;
         saved: string;
+        language: string;
     };
 }
 
@@ -176,7 +177,7 @@ export function NavbarClient({ user, translations: t }: NavbarClientProps) {
                         )}
 
                         <div className="flex items-center justify-between pt-6 border-t border-slate-100">
-                            <span className="text-sm font-medium text-slate-500">Language</span>
+                            <span className="text-sm font-medium text-slate-500">{t.language}</span>
                             <LocaleSwitcher />
                         </div>
                     </nav>

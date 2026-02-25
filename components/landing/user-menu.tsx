@@ -78,7 +78,7 @@ export function UserMenu({ user }: { user: NonNullable<CurrentUser> }) {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-60 p-1 rounded-xl shadow-2xl border-slate-200">
         <div className="flex flex-col space-y-0.5 p-3 px-4">
-          <p className="text-sm font-black text-slate-900 truncate">{user.name || "User"}</p>
+          <p className="text-sm font-black text-slate-900 truncate">{user.name || t("common.user")}</p>
           <p className="text-[11px] font-bold text-slate-500 truncate">{user.email}</p>
         </div>
         <DropdownMenuSeparator className="mx-1 bg-slate-100" />

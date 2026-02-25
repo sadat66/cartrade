@@ -21,6 +21,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 // --- Types ---
 type CountItem = {
@@ -113,6 +114,37 @@ export function FilterSidebar({ makes, bodyTypes, currentFilters, isMobile, onCl
   const searchParams = useSearchParams();
   const [openSections, setOpenSections] = useState<string[]>(["make", "price"]);
   const [makeSearch, setMakeSearch] = useState("");
+  
+  const tf = useTranslations("cars.filters");
+  const tft = useTranslations("cars.fuelTypes");
+  const tt = useTranslations("cars.transmissions");
+  const tc = useTranslations("cars.colours");
+
+  const FUEL_TYPES = [
+    { key: "petrol", label: tft("petrol"), count: 12 },
+    { key: "diesel", label: tft("diesel"), count: 8 },
+    { key: "electric", label: tft("electric"), count: 3 },
+    { key: "hybrid", label: tft("hybrid"), count: 5 },
+  ];
+
+  const TRANSMISSIONS = [
+    { key: "automatic", label: tt("automatic"), count: 20 },
+    { key: "manual", label: tt("manual"), count: 8 },
+  ];
+
+  const DRIVETRAINS = [
+    { key: "fwd", label: "FWD", count: 15 },
+    { key: "rwd", label: "RWD", count: 5 },
+    { key: "awd", label: "AWD", count: 8 },
+  ];
+
+  const COLOURS = [
+    { key: "white", label: tc("white"), hex: "#FFFFFF", count: 10 },
+    { key: "black", label: tc("black"), hex: "#000000", count: 8 },
+    { key: "silver", label: tc("silver"), hex: "#C0C0C0", count: 5 },
+    { key: "blue", label: tc("blue"), hex: "#0000FF", count: 3 },
+    { key: "red", label: tc("red"), hex: "#FF0000", count: 2 },
+  ];
 
   const toggleSection = (section: string) => {
     setOpenSections(prev => 
@@ -151,14 +183,14 @@ export function FilterSidebar({ makes, bodyTypes, currentFilters, isMobile, onCl
               <X className="size-5" />
             </button>
           )}
-          <h2 className="text-xl font-black text-slate-900 tracking-tight">Filters</h2>
+          <h2 className="text-xl font-black text-slate-900 tracking-tight">{tf("title")}</h2>
         </div>
         <button 
           onClick={clearFilters}
           className="text-xs font-black text-[#4B0082] hover:underline flex items-center gap-1.5 transition-all"
         >
           <RotateCcw className="size-3.5" />
-          CLEAR ALL
+          {tf("clearAll")}
         </button>
       </div>
 
@@ -167,7 +199,7 @@ export function FilterSidebar({ makes, bodyTypes, currentFilters, isMobile, onCl
         
         {/* Make & Model */}
         <FilterSection 
-          title="Make & Model" 
+          title={tf("makeModel")} 
           icon={Car} 
           isOpen={openSections.includes("make")} 
           onToggle={() => toggleSection("make")}
@@ -175,7 +207,7 @@ export function FilterSidebar({ makes, bodyTypes, currentFilters, isMobile, onCl
           <div className="relative">
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-slate-400 pointer-events-none" />
             <Input 
-              placeholder="Search make..."
+              placeholder={tf("searchMake")}
               value={makeSearch}
               onChange={(e) => setMakeSearch(e.target.value)}
               className="pl-11 h-10 border-slate-200 rounded-xl focus:ring-[#4B0082]/20 focus:border-[#4B0082] bg-slate-50/50 text-sm"
@@ -217,14 +249,14 @@ export function FilterSidebar({ makes, bodyTypes, currentFilters, isMobile, onCl
 
         {/* Price */}
         <FilterSection 
-          title="Price Range" 
+          title={tf("priceRange")} 
           icon={DollarSign} 
           isOpen={openSections.includes("price")} 
           onToggle={() => toggleSection("price")}
         >
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Min Price</span>
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">{tf("minPrice")}</span>
               <div className="relative">
                 <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 font-bold">$</span>
                 <Input 
@@ -237,7 +269,7 @@ export function FilterSidebar({ makes, bodyTypes, currentFilters, isMobile, onCl
               </div>
             </div>
             <div className="space-y-1.5">
-              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Max Price</span>
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">{tf("maxPrice")}</span>
               <div className="relative">
                 <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 font-bold">$</span>
                 <Input 
@@ -254,14 +286,14 @@ export function FilterSidebar({ makes, bodyTypes, currentFilters, isMobile, onCl
 
         {/* Kilometers */}
         <FilterSection 
-          title="Kilometers" 
+          title={tf("kilometers")} 
           icon={Gauge} 
           isOpen={openSections.includes("km")} 
           onToggle={() => toggleSection("km")}
         >
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Min KM</span>
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">{tf("minKm")}</span>
               <Input 
                 type="number"
                 placeholder="0"
@@ -271,7 +303,7 @@ export function FilterSidebar({ makes, bodyTypes, currentFilters, isMobile, onCl
               />
             </div>
             <div className="space-y-1.5">
-              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Max KM</span>
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">{tf("maxKm")}</span>
               <Input 
                 type="number"
                 placeholder="Any"
@@ -285,7 +317,7 @@ export function FilterSidebar({ makes, bodyTypes, currentFilters, isMobile, onCl
 
         {/* Fuel Type */}
         <FilterSection 
-          title="Fuel type" 
+          title={tf("fuelType")} 
           icon={Fuel} 
           isOpen={openSections.includes("fuel")} 
           onToggle={() => toggleSection("fuel")}
@@ -314,7 +346,7 @@ export function FilterSidebar({ makes, bodyTypes, currentFilters, isMobile, onCl
 
         {/* Transmission */}
         <FilterSection 
-          title="Transmission" 
+          title={tf("transmission")} 
           icon={Settings2} 
           isOpen={openSections.includes("trans")} 
           onToggle={() => toggleSection("trans")}
@@ -339,7 +371,7 @@ export function FilterSidebar({ makes, bodyTypes, currentFilters, isMobile, onCl
 
         {/* Drivetrain */}
         <FilterSection 
-          title="Drivetrain" 
+          title={tf("drivetrain")} 
           icon={Lock} 
           isOpen={openSections.includes("drive")} 
           onToggle={() => toggleSection("drive")}
@@ -364,7 +396,7 @@ export function FilterSidebar({ makes, bodyTypes, currentFilters, isMobile, onCl
 
         {/* Colour */}
         <FilterSection 
-          title="Colour" 
+          title={tf("colour")} 
           icon={Palette} 
           isOpen={openSections.includes("colour")} 
           onToggle={() => toggleSection("colour")}
@@ -409,10 +441,10 @@ export function FilterSidebar({ makes, bodyTypes, currentFilters, isMobile, onCl
                 </div>
                 <div className="text-left">
                   <p className={cn("text-[13px] font-black tracking-tight", currentFilters.available === "true" ? "text-[#4B0082]" : "text-slate-800")}>
-                    Available Only
+                    {tf("availableOnly")}
                   </p>
                   <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">
-                    Hide sold cars
+                    {tf("hideSold")}
                   </p>
                 </div>
               </div>
@@ -436,13 +468,13 @@ export function FilterSidebar({ makes, bodyTypes, currentFilters, isMobile, onCl
             onClick={clearFilters}
             className="h-11 rounded-xl border border-slate-200 font-bold text-slate-600 active:scale-95 transition-all text-sm"
           >
-            Reset
+            {tf("reset")}
           </button>
           <button 
             onClick={onClose}
             className="h-11 rounded-xl bg-[#4B0082] text-white font-black active:scale-95 transition-all shadow-md shadow-[#4B0082]/10 text-sm"
           >
-            Show results
+            {tf("showResults")}
           </button>
         </div>
       )}

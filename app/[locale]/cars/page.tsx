@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/db";
+import { getTranslations } from "next-intl/server";
 import { ListingCard } from "@/components/listing/listing-card";
 import { resolveListing } from "@/lib/listing-images";
 import { Link } from "@/i18n/navigation";
@@ -154,13 +155,15 @@ export default async function CarsPage({ params, searchParams }: Props) {
         // Return empty arrays on error - the component will handle empty state
     }
 
+    const t = await getTranslations({ locale: (await params).locale });
+
     return (
         <div className="min-h-screen lg:h-[calc(100vh-80px)] lg:overflow-hidden bg-[#F8FAFC]">
             <div className="container mx-auto px-4 md:px-6 h-full flex flex-col py-6 pt-8 lg:pt-14">
                 <Breadcrumb 
                   items={[
-                    { label: "Home", href: "/" },
-                    { label: "Cars" }
+                    { label: t("cars.breadcrumb.home"), href: "/" },
+                    { label: t("cars.breadcrumb.cars") }
                   ]}
                   className="mb-6"
                 />
@@ -202,10 +205,10 @@ export default async function CarsPage({ params, searchParams }: Props) {
                                         </div>
                                         
                                         <h2 className="text-2xl lg:text-3xl font-black text-slate-900 mb-3 tracking-tight">
-                                            No matches found
+                                            {t("cars.empty.title")}
                                         </h2>
                                         <p className="text-slate-500 mb-8 lg:mb-10 max-w-[320px] font-bold leading-relaxed text-sm lg:text-base">
-                                            We couldn't find any results matching your filters. Try adjusting your search criteria.
+                                            {t("cars.empty.subtitle")}
                                         </p>
                                         
                                         <Link
@@ -213,7 +216,7 @@ export default async function CarsPage({ params, searchParams }: Props) {
                                             className="group flex items-center gap-3 bg-slate-900 hover:bg-[#4B0082] text-white rounded-2xl px-8 lg:px-10 py-4 lg:py-5 text-sm font-black transition-all active:scale-[0.98] shadow-xl shadow-slate-900/10"
                                         >
                                             <RotateCcw className="size-4 transition-transform group-hover:rotate-180 duration-700" />
-                                            <span>Reset all filters</span>
+                                            <span>{t("cars.empty.reset")}</span>
                                         </Link>
                                     </div>
                                 </div>
