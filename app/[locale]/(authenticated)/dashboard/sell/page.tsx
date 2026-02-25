@@ -29,6 +29,7 @@ export default async function MyListingsPage({ params }: Props) {
   const serializedListings = listings.map((listing) => ({
     ...resolveListing(listing),
     price: Number(listing.price),
+    createdAt: listing.createdAt.toISOString(),
   }));
 
   return (

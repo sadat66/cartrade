@@ -30,7 +30,7 @@ export function NavbarClient({ user, translations: t }: NavbarClientProps) {
 
     const navLinks = [
         { href: "/buy", label: t.buy },
-        { href: "/login?next=/dashboard/sell/new", label: t.sell },
+        { href: user ? "/dashboard/sell" : "/login?next=/dashboard/sell", label: t.sell },
         { href: "/dealerships", label: t.dealership },
         { href: "/why-cartrade", label: t.whyCartrade },
     ];
@@ -84,7 +84,10 @@ export function NavbarClient({ user, translations: t }: NavbarClientProps) {
                         </Button>
 
                         {user ? (
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-4">
+                                <Button asChild className="hidden md:flex bg-[#ff385c] hover:bg-[#e03150] text-white rounded-full px-6">
+                                    <Link href="/dashboard/sell">{t.sellMyCar}</Link>
+                                </Button>
                                 <UserMenu user={user} />
                             </div>
                         ) : (
@@ -145,7 +148,7 @@ export function NavbarClient({ user, translations: t }: NavbarClientProps) {
                             </Link>
                         ))}
 
-                        {!user && (
+                        {!user ? (
                             <div className="flex flex-col gap-4 pt-4">
                                 <Link
                                     href="/login"
@@ -156,6 +159,14 @@ export function NavbarClient({ user, translations: t }: NavbarClientProps) {
                                 </Link>
                                 <Button asChild className="bg-[#ff385c] hover:bg-[#e03150] text-white rounded-full w-full py-6 text-lg">
                                     <Link href="/login?next=/dashboard/sell" onClick={() => setIsMenuOpen(false)}>
+                                        {t.sellMyCar}
+                                    </Link>
+                                </Button>
+                            </div>
+                        ) : (
+                            <div className="flex flex-col gap-4 pt-4">
+                                <Button asChild className="bg-[#ff385c] hover:bg-[#e03150] text-white rounded-full w-full py-6 text-lg">
+                                    <Link href="/dashboard/sell" onClick={() => setIsMenuOpen(false)}>
                                         {t.sellMyCar}
                                     </Link>
                                 </Button>

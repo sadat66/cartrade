@@ -24,12 +24,13 @@ type Listing = {
 export function FeaturedCars({
   listings,
   locale,
+  activeBodyType,
 }: {
   listings: Listing[];
   locale: string;
+  activeBodyType: string;
 }) {
-  const searchParams = useSearchParams();
-  const currentBodyType = searchParams.get("bodyType") || "SUV";
+  const currentBodyType = activeBodyType;
   
   const [canScrollPrev, setCanScrollPrev] = React.useState(false);
   const [canScrollNext, setCanScrollNext] = React.useState(false);
