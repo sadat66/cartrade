@@ -29,6 +29,16 @@ function getInitials(name: string | null, email: string) {
   return "?";
 }
 
+function getColorFromSeed(seed: string) {
+  let hash = 0;
+  for (let i = 0; i < seed.length; i++) {
+    hash = seed.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const h = Math.abs(hash % 360);
+  // Using uniform saturation and lightness for a professional, balanced look
+  return `hsl(${h}, 65%, 45%)`;
+}
+
 export function UserMenu({ user }: { user: NonNullable<CurrentUser> }) {
   const [mounted, setMounted] = useState(false);
   const t = useTranslations();
@@ -38,10 +48,11 @@ export function UserMenu({ user }: { user: NonNullable<CurrentUser> }) {
   }, []);
 
   const initials = getInitials(user.name, user.email ?? "");
+  const userColor = getColorFromSeed(user.id || user.email || "default");
 
   if (!mounted) {
     return (
-      <div className="h-10 w-10 h-10 w-10 rounded-full border-2 border-white/20 bg-slate-600" />
+      <div className="h-12 w-12 rounded-full border-2 border-slate-200 bg-slate-100 animate-pulse" />
     );
   }
 
@@ -53,39 +64,51 @@ export function UserMenu({ user }: { user: NonNullable<CurrentUser> }) {
         )}
         aria-label={t("header.profile")}
       >
-        <Avatar className="h-10 w-10 border border-slate-200 shadow-sm">
+        <Avatar className="h-12 w-12 border-2 border-slate-200 shadow-sm transition-all hover:border-[#ff385c]/30">
           {user.image ? (
             <AvatarImage src={user.image} alt={user.name ?? undefined} />
           ) : null}
-          <AvatarFallback className="bg-slate-800 text-base text-white font-semibold">
+          <AvatarFallback 
+            className="text-lg text-white font-bold"
+            style={{ backgroundColor: userColor }}
+          >
             {initials}
           </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-48">
-        <DropdownMenuGroup>
-          <DropdownMenuItem asChild>
-            <Link href="/dashboard/profile">{t("dashboard.nav.profile")}</Link>
+      <DropdownMenuContent align="end" className="w-60 p-1 rounded-xl shadow-2xl border-slate-200">
+        <div className="flex flex-col space-y-0.5 p-3 px-4">
+          <p className="text-sm font-black text-slate-900 truncate">{user.name || "User"}</p>
+          <p className="text-[11px] font-bold text-slate-500 truncate">{user.email}</p>
+        </div>
+        <DropdownMenuSeparator className="mx-1 bg-slate-100" />
+        <DropdownMenuGroup className="p-1">
+          <DropdownMenuItem asChild className="rounded-lg focus:bg-slate-50 cursor-pointer py-2.5 px-3">
+            <Link href="/dashboard/profile" className="flex items-center font-bold text-slate-700 text-sm">
+              {t("dashboard.nav.profile")}
+            </Link>
           </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Link href="/dashboard">{t("dashboard.nav.dashboard")}</Link>
+          <DropdownMenuItem asChild className="rounded-lg focus:bg-slate-50 cursor-pointer py-2.5 px-3">
+            <Link href="/dashboard" className="flex items-center font-bold text-slate-700 text-sm">
+              {t("dashboard.nav.dashboard")}
+            </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
+        <DropdownMenuSeparator className="mx-1 bg-slate-100" />
+        <div className="p-1">
           <form action={signOut} id="header-signout-form" className="w-full">
-            <DropdownMenuItem asChild>
+            <DropdownMenuItem asChild className="rounded-lg focus:bg-red-50 cursor-pointer py-2.5 px-3">
               <button
                 type="submit"
                 form="header-signout-form"
-                className="flex w-full cursor-default items-center gap-2 text-left text-red-600 focus:bg-red-50 focus:text-red-700 dark:focus:bg-red-950/50 dark:focus:text-red-400"
+                className="flex w-full items-center gap-2 text-left font-bold text-red-600 focus:text-red-700"
               >
                 <LogOut className="size-4" />
                 {t("header.logOut")}
               </button>
             </DropdownMenuItem>
           </form>
-        </DropdownMenuGroup>
+        </div>
       </DropdownMenuContent>
     </DropdownMenu>
   );

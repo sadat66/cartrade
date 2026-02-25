@@ -65,7 +65,9 @@ export function CarsPageSkeleton() {
         {/* Breadcrumbs Skeleton */}
         <div className="flex items-center gap-2 mb-6 shrink-0">
           <Skeleton className="h-3 w-12 rounded" />
-          <Skeleton className="size-3 rounded-full" />
+          <div className="size-3 flex items-center justify-center">
+            <div className="size-1 bg-slate-200 rounded-full" />
+          </div>
           <Skeleton className="h-3 w-12 rounded" />
         </div>
 
