@@ -37,7 +37,11 @@ export async function updateSession(
     }
   );
 
-  await supabase.auth.getUser();
+  // try {
+  //   await supabase.auth.getUser();
+  // } catch (error) {
+  //   console.warn("Supabase auth check failed in middleware:", error);
+  // }
 
   return response;
 }
