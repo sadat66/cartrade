@@ -24,7 +24,7 @@ export default async function ListingPage({
     [listing, user, savedIds] = await Promise.all([
       prisma.listing.findUnique({
         where: { id, status: "active" },
-        include: { user: { select: { id: true, name: true, image: true } } },
+        include: { user: { select: { id: true, name: true, image: true, email: true } } },
       }),
       getCurrentUser(),
       (async () => {
@@ -175,7 +175,7 @@ export default async function ListingPage({
                     />
                   ) : (
                     <div className="flex h-full w-full items-center justify-center bg-slate-800 text-xl font-bold text-white">
-                      {(resolvedListing.user.name ?? "?").charAt(0).toUpperCase()}
+                      {(resolvedListing.user.name ?? resolvedListing.user.email ?? "?").charAt(0).toUpperCase()}
                     </div>
                   )}
                 </div>
