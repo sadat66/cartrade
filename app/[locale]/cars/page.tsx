@@ -144,8 +144,8 @@ export default async function CarsPage({ params, searchParams }: Props) {
     }
 
     return (
-        <div className="h-[calc(100vh-80px)] overflow-hidden bg-[#F8FAFC]">
-            <div className="container mx-auto px-4 md:px-6 h-full flex flex-col py-6 pt-14">
+        <div className="min-h-screen lg:h-[calc(100vh-80px)] lg:overflow-hidden bg-[#F8FAFC]">
+            <div className="container mx-auto px-4 md:px-6 h-full flex flex-col py-6 pt-8 lg:pt-14">
                 {/* Breadcrumbs */}
                 <nav className="flex items-center gap-2 text-xs font-bold text-slate-400 mb-6 uppercase tracking-widest shrink-0">
                   <Link href="/" className="hover:text-slate-900 transition-colors">Home</Link>
@@ -153,7 +153,7 @@ export default async function CarsPage({ params, searchParams }: Props) {
                   <span className="text-slate-900">Cars</span>
                 </nav>
 
-                <div className="flex flex-col lg:flex-row gap-8 items-start flex-1 min-h-0">
+                <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-start lg:flex-1 lg:min-h-0">
                     {/* Sidebar - Desktop Only */}
                     <aside className="hidden lg:block w-[300px] shrink-0 h-full">
                         <FilterSidebar 
@@ -164,7 +164,7 @@ export default async function CarsPage({ params, searchParams }: Props) {
                     </aside>
 
                     {/* Main Content */}
-                    <main className="flex-1 w-full lg:min-w-0 h-full flex flex-col min-h-0">
+                    <main className="flex-1 w-full lg:min-w-0 lg:h-full flex flex-col lg:min-h-0">
                         <div className="shrink-0">
                             <CarsControls 
                                 resultCount={resolvedListings.length}
@@ -175,9 +175,9 @@ export default async function CarsPage({ params, searchParams }: Props) {
                             />
                         </div>
 
-                        <div className="flex-1 overflow-y-auto scrollbar-hide pb-10">
+                        <div className="lg:flex-1 lg:overflow-y-auto scrollbar-hide pb-10">
                             {resolvedListings.length === 0 ? (
-                                <div className="flex flex-col items-center justify-center py-32 px-6 text-center bg-white rounded-[2.5rem] border border-slate-100 shadow-sm">
+                                <div className="flex flex-col items-center justify-center py-20 lg:py-32 px-6 text-center bg-white rounded-[2.5rem] border border-slate-100 shadow-sm">
                                     <div className="flex flex-col items-center">
                                         <div className="relative mb-10">
                                           <div className="size-24 bg-slate-50 border border-slate-100 rounded-[2.5rem] flex items-center justify-center shadow-inner relative overflow-hidden">
@@ -189,16 +189,16 @@ export default async function CarsPage({ params, searchParams }: Props) {
                                           </div>
                                         </div>
                                         
-                                        <h2 className="text-3xl font-black text-slate-900 mb-3 tracking-tight">
+                                        <h2 className="text-2xl lg:text-3xl font-black text-slate-900 mb-3 tracking-tight">
                                             No matches found
                                         </h2>
-                                        <p className="text-slate-500 mb-10 max-w-[320px] font-bold leading-relaxed">
+                                        <p className="text-slate-500 mb-8 lg:mb-10 max-w-[320px] font-bold leading-relaxed text-sm lg:text-base">
                                             We couldn't find any results matching your filters. Try adjusting your search criteria.
                                         </p>
                                         
                                         <Link
                                             href="/cars"
-                                            className="group flex items-center gap-3 bg-slate-900 hover:bg-[#4B0082] text-white rounded-2xl px-10 py-5 text-sm font-black transition-all active:scale-[0.98] shadow-xl shadow-slate-900/10"
+                                            className="group flex items-center gap-3 bg-slate-900 hover:bg-[#4B0082] text-white rounded-2xl px-8 lg:px-10 py-4 lg:py-5 text-sm font-black transition-all active:scale-[0.98] shadow-xl shadow-slate-900/10"
                                         >
                                             <RotateCcw className="size-4 transition-transform group-hover:rotate-180 duration-700" />
                                             <span>Reset all filters</span>
@@ -206,7 +206,7 @@ export default async function CarsPage({ params, searchParams }: Props) {
                                     </div>
                                 </div>
                             ) : (
-                                <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+                                <div className="grid gap-4 lg:gap-6 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
                                     {resolvedListings.map((listing: any) => (
                                         <ListingCard key={listing.id} listing={listing} />
                                     ))}
