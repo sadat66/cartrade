@@ -4,7 +4,8 @@ import { resolveListing } from "@/lib/listing-images";
 import { Link } from "@/i18n/navigation";
 import { FilterSidebar } from "./filter-sidebar";
 import { SortSelect } from "./sort-select";
-import { ChevronRight, Settings2, CarFront, RotateCcw } from "lucide-react";
+import { CarsControls } from "./cars-controls";
+import { ChevronRight, CarFront, RotateCcw, Search } from "lucide-react";
 
 type SearchParams = { [key: string]: string | undefined };
 
@@ -86,66 +87,75 @@ export default async function CarsPage({ params, searchParams }: Props) {
     };
     const orderBy = sortMapping[sort] || sortMapping.recommended;
 
-    // --- Data Fetching ---
-    const [listings, makeCounts, bodyTypeCounts] = await Promise.all([
-        prisma.listing.findMany({ 
-            where, 
-            orderBy,
-            take: 50 // Performance capping
-        }),
-        prisma.listing.groupBy({
-            by: ["make"],
-            where: { status: "active" },
-            _count: { _all: true },
-        }),
-        prisma.listing.groupBy({
-            by: ["bodyType"],
-            where: { status: "active" },
-            _count: { _all: true },
-        }),
-    ]);
+    // --- Data Fetching with Error Handling ---
+    let resolvedListings: any[] = [];
+    let formattedMakes: any[] = [];
+    let formattedBodyTypes: any[] = [];
 
-    const resolvedListings = listings.map((l: any) => ({
-        ...resolveListing(l),
-        price: Number(l.price),
-        isDepositTaken: l.title.length % 7 === 0,
-        transmission: "Automatic", // Default for now
-        weeklyEstimate: Math.round(Number(l.price) / 200),
-        interestRate: 10.02
-    }));
+    try {
+        const [listings, makeCounts, bodyTypeCounts] = await Promise.all([
+            prisma.listing.findMany({ 
+                where, 
+                orderBy,
+                take: 50 // Performance capping
+            }),
+            prisma.listing.groupBy({
+                by: ["make"],
+                where: { status: "active" },
+                _count: { _all: true },
+            }),
+            prisma.listing.groupBy({
+                by: ["bodyType"],
+                where: { status: "active" },
+                _count: { _all: true },
+            }),
+        ]);
 
-    // --- Prepare Filter Data ---
-    const formattedMakes = makeCounts
-        .filter(m => m.make)
-        .map(m => ({
-            key: m.make!.toLowerCase(),
-            label: m.make!,
-            count: m._count._all
-        }))
-        .sort((a, b) => b.count - a.count);
+        resolvedListings = listings.map((l: any) => ({
+            ...resolveListing(l),
+            price: Number(l.price),
+            isDepositTaken: l.title.length % 7 === 0,
+            transmission: "Automatic", // Default for now
+            weeklyEstimate: Math.round(Number(l.price) / 200),
+            interestRate: 10.02
+        }));
 
-    const formattedBodyTypes = bodyTypeCounts
-        .filter(b => b.bodyType)
-        .map(b => ({
-            key: b.bodyType!.toLowerCase(),
-            label: b.bodyType!,
-            count: b._count._all
-        }))
-        .sort((a, b) => b.count - a.count);
+        // --- Prepare Filter Data ---
+        formattedMakes = makeCounts
+            .filter(m => m.make)
+            .map(m => ({
+                key: m.make!.toLowerCase(),
+                label: m.make!,
+                count: m._count._all
+            }))
+            .sort((a, b) => b.count - a.count);
+
+        formattedBodyTypes = bodyTypeCounts
+            .filter(b => b.bodyType)
+            .map(b => ({
+                key: b.bodyType!.toLowerCase(),
+                label: b.bodyType!,
+                count: b._count._all
+            }))
+            .sort((a, b) => b.count - a.count);
+    } catch (error) {
+        console.error("Failed to fetch listings or filter data:", error);
+        // Return empty arrays on error - the component will handle empty state
+    }
 
     return (
-        <div className="min-h-screen bg-[#F8FAFC]">
-            <div className="container mx-auto px-4 md:px-6 py-10 pt-20">
+        <div className="h-[calc(100vh-80px)] overflow-hidden bg-[#F8FAFC]">
+            <div className="container mx-auto px-4 md:px-6 h-full flex flex-col py-6 pt-14">
                 {/* Breadcrumbs */}
-                <nav className="flex items-center gap-2 text-xs font-bold text-slate-400 mb-8 uppercase tracking-widest">
+                <nav className="flex items-center gap-2 text-xs font-bold text-slate-400 mb-6 uppercase tracking-widest shrink-0">
                   <Link href="/" className="hover:text-slate-900 transition-colors">Home</Link>
                   <ChevronRight className="size-3" />
                   <span className="text-slate-900">Cars</span>
                 </nav>
 
-                <div className="flex flex-col lg:flex-row gap-8 items-start">
-                    {/* Sidebar */}
-                    <aside className="w-full lg:w-[300px] lg:sticky lg:top-24">
+                <div className="flex flex-col lg:flex-row gap-8 items-start flex-1 min-h-0">
+                    {/* Sidebar - Desktop Only */}
+                    <aside className="hidden lg:block w-[300px] shrink-0 h-full">
                         <FilterSidebar 
                             makes={formattedMakes} 
                             bodyTypes={formattedBodyTypes}
@@ -154,55 +164,55 @@ export default async function CarsPage({ params, searchParams }: Props) {
                     </aside>
 
                     {/* Main Content */}
-                    <main className="flex-1">
-                        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
-                            <div>
-                                <h1 className="text-3xl font-black text-slate-900 mb-2">Our cars</h1>
-                                <p className="text-slate-500 font-bold border-l-4 border-[#4B0082] pl-3">
-                                    Showing {resolvedListings.length} results
-                                </p>
-                            </div>
-                            
-                            <div className="flex items-center gap-4">
-                                <SortSelect defaultValue={sort} />
-                                <button className="lg:hidden p-3 bg-white border border-slate-200 rounded-xl text-slate-900 shadow-sm transition-all hover:bg-slate-50 active:scale-95">
-                                  <Settings2 className="size-5" />
-                                </button>
-                            </div>
+                    <main className="flex-1 w-full lg:min-w-0 h-full flex flex-col min-h-0">
+                        <div className="shrink-0">
+                            <CarsControls 
+                                resultCount={resolvedListings.length}
+                                sort={sort}
+                                makes={formattedMakes}
+                                bodyTypes={formattedBodyTypes}
+                                currentFilters={sParams}
+                            />
                         </div>
 
-                        {resolvedListings.length === 0 ? (
-                            <div className="flex flex-col items-center justify-center py-24 px-6 text-center">
-                                <div className="flex flex-col items-center">
-                                    <div className="relative mb-8">
-                                      <div className="size-20 bg-white border border-slate-100 rounded-[2rem] flex items-center justify-center shadow-sm relative">
-                                        <CarFront className="size-8 text-slate-300 stroke-[1.5]" />
-                                      </div>
+                        <div className="flex-1 overflow-y-auto scrollbar-hide pb-10">
+                            {resolvedListings.length === 0 ? (
+                                <div className="flex flex-col items-center justify-center py-32 px-6 text-center bg-white rounded-[2.5rem] border border-slate-100 shadow-sm">
+                                    <div className="flex flex-col items-center">
+                                        <div className="relative mb-10">
+                                          <div className="size-24 bg-slate-50 border border-slate-100 rounded-[2.5rem] flex items-center justify-center shadow-inner relative overflow-hidden">
+                                            <div className="absolute inset-0 bg-gradient-to-br from-transparent to-slate-200/20" />
+                                            <CarFront className="size-10 text-slate-300 stroke-[1.2] relative z-10" />
+                                          </div>
+                                          <div className="absolute -bottom-1 -right-1 size-8 bg-[#4B0082] rounded-2xl flex items-center justify-center shadow-lg transform rotate-12">
+                                            <Search className="size-4 text-white" />
+                                          </div>
+                                        </div>
+                                        
+                                        <h2 className="text-3xl font-black text-slate-900 mb-3 tracking-tight">
+                                            No matches found
+                                        </h2>
+                                        <p className="text-slate-500 mb-10 max-w-[320px] font-bold leading-relaxed">
+                                            We couldn't find any results matching your filters. Try adjusting your search criteria.
+                                        </p>
+                                        
+                                        <Link
+                                            href="/cars"
+                                            className="group flex items-center gap-3 bg-slate-900 hover:bg-[#4B0082] text-white rounded-2xl px-10 py-5 text-sm font-black transition-all active:scale-[0.98] shadow-xl shadow-slate-900/10"
+                                        >
+                                            <RotateCcw className="size-4 transition-transform group-hover:rotate-180 duration-700" />
+                                            <span>Reset all filters</span>
+                                        </Link>
                                     </div>
-                                    
-                                    <h2 className="text-2xl font-bold text-slate-900 mb-2 tracking-tight">
-                                        Refine your search
-                                    </h2>
-                                    <p className="text-sm text-slate-500 mb-8 max-w-[280px] font-medium leading-relaxed">
-                                        We couldn't find any results matching your filters. Try a different combination.
-                                    </p>
-                                    
-                                    <Link
-                                        href="/cars"
-                                        className="group flex items-center gap-2.5 bg-slate-900 hover:bg-[#4B0082] text-white rounded-xl px-8 py-3.5 text-sm font-bold transition-all active:scale-[0.98]"
-                                    >
-                                        <RotateCcw className="size-4 transition-transform group-hover:rotate-180 duration-500" />
-                                        <span>Reset all filters</span>
-                                    </Link>
                                 </div>
-                            </div>
-                        ) : (
-                            <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-                                {resolvedListings.map((listing: any) => (
-                                    <ListingCard key={listing.id} listing={listing} />
-                                ))}
-                            </div>
-                        )}
+                            ) : (
+                                <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+                                    {resolvedListings.map((listing: any) => (
+                                        <ListingCard key={listing.id} listing={listing} />
+                                    ))}
+                                </div>
+                            )}
+                        </div>
                     </main>
                 </div>
             </div>

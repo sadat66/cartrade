@@ -15,7 +15,14 @@ export default async function AuthenticatedLayout({ children, params }: Props) {
       ? (locale as Locale)
       : routing.defaultLocale;
 
-  const user = await getCurrentUser();
+  let user;
+  try {
+    user = await getCurrentUser();
+  } catch (error) {
+    console.error("Failed to get user in AuthenticatedLayout:", error);
+    redirect({ href: "/login?next=/dashboard", locale: validLocale });
+  }
+
   if (!user) redirect({ href: "/login?next=/dashboard", locale: validLocale });
 
   return (

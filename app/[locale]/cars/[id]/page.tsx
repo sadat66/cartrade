@@ -18,17 +18,24 @@ export default async function ListingPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const [listing, user, savedIds] = await Promise.all([
-    prisma.listing.findUnique({
-      where: { id, status: "active" },
-      include: { user: { select: { id: true, name: true, image: true } } },
-    }),
-    getCurrentUser(),
-    (async () => {
-      const u = await getCurrentUser();
-      return u ? getSavedListingIds(u.id) : Promise.resolve(new Set<string>());
-    })(),
-  ]);
+  
+  let listing, user, savedIds;
+  try {
+    [listing, user, savedIds] = await Promise.all([
+      prisma.listing.findUnique({
+        where: { id, status: "active" },
+        include: { user: { select: { id: true, name: true, image: true } } },
+      }),
+      getCurrentUser(),
+      (async () => {
+        const u = await getCurrentUser();
+        return u ? getSavedListingIds(u.id) : Promise.resolve(new Set<string>());
+      })(),
+    ]);
+  } catch (error) {
+    console.error("Failed to fetch listing data:", error);
+    notFound();
+  }
 
   if (!listing) notFound();
 

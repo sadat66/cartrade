@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from "sonner";
-import { getLocale } from "next-intl/server";
 import "./globals.css";
 import "leaflet/dist/leaflet.css";
 
@@ -21,14 +20,15 @@ export const metadata: Metadata = {
     "Buy and sell cars with confidence. Get instant cash offers, browse listings, and find local dealerships.",
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const locale = await getLocale();
+  // Use default locale - the actual locale is handled in [locale]/layout.tsx
+  // This avoids dynamic rendering issues with next-intl
   return (
-    <html lang={locale} suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
