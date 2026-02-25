@@ -247,6 +247,19 @@ export async function DashboardOverview({ user, locale }: Props) {
                                 </span>
                               )}
                             </div>
+                            <div className="relative h-10 w-14 shrink-0 overflow-hidden rounded-md border bg-muted">
+                              {c.listing.imageUrls[0] ? (
+                                <Image
+                                  src={c.listing.imageUrls[0]}
+                                  alt={c.listing.title}
+                                  fill
+                                  className="object-cover"
+                                  sizes="56px"
+                                />
+                              ) : (
+                                <span className="flex h-full w-full items-center justify-center text-[10px] text-muted-foreground">Car</span>
+                              )}
+                            </div>
                             <div className="min-w-0 flex-1">
                               <p className="font-medium text-sm truncate">
                                 {other.name ?? t("dashboard.messages.unknown")}

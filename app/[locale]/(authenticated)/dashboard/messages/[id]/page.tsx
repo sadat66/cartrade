@@ -47,10 +47,19 @@ export default async function ConversationPage({ params }: Props) {
             </span>
           )}
         </div>
-        <div className="min-w-0 flex-1 pt-0.5">
-          <p className="text-[17px] font-bold text-slate-900 truncate">{other.name ?? t("dashboard.messages.unknown")}</p>
-          <Link href={`/cars/${conv.listing.id}`} className="text-[#ff385c] hover:text-[#e03150] text-xs font-bold uppercase tracking-wider hover:underline flex items-center gap-1.5 truncate transition-colors">
-            {t("dashboard.messages.re")} {conv.listing.title} <ExternalLink className="size-3" />
+        <div className="min-w-0 flex-1 pt-0.5 flex items-center gap-3">
+          <div className="min-w-0 flex-1">
+            <p className="text-[17px] font-bold text-slate-900 truncate">{other.name ?? t("dashboard.messages.unknown")}</p>
+            <Link href={`/cars/${conv.listing.id}`} className="text-[#ff385c] hover:text-[#e03150] text-xs font-bold uppercase tracking-wider hover:underline flex items-center gap-1.5 truncate transition-colors">
+              {t("dashboard.messages.re")} {conv.listing.title} <ExternalLink className="size-3 shrink-0" />
+            </Link>
+          </div>
+          <Link href={`/cars/${conv.listing.id}`} className="relative h-12 w-16 shrink-0 overflow-hidden rounded-lg border border-slate-200 bg-slate-100 shadow-sm">
+            {conv.listing.imageUrls[0] ? (
+              <Image src={conv.listing.imageUrls[0]} alt={conv.listing.title} fill className="object-cover" sizes="64px" />
+            ) : (
+              <span className="flex h-full w-full items-center justify-center text-slate-400 text-xs">Car</span>
+            )}
           </Link>
         </div>
       </div>
