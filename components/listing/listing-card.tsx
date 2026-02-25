@@ -61,7 +61,7 @@ export function ListingCard({ listing, kmLabel }: ListingCardProps) {
       {/* Content Section */}
       <div className="flex flex-1 flex-col p-4">
         <Link href={`/cars/${listing.id}`}>
-          <h3 className="text-sm font-bold uppercase tracking-tight text-slate-800">
+          <h3 className="text-sm font-bold uppercase tracking-tight text-slate-800 transition-colors group-hover:text-[#3D0066]">
             {listing.year} {listing.make} {listing.model}
           </h3>
         </Link>

@@ -325,7 +325,7 @@ export function NewListingForm() {
             <p className="text-destructive text-sm">{state.error}</p>
           )}
           <SubmitButton
-            className="w-full sm:w-auto bg-primary hover:bg-primary/90"
+            className="w-full sm:w-auto bg-[#3D0066] hover:bg-[#2A0045] text-white rounded-xl px-8 font-bold shadow-lg shadow-purple-900/10 transition-all active:scale-[0.98]"
             loadingText={t("creating")}
           >
             Create listing

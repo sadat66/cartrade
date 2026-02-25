@@ -31,7 +31,7 @@ export function NavbarClient({ user, translations: t }: NavbarClientProps) {
 
     const navLinks = [
         { href: "/buy", label: t.buy },
-        { href: user ? "/dashboard/sell" : "/login?next=/dashboard/sell", label: t.sell },
+        { href: user ? "/sell" : "/login?next=/sell", label: t.sell },
         { href: "/dealerships", label: t.dealership },
         { href: "/why-cartrade", label: t.whyCartrade },
     ];
@@ -92,8 +92,8 @@ export function NavbarClient({ user, translations: t }: NavbarClientProps) {
 
                         {user ? (
                             <div className="flex items-center gap-3">
-                                <Button asChild className="hidden md:flex bg-[#ff385c] hover:bg-[#e03150] text-white rounded-full px-6 font-bold">
-                                    <Link href="/dashboard/sell">{t.sellMyCar}</Link>
+                                <Button asChild className="hidden md:flex bg-[#ff385c] hover:bg-[#e03150] text-white rounded-full px-6 font-bold shadow-lg shadow-pink-900/10 transition-all active:scale-95">
+                                    <Link href="/sell">{t.sellMyCar}</Link>
                                 </Button>
                                 <UserMenu user={user} />
                             </div>
@@ -105,8 +105,8 @@ export function NavbarClient({ user, translations: t }: NavbarClientProps) {
                                 >
                                     {t.login}
                                 </Link>
-                                <Button asChild className="hidden md:flex bg-[#ff385c] hover:bg-[#e03150] text-white rounded-full px-6 font-bold">
-                                    <Link href="/login?next=/dashboard/sell">{t.sellMyCar}</Link>
+                                <Button asChild className="hidden md:flex bg-[#ff385c] hover:bg-[#e03150] text-white rounded-full px-6 font-bold shadow-lg shadow-pink-900/10 transition-all active:scale-95">
+                                    <Link href="/login?next=/sell">{t.sellMyCar}</Link>
                                 </Button>
                                 <Button variant="ghost" size="icon" asChild className="text-slate-700 hover:bg-slate-100 lg:hidden">
                                     <Link href="/login">
@@ -160,16 +160,16 @@ export function NavbarClient({ user, translations: t }: NavbarClientProps) {
                                 >
                                     {t.login}
                                 </Link>
-                                <Button asChild className="bg-[#ff385c] hover:bg-[#e03150] text-white rounded-full w-full py-6 text-lg">
-                                    <Link href="/login?next=/dashboard/sell" onClick={() => setIsMenuOpen(false)}>
+                                <Button asChild className="bg-[#ff385c] hover:bg-[#e03150] text-white rounded-full w-full py-6 text-lg shadow-lg shadow-pink-900/10 transition-all active:scale-95">
+                                    <Link href="/login?next=/sell" onClick={() => setIsMenuOpen(false)}>
                                         {t.sellMyCar}
                                     </Link>
                                 </Button>
                             </div>
                         ) : (
                             <div className="flex flex-col gap-4 pt-4">
-                                <Button asChild className="bg-[#ff385c] hover:bg-[#e03150] text-white rounded-full w-full py-6 text-lg">
-                                    <Link href="/dashboard/sell" onClick={() => setIsMenuOpen(false)}>
+                                <Button asChild className="bg-[#ff385c] hover:bg-[#e03150] text-white rounded-full w-full py-6 text-lg shadow-lg shadow-pink-900/10 transition-all active:scale-95">
+                                    <Link href="/sell" onClick={() => setIsMenuOpen(false)}>
                                         {t.sellMyCar}
                                     </Link>
                                 </Button>
