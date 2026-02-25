@@ -17,13 +17,28 @@ const BODY_TYPES = [
   { key: "unique", label: "Unique", image: "/herocar/Unique.png" },
 ] as const;
 
-export function BodyTypeFilter({ 
-  activeBodyType, 
-  onBodyTypeChange 
-}: { 
-  activeBodyType: string;
-  onBodyTypeChange: (type: string) => void;
-}) {
+export function BodyTypeFilter({
+  activeBodyType: controlledType,
+  onBodyTypeChange: controlledOnChange
+}: {
+  activeBodyType?: string;
+  onBodyTypeChange?: (type: string) => void;
+} = {}) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const locale = useLocale();
+
+  const activeBodyType = controlledType ?? (searchParams.get("bodyType") || "suv");
+
+  const onBodyTypeChange = (type: string) => {
+    if (controlledOnChange) {
+      controlledOnChange(type);
+    } else {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("bodyType", type);
+      router.push(`/${locale}/cars?${params.toString()}`, { scroll: false });
+    }
+  };
   const [indicatorProps, setIndicatorProps] = useState({ left: 0, width: 0, opacity: 0 });
   const tabsRef = useRef<HTMLDivElement>(null);
   const activeTabRef = useRef<HTMLButtonElement>(null);
@@ -53,7 +68,7 @@ export function BodyTypeFilter({
     <div className="bg-white pt-12 pb-2">
       <div className="container mx-auto px-4 md:px-6">
         <h2 className="text-2xl font-extrabold text-[#1a1a1a] mb-10 tracking-tight">Looking for a specific size?</h2>
-        
+
         <div className="relative border-b border-slate-100 mb-8">
           <div ref={tabsRef} className="flex flex-wrap items-end gap-x-8 md:gap-x-12 relative pb-4">
             {BODY_TYPES.map((type) => {
