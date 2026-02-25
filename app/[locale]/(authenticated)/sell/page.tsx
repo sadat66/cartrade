@@ -52,7 +52,7 @@ export default async function MyListingsPage({ params }: Props) {
               {t("dashboard.myListings.listingCount", { count: serializedListings.length })}
             </p>
           </div>
-          <Button asChild size="lg" className="bg-[#3D0066] hover:bg-[#2A0045] text-white rounded-xl px-6 font-bold shadow-lg shadow-purple-900/10">
+          <Button asChild size="lg" className="bg-[#3D0066] hover:bg-[#2A0045] text-white rounded-xl px-6 font-bold shadow-lg shadow-purple-900/10 transition-all active:scale-95">
             <Link href="/sell/new" className="inline-flex items-center gap-2">
               <Plus className="size-5" />
               {t("dashboard.myListings.addListing")}

@@ -64,7 +64,7 @@ export function UserMenu({ user }: { user: NonNullable<CurrentUser> }) {
         )}
         aria-label={t("header.profile")}
       >
-        <Avatar className="h-12 w-12 border-2 border-slate-200 shadow-sm transition-all hover:border-[#3D0066]/30">
+        <Avatar className="h-12 w-12 border-2 border-slate-200 shadow-sm transition-all hover:border-[#ff385c]/30">
           {user.image ? (
             <AvatarImage src={user.image} alt={user.name ?? undefined} />
           ) : null}

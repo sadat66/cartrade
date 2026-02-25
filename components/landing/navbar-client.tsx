@@ -63,7 +63,7 @@ export function NavbarClient({ user, translations: t }: NavbarClientProps) {
                             <Link
                                 key={link.href}
                                 href={link.href}
-                                className="flex items-center gap-1 text-[15px] font-semibold text-slate-800 transition-colors hover:text-[#ff385c]"
+                                className="flex items-center gap-1 text-[15px] font-semibold text-slate-800 transition-colors hover:text-[#3D0066]"
                             >
                                 {link.label}
                             </Link>
@@ -101,7 +101,7 @@ export function NavbarClient({ user, translations: t }: NavbarClientProps) {
                             <div className="flex items-center gap-3">
                                 <Link
                                     href="/login"
-                                    className="hidden lg:block text-[15px] font-bold text-slate-800 hover:text-[#ff385c]"
+                                    className="hidden lg:block text-[15px] font-bold text-slate-800 hover:text-[#3D0066]"
                                 >
                                     {t.login}
                                 </Link>
