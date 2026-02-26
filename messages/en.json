@@ -53,7 +53,24 @@
     "rights": "© {year} Cartrade. All rights reserved.",
     "privacy": "Privacy Policy",
     "terms": "Terms of Service",
-    "contact": "Contact"
+    "contact": "Contact",
+    "aboutText": "Cartrade is the leading marketplace for buying and selling vehicles. We provide a transparent and efficient experience for both buyers and sellers.",
+    "buy": "Buy",
+    "sell": "Sell",
+    "company": "Company",
+    "allCars": "All Cars",
+    "newCars": "New Cars",
+    "dealerships": "Dealerships",
+    "sellMyCar": "Sell my car",
+    "manageAds": "Manage your ads",
+    "whyCartrade": "Why Cartrade?",
+    "careers": "Careers",
+    "support": "Support Center",
+    "callUs": "Call Us",
+    "emailUs": "Email Us",
+    "visitUs": "Visit Us",
+    "aboutUs": "About Us",
+    "cookiePolicy": "Cookie Policy"
   },
   "whyCartrade": {
     "title": "Why Cartrade?",
@@ -291,5 +308,39 @@
     "depositTaken": "Deposit Taken",
     "variantFallback": "Variant (FWD)",
     "weeklyEstimate": "est. ${amount}/wk based on {rate}% p.a."
+  },
+  "reviews": {
+    "title": "Why our users are choosing Cartrade",
+    "subtitle": "Discover why thousands of people trust Cartrade for buying and selling vehicles with total confidence.",
+    "user1": {
+      "name": "Sarah Jenkins",
+      "role": "Verified Buyer",
+      "content": "Finding my dream car was so easy with Cartrade. The AI search actually understood exactly what I was looking for, saving me hours of browsing!"
+    },
+    "user2": {
+      "name": "David Chen",
+      "role": "Verified Seller",
+      "content": "I received a competitive instant offer within minutes. The process was transparent and the payment was handled professionally. Highly recommended!"
+    },
+    "user3": {
+      "name": "Michael Rodriguez",
+      "role": "Dealer Partner",
+      "content": "As a dealer, I find the lead management system incredibly efficient. It has significantly boosted our sales closure rate and customer satisfaction."
+    },
+    "user4": {
+      "name": "Emma Thompson",
+      "role": "First-time Buyer",
+      "content": "The vehicle verification process gave me peace of mind. I knew exactly what I was buying. Great experience from start to finish!"
+    },
+    "user5": {
+      "name": "Robert Wilson",
+      "role": "Classic Car Collector",
+      "content": "I found a rare vintage gem here that I couldn't find anywhere else. The communication with the seller was seamless."
+    },
+    "user6": {
+      "name": "Lisa Wang",
+      "role": "Reliable Commuter",
+      "content": "The filtering options are top-notch. I found a fuel-efficient car for my daily commute within my strict budget!"
+    }
   }
 }

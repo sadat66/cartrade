@@ -1,4 +1,5 @@
 import { Navbar } from "@/components/landing/navbar";
+import { Footer } from "@/components/landing/footer";
 import { NextIntlClientProvider } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 import { routing } from "@/i18n/routing";
@@ -49,8 +50,13 @@ export default async function LocaleLayout({ children, params }: Props) {
 
   return (
     <NextIntlClientProvider locale={validLocale} messages={messages}>
-      <Navbar locale={validLocale} />
-      {children}
+      <div className="min-h-screen flex flex-col">
+        <Navbar locale={validLocale} />
+        <main className="flex-1">
+          {children}
+        </main>
+        <Footer locale={validLocale} />
+      </div>
     </NextIntlClientProvider>
   );
 }
