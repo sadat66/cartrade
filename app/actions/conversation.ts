@@ -50,7 +50,7 @@ export async function getOrCreateConversation(listingId: string) {
     },
   });
 
-  revalidatePath("/dashboard/messages");
+  revalidatePath("/messages");
   return {
     conversationId: created.id,
     conversation: {
@@ -84,8 +84,8 @@ export async function sendMessage(conversationId: string, content: string) {
     },
   });
 
-  revalidatePath("/dashboard/messages");
-  revalidatePath(`/dashboard/messages/${conversationId}`);
+  revalidatePath("/messages");
+  revalidatePath(`/messages/${conversationId}`);
   return { success: true };
 }
 

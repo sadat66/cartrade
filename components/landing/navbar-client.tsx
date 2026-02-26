@@ -73,7 +73,7 @@ export function NavbarClient({ user, translations: t }: NavbarClientProps) {
                     {/* Right Side Icons */}
                     <div className="flex items-center gap-2 md:gap-4">
                         <Button variant="ghost" size="icon" asChild className="text-slate-700 hover:bg-slate-100 hidden sm:flex">
-                            <Link href={user ? "/dashboard/messages" : "/login"}>
+                            <Link href={user ? "/messages" : "/login"}>
                                 <MessageSquare className="size-5" />
                             </Link>
                         </Button>

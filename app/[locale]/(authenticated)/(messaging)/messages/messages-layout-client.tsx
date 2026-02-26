@@ -19,10 +19,10 @@ export function MessagesLayoutClient({
     translations: any;
 }) {
     const pathname = usePathname();
-    const isConversationOpen = pathname.match(/\/dashboard\/messages\/[^/]+/);
+    const isConversationOpen = pathname.match(/\/messages\/[^/]+/);
 
     return (
-        <div className="flex h-[calc(100vh-140px)] w-full overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl ring-1 ring-slate-200/50">
+        <div className="flex flex-1 h-full min-h-[600px] w-full overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl ring-1 ring-slate-200/50">
             {/* Sidebar List */}
             <div className={cn(
                 "flex w-full flex-col border-r border-slate-200 bg-slate-50/50 md:w-80 lg:w-96 shrink-0 relative",
@@ -43,11 +43,11 @@ export function MessagesLayoutClient({
                                 const last = c.messages[0];
                                 const other = currentUserId === c.buyerId ? c.seller : c.buyer;
                                 const listing = c.listing;
-                                const isActive = pathname === `/dashboard/messages/${c.id}`;
+                                const isActive = pathname === `/messages/${c.id}`;
 
                                 return (
                                     <li key={c.id}>
-                                        <Link href={`/dashboard/messages/${c.id}`} className="block w-full outline-none">
+                                        <Link href={`/messages/${c.id}`} className="block w-full outline-none">
                                             <div className={cn(
                                                 "flex items-start gap-4 p-4 transition-all duration-200 hover:bg-slate-100/80 cursor-pointer w-full relative",
                                                 isActive ? "bg-purple-50/50 hover:bg-purple-50/80 before:absolute before:left-0 before:top-0 before:h-full before:w-1.5 before:bg-[#3D0066]" : "bg-white"

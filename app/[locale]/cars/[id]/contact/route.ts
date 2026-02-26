@@ -23,5 +23,5 @@ export async function GET(
   if (result.error || !result.conversationId) {
     redirect({ href: "/cars/" + listingId, locale });
   }
-  redirect({ href: "/dashboard/messages/" + result.conversationId, locale });
+  redirect({ href: "/messages/" + result.conversationId, locale });
 }

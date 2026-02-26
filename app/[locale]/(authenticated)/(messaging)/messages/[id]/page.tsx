@@ -21,10 +21,10 @@ export default async function ConversationPage({ params }: Props) {
       : routing.defaultLocale;
 
   const user = await getCurrentUser();
-  if (!user) return redirect({ href: "/login?next=/dashboard/messages/" + id, locale: validLocale });
+  if (!user) return redirect({ href: "/login?next=/messages/" + id, locale: validLocale });
 
   const conv = await getConversationWithMessages(id);
-  if (!conv) return redirect({ href: "/dashboard/messages", locale: validLocale });
+  if (!conv) return redirect({ href: "/messages", locale: validLocale });
 
   const t = await getTranslations({ locale: validLocale });
   const other = conv.buyerId === user.id ? conv.seller : conv.buyer;
@@ -35,7 +35,7 @@ export default async function ConversationPage({ params }: Props) {
       {/* Header */}
       <div className="flex items-center gap-4 border-b border-slate-200 bg-white/95 p-4 px-6 backdrop-blur-md shadow-sm z-10 shrink-0">
         {/* Mobile Back Button */}
-        <Link href="/dashboard/messages" className="md:hidden p-2 -ml-2 text-slate-500 hover:text-slate-800 transition-colors">
+        <Link href="/messages" className="md:hidden p-2 -ml-2 text-slate-500 hover:text-slate-800 transition-colors">
           <ArrowLeft className="size-5" />
         </Link>
         <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full border border-slate-200 shadow-sm bg-slate-50">

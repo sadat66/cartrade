@@ -78,7 +78,7 @@ export async function DashboardOverview({ user, locale }: Props) {
                 <CardDescription>{user.email}</CardDescription>
               </div>
               <Button asChild className="shrink-0 bg-[#3D0066] hover:bg-[#2A0045] text-white rounded-full px-6 font-bold shadow-lg shadow-purple-900/10 transition-all active:scale-95">
-                <Link href="/dashboard/profile">{t("dashboard.overview.viewDetails")}</Link>
+                <Link href="/profile">{t("dashboard.overview.viewDetails")}</Link>
               </Button>
             </CardHeader>
           </Card>
@@ -212,7 +212,7 @@ export async function DashboardOverview({ user, locale }: Props) {
               </CardTitle>
               {recentConversations.length > 0 && (
                 <Button variant="ghost" size="sm" asChild>
-                  <Link href="/dashboard/messages">{t("dashboard.overview.viewAllMessages")}</Link>
+                  <Link href="/messages">{t("dashboard.overview.viewAllMessages")}</Link>
                 </Button>
               )}
             </CardHeader>
@@ -231,7 +231,7 @@ export async function DashboardOverview({ user, locale }: Props) {
                     const last = c.messages[0];
                     return (
                       <li key={c.id}>
-                        <Link href={`/dashboard/messages/${c.id}`}>
+                        <Link href={`/messages/${c.id}`}>
                           <div className="flex items-center gap-3 rounded-lg border p-3 transition-colors hover:bg-muted/50">
                             <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full bg-muted">
                               {other.image ? (
@@ -284,7 +284,7 @@ export async function DashboardOverview({ user, locale }: Props) {
             {recentConversations.length > 0 && (
               <CardFooter>
                 <Button variant="outline" className="w-full" asChild>
-                  <Link href="/dashboard/messages">{t("dashboard.overview.viewAllMessages")}</Link>
+                  <Link href="/messages">{t("dashboard.overview.viewAllMessages")}</Link>
                 </Button>
               </CardFooter>
             )}
@@ -301,7 +301,7 @@ export async function DashboardOverview({ user, locale }: Props) {
             </CardHeader>
             <CardFooter>
               <Button variant="outline" className="w-full" asChild>
-                <Link href="/dashboard/profile">{t("dashboard.overview.viewProfileSettings")}</Link>
+                <Link href="/profile">{t("dashboard.overview.viewProfileSettings")}</Link>
               </Button>
             </CardFooter>
           </Card>

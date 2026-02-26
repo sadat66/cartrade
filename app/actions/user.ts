@@ -50,7 +50,7 @@ export async function updateProfile(formData: FormData) {
     },
   });
 
-  revalidatePath("/dashboard/profile");
+  revalidatePath("/profile");
   revalidatePath("/dashboard");
   return { success: true };
 }

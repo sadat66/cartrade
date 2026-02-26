@@ -20,7 +20,7 @@ export default async function ProfilePage({ params }: Props) {
       ? (locale as Locale)
       : routing.defaultLocale;
   const user = await getCurrentUser();
-  if (!user) redirect({ href: "/login?next=/dashboard/profile", locale: validLocale });
+  if (!user) redirect({ href: "/login?next=/profile", locale: validLocale });
   const t = await getTranslations({ locale: validLocale });
   const currentUser = user!;
 
@@ -29,7 +29,6 @@ export default async function ProfilePage({ params }: Props) {
       <Breadcrumb
         items={[
           { label: t("cars.breadcrumb.home"), href: "/" },
-          { label: t("dashboard.nav.dashboard"), href: "/dashboard" },
           { label: t("dashboard.profile.title") }
         ]}
       />
