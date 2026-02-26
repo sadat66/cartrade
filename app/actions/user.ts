@@ -67,7 +67,7 @@ export async function saveListing(listingId: string) {
     update: {},
   });
 
-  revalidatePath("/dashboard/saved");
+  revalidatePath("/saved");
   revalidatePath("/cars/[id]", "page");
   return { success: true };
 }
@@ -80,7 +80,7 @@ export async function unsaveListing(listingId: string) {
     where: { userId: user.id, listingId },
   });
 
-  revalidatePath("/dashboard/saved");
+  revalidatePath("/saved");
   revalidatePath("/cars/[id]", "page");
   return { success: true };
 }

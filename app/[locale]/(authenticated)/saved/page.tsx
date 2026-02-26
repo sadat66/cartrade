@@ -15,55 +15,26 @@ import { Breadcrumb } from "@/components/shared/breadcrumb";
 type Props = { params: Promise<{ locale: string }> };
 
 export default async function SavedListingsPage({ params }: Props) {
-  let locale: string;
-  try {
-    const resolvedParams = await params;
-    locale = resolvedParams.locale;
-  } catch (error) {
-    console.error("Failed to resolve params in SavedListingsPage:", error);
-    locale = routing.defaultLocale;
-  }
-  
+  const { locale } = await params;
   const validLocale: Locale =
     locale && routing.locales.includes(locale as Locale)
       ? (locale as Locale)
       : routing.defaultLocale;
-  
-  let user;
-  try {
-    user = await getCurrentUser();
-  } catch (error) {
-    console.error("Failed to get user in SavedListingsPage:", error);
-    return null;
-  }
-  
+  const user = await getCurrentUser();
   if (!user) return null;
-  
-  let t;
-  try {
-    t = await getTranslations({ locale: validLocale });
-  } catch (error) {
-    console.error("Failed to get translations in SavedListingsPage:", error);
-    return null;
-  }
+  const t = await getTranslations({ locale: validLocale });
 
-  let savedWithResolved = [];
-  try {
-    const saved = await prisma.savedListing.findMany({
-      where: { userId: user.id },
-      include: {
-        listing: true,
-      },
-      orderBy: { createdAt: "desc" },
-    });
-    savedWithResolved = saved.map((item) => ({
-      ...item,
-      listing: resolveListing(item.listing),
-    }));
-  } catch (error) {
-    console.error("Failed to fetch saved listings:", error);
-    savedWithResolved = [];
-  }
+  const saved = await prisma.savedListing.findMany({
+    where: { userId: user.id },
+    include: {
+      listing: true,
+    },
+    orderBy: { createdAt: "desc" },
+  });
+  const savedWithResolved = saved.map((item) => ({
+    ...item,
+    listing: resolveListing(item.listing),
+  }));
 
   return (
     <div className="container mx-auto px-4 md:px-6 py-6 pt-8 lg:pt-14 space-y-6">
@@ -133,4 +104,3 @@ export default async function SavedListingsPage({ params }: Props) {
     </div>
   );
 }
-

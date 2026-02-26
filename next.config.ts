@@ -35,6 +35,11 @@ const nextConfig: NextConfig = {
         destination: '/en/cars',
         permanent: true,
       },
+      {
+        source: '/en/dashboard/saved',
+        destination: '/en/saved',
+        permanent: true,
+      },
     ];
   },
 };

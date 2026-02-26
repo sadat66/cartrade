@@ -97,7 +97,7 @@ export async function DashboardOverview({ user, locale }: Props) {
               </div>
               {savedWithResolved.length > 0 && (
                 <Button variant="ghost" size="sm" asChild>
-                  <Link href="/dashboard/saved">{t("dashboard.overview.viewAll")}</Link>
+                  <Link href="/saved">{t("dashboard.overview.viewAll")}</Link>
                 </Button>
               )}
             </CardHeader>
@@ -152,7 +152,7 @@ export async function DashboardOverview({ user, locale }: Props) {
                 </CardContent>
                 <CardFooter>
                   <Button variant="outline" className="w-full" asChild>
-                    <Link href="/dashboard/saved">{t("dashboard.overview.viewAllSaved")}</Link>
+                    <Link href="/saved">{t("dashboard.overview.viewAllSaved")}</Link>
                   </Button>
                 </CardFooter>
               </>
