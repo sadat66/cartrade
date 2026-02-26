@@ -2,6 +2,8 @@ import { getTranslations } from "next-intl/server";
 import { routing } from "@/i18n/routing";
 import type { Locale } from "@/i18n/config";
 
+import { Breadcrumb } from "@/components/shared/breadcrumb";
+
 type Props = {
     params: Promise<{ locale: string }>;
 };
@@ -16,7 +18,13 @@ export default async function DealershipsPage({ params }: Props) {
     const t = await getTranslations({ locale: validLocale });
 
     return (
-        <div className="container mx-auto px-4 py-12 md:px-6">
+        <div className="container mx-auto px-4 py-6 pt-8 lg:pt-14 md:px-6 space-y-6">
+            <Breadcrumb
+                items={[
+                    { label: t("cars.breadcrumb.home"), href: "/" },
+                    { label: t("header.dealerships") }
+                ]}
+            />
             <div className="space-y-6">
                 <div>
                     <h1 className="text-3xl font-bold tracking-tight md:text-4xl text-[#1e293b]">

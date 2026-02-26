@@ -6,7 +6,7 @@ import { BodyTypeFilter } from "@/components/landing/body-type-filter";
 import { FeaturedCars } from "@/components/landing/featured-cars";
 import { BudgetSection } from "@/components/landing/budget-section";
 import { NewCarsSection } from "@/components/landing/new-cars-section";
-import { Footer } from "@/components/landing/footer-client";
+import { Testimonials } from "@/components/landing/testimonials";
 
 type Listing = {
   id: string;
@@ -36,8 +36,8 @@ export default function HomeClient({
   }, [initialListings, activeBodyType]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <main className="flex-1 relative">
+    <div className="bg-background">
+      <main className="relative">
         <Hero />
         <section className="pt-16 md:pt-20">
           <BodyTypeFilter 
@@ -51,9 +51,9 @@ export default function HomeClient({
           />
           <BudgetSection listings={initialListings} />
           <NewCarsSection listings={initialListings.slice(0, 10)} />
+          <Testimonials />
         </section>
       </main>
-      <Footer />
     </div>
   );
 }
