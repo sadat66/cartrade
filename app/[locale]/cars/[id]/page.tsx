@@ -10,7 +10,7 @@ import { ListingActions } from "./listing-actions";
 import { getTranslations } from "next-intl/server";
 import { ListingLocationDisplay } from "@/components/listing/listing-location-display";
 import { resolveListing } from "@/lib/listing-images";
-import { Calendar, Gauge, MapPin, CarFront, FileText, BadgeCheck } from "lucide-react";
+import { Calendar, Gauge, MapPin, CarFront, FileText, BadgeCheck, Settings2, Shield, Palette } from "lucide-react";
 
 export default async function ListingPage({
   params,
@@ -18,7 +18,7 @@ export default async function ListingPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  
+
   let listing, user, savedIds;
   try {
     [listing, user, savedIds] = await Promise.all([
@@ -61,6 +61,24 @@ export default async function ListingPage({
           <span className="flex items-center gap-1.5 bg-slate-100 px-3 py-1.5 rounded-lg"><Calendar className="size-4 text-slate-500" /> {resolvedListing.year}</span>
           <span className="flex items-center gap-1.5 bg-slate-100 px-3 py-1.5 rounded-lg"><Gauge className="size-4 text-slate-500" /> {resolvedListing.mileage?.toLocaleString() ?? "N/A"} km</span>
           <span className="flex items-center gap-1.5 bg-slate-100 px-3 py-1.5 rounded-lg"><MapPin className="size-4 text-slate-500" /> {resolvedListing.location || "Location not specified"}</span>
+          {resolvedListing.transmission && (
+            <span className="flex items-center gap-1.5 bg-slate-100 px-3 py-1.5 rounded-lg">
+              <Settings2 className="size-4 text-slate-500" />
+              {t.has(`cars.transmissions.${resolvedListing.transmission.toLowerCase()}`) ? t(`cars.transmissions.${resolvedListing.transmission.toLowerCase()}`) : resolvedListing.transmission}
+            </span>
+          )}
+          {resolvedListing.drivetrain && (
+            <span className="flex items-center gap-1.5 bg-slate-100 px-3 py-1.5 rounded-lg">
+              <Shield className="size-4 text-slate-500" />
+              {t.has(`cars.drivetrains.${resolvedListing.drivetrain.toLowerCase()}`) ? t(`cars.drivetrains.${resolvedListing.drivetrain.toLowerCase()}`) : resolvedListing.drivetrain}
+            </span>
+          )}
+          {resolvedListing.color && (
+            <span className="flex items-center gap-1.5 bg-slate-100 px-3 py-1.5 rounded-lg">
+              <Palette className="size-4 text-slate-500" />
+              {t.has(`cars.colours.${resolvedListing.color.toLowerCase()}`) ? t(`cars.colours.${resolvedListing.color.toLowerCase()}`) : resolvedListing.color}
+            </span>
+          )}
         </div>
       </div>
 
@@ -148,6 +166,22 @@ export default async function ListingPage({
                   <p className="text-xs text-slate-500 font-bold uppercase tracking-wider mb-1">Model</p>
                   <p className="font-extrabold text-slate-900 text-lg truncate">{resolvedListing.model}</p>
                 </div>
+                {resolvedListing.transmission && (
+                  <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
+                    <p className="text-xs text-slate-500 font-bold uppercase tracking-wider mb-1">Transmission</p>
+                    <p className="font-extrabold text-slate-900 text-lg truncate">
+                      {t.has(`cars.transmissions.${resolvedListing.transmission.toLowerCase()}`) ? t(`cars.transmissions.${resolvedListing.transmission.toLowerCase()}`) : resolvedListing.transmission}
+                    </p>
+                  </div>
+                )}
+                {resolvedListing.drivetrain && (
+                  <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
+                    <p className="text-xs text-slate-500 font-bold uppercase tracking-wider mb-1">Drivetrain</p>
+                    <p className="font-extrabold text-slate-900 text-lg truncate">
+                      {t.has(`cars.drivetrains.${resolvedListing.drivetrain.toLowerCase()}`) ? t(`cars.drivetrains.${resolvedListing.drivetrain.toLowerCase()}`) : resolvedListing.drivetrain}
+                    </p>
+                  </div>
+                )}
               </div>
 
               {/* Action Buttons */}
@@ -208,6 +242,6 @@ export default async function ListingPage({
 
         </div>
       </div>
-    </div>
+    </div >
   );
 }

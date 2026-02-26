@@ -12,10 +12,22 @@ type Props = {
   sort: string;
   makes: any[];
   bodyTypes: any[];
+  transmissions?: any[];
+  drivetrains?: any[];
+  colours?: any[];
   currentFilters: any;
 };
 
-export function CarsControls({ resultCount, sort, makes, bodyTypes, currentFilters }: Props) {
+export function CarsControls({
+  resultCount,
+  sort,
+  makes,
+  bodyTypes,
+  transmissions,
+  drivetrains,
+  colours,
+  currentFilters
+}: Props) {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const t = useTranslations("cars.controls");
 
@@ -40,11 +52,14 @@ export function CarsControls({ resultCount, sort, makes, bodyTypes, currentFilte
                 </button>
               </DialogTrigger>
               <DialogContent className="max-w-[95vw] w-full p-0 overflow-hidden sm:max-w-[425px] rounded-3xl h-[85vh] flex flex-col" showCloseButton={false}>
-                <FilterSidebar 
-                  makes={makes} 
-                  bodyTypes={bodyTypes} 
-                  currentFilters={currentFilters} 
-                  isMobile 
+                <FilterSidebar
+                  makes={makes}
+                  bodyTypes={bodyTypes}
+                  transmissions={transmissions}
+                  drivetrains={drivetrains}
+                  colours={colours}
+                  currentFilters={currentFilters}
+                  isMobile
                   onClose={() => setIsFilterOpen(false)}
                 />
               </DialogContent>

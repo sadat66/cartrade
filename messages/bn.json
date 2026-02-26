@@ -159,6 +159,12 @@
       "automatic": "অটোমেটিক",
       "manual": "ম্যানুয়াল"
     },
+    "drivetrains": {
+      "fwd": "FWD",
+      "rwd": "RWD",
+      "awd": "AWD",
+      "4wd": "4WD"
+    },
     "colours": {
       "white": "সাদা",
       "black": "কালো",

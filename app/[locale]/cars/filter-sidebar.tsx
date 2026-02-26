@@ -1,13 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import { 
-  ChevronDown, 
-  ChevronUp, 
-  Search, 
-  RotateCcw, 
-  Car, 
-  DollarSign, 
+import {
+  ChevronDown,
+  ChevronUp,
+  Search,
+  RotateCcw,
+  Car,
+  DollarSign,
   Gauge,
   Fuel,
   Settings2,
@@ -28,11 +28,15 @@ type CountItem = {
   key: string;
   label: string;
   count: number;
+  hex?: string;
 };
 
 type FilterSidebarProps = {
   makes: CountItem[];
   bodyTypes: CountItem[];
+  transmissions?: CountItem[];
+  drivetrains?: CountItem[];
+  colours?: CountItem[];
   currentFilters: { [key: string]: string | undefined };
   isMobile?: boolean;
   onClose?: () => void;
@@ -67,22 +71,22 @@ const COLOURS = [
 
 // --- Sub-components ---
 
-function FilterSection({ 
-  title, 
-  icon: Icon, 
-  isOpen, 
-  onToggle, 
-  children 
-}: { 
-  title: string; 
-  icon: any; 
-  isOpen: boolean; 
-  onToggle: () => void; 
-  children: React.ReactNode 
+function FilterSection({
+  title,
+  icon: Icon,
+  isOpen,
+  onToggle,
+  children
+}: {
+  title: string;
+  icon: any;
+  isOpen: boolean;
+  onToggle: () => void;
+  children: React.ReactNode
 }) {
   return (
     <div className="border-b border-slate-100 last:border-0">
-      <button 
+      <button
         onClick={onToggle}
         className="w-full p-5 flex items-center justify-between hover:bg-slate-50 transition-all duration-200 group"
       >
@@ -109,12 +113,21 @@ function FilterSection({
   );
 }
 
-export function FilterSidebar({ makes, bodyTypes, currentFilters, isMobile, onClose }: FilterSidebarProps) {
+export function FilterSidebar({
+  makes,
+  bodyTypes,
+  transmissions,
+  drivetrains,
+  colours,
+  currentFilters,
+  isMobile,
+  onClose
+}: FilterSidebarProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [openSections, setOpenSections] = useState<string[]>(["make", "price"]);
   const [makeSearch, setMakeSearch] = useState("");
-  
+
   const tf = useTranslations("cars.filters");
   const tft = useTranslations("cars.fuelTypes");
   const tt = useTranslations("cars.transmissions");
@@ -127,27 +140,29 @@ export function FilterSidebar({ makes, bodyTypes, currentFilters, isMobile, onCl
     { key: "hybrid", label: tft("hybrid"), count: 5 },
   ];
 
-  const TRANSMISSIONS = [
-    { key: "automatic", label: tt("automatic"), count: 20 },
-    { key: "manual", label: tt("manual"), count: 8 },
+  const TRANSMISSIONS = transmissions || [
+    { key: "automatic", label: tt("automatic"), count: 0 },
+    { key: "manual", label: tt("manual"), count: 0 },
   ];
 
-  const DRIVETRAINS = [
-    { key: "fwd", label: "FWD", count: 15 },
-    { key: "rwd", label: "RWD", count: 5 },
-    { key: "awd", label: "AWD", count: 8 },
+  const DRIVETRAINS = drivetrains || [
+    { key: "fwd", label: "FWD", count: 0 },
+    { key: "rwd", label: "RWD", count: 0 },
+    { key: "awd", label: "AWD", count: 0 },
   ];
 
-  const COLOURS = [
-    { key: "white", label: tc("white"), hex: "#FFFFFF", count: 10 },
-    { key: "black", label: tc("black"), hex: "#000000", count: 8 },
-    { key: "silver", label: tc("silver"), hex: "#C0C0C0", count: 5 },
-    { key: "blue", label: tc("blue"), hex: "#0000FF", count: 3 },
-    { key: "red", label: tc("red"), hex: "#FF0000", count: 2 },
+  const COLOUR_DEFAULTS = [
+    { key: "white", label: tc("white"), hex: "#FFFFFF" },
+    { key: "black", label: tc("black"), hex: "#000000" },
+    { key: "silver", label: tc("silver"), hex: "#C0C0C0" },
+    { key: "blue", label: tc("blue"), hex: "#0000FF" },
+    { key: "red", label: tc("red"), hex: "#FF0000" },
   ];
+
+  const COLOURS = colours || COLOUR_DEFAULTS.map(c => ({ ...c, count: 0 }));
 
   const toggleSection = (section: string) => {
-    setOpenSections(prev => 
+    setOpenSections(prev =>
       prev.includes(section) ? prev.filter(s => s !== section) : [...prev, section]
     );
   };
@@ -166,7 +181,7 @@ export function FilterSidebar({ makes, bodyTypes, currentFilters, isMobile, onCl
     router.push("/cars", { scroll: false });
   };
 
-  const filteredMakes = makes.filter(m => 
+  const filteredMakes = makes.filter(m =>
     m.label.toLowerCase().includes(makeSearch.toLowerCase())
   );
 
@@ -185,7 +200,7 @@ export function FilterSidebar({ makes, bodyTypes, currentFilters, isMobile, onCl
           )}
           <h2 className="text-xl font-black text-slate-900 tracking-tight">{tf("title")}</h2>
         </div>
-        <button 
+        <button
           onClick={clearFilters}
           className="text-xs font-black text-[#4B0082] hover:underline flex items-center gap-1.5 transition-all"
         >
@@ -196,17 +211,17 @@ export function FilterSidebar({ makes, bodyTypes, currentFilters, isMobile, onCl
 
       {/* Filter Content */}
       <div className="overflow-y-auto flex-1 custom-scrollbar">
-        
+
         {/* Make & Model */}
-        <FilterSection 
-          title={tf("makeModel")} 
-          icon={Car} 
-          isOpen={openSections.includes("make")} 
+        <FilterSection
+          title={tf("makeModel")}
+          icon={Car}
+          isOpen={openSections.includes("make")}
           onToggle={() => toggleSection("make")}
         >
           <div className="relative">
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-slate-400 pointer-events-none" />
-            <Input 
+            <Input
               placeholder={tf("searchMake")}
               value={makeSearch}
               onChange={(e) => setMakeSearch(e.target.value)}
@@ -215,8 +230,8 @@ export function FilterSidebar({ makes, bodyTypes, currentFilters, isMobile, onCl
           </div>
           <div className="space-y-1.5 max-h-[250px] overflow-y-auto pr-2 custom-scrollbar">
             {filteredMakes.map((make) => (
-              <label 
-                key={make.key} 
+              <label
+                key={make.key}
                 className={cn(
                   "flex items-center justify-between p-3 rounded-xl cursor-pointer transition-all",
                   currentFilters.make === make.key ? "bg-[#4B0082]/5" : "hover:bg-slate-50"
@@ -224,7 +239,7 @@ export function FilterSidebar({ makes, bodyTypes, currentFilters, isMobile, onCl
               >
                 <div className="flex items-center gap-3">
                   <div className="relative flex items-center">
-                    <input 
+                    <input
                       type="checkbox"
                       checked={currentFilters.make?.toLowerCase() === make.key.toLowerCase()}
                       onChange={() => handleFilterChange("make", currentFilters.make === make.key ? null : make.key)}
@@ -248,10 +263,10 @@ export function FilterSidebar({ makes, bodyTypes, currentFilters, isMobile, onCl
         </FilterSection>
 
         {/* Price */}
-        <FilterSection 
-          title={tf("priceRange")} 
-          icon={DollarSign} 
-          isOpen={openSections.includes("price")} 
+        <FilterSection
+          title={tf("priceRange")}
+          icon={DollarSign}
+          isOpen={openSections.includes("price")}
           onToggle={() => toggleSection("price")}
         >
           <div className="grid grid-cols-2 gap-4">
@@ -259,7 +274,7 @@ export function FilterSidebar({ makes, bodyTypes, currentFilters, isMobile, onCl
               <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">{tf("minPrice")}</span>
               <div className="relative">
                 <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 font-bold">$</span>
-                <Input 
+                <Input
                   type="number"
                   placeholder="0"
                   value={currentFilters.minPrice || ""}
@@ -272,7 +287,7 @@ export function FilterSidebar({ makes, bodyTypes, currentFilters, isMobile, onCl
               <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">{tf("maxPrice")}</span>
               <div className="relative">
                 <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 font-bold">$</span>
-                <Input 
+                <Input
                   type="number"
                   placeholder="Any"
                   value={currentFilters.maxPrice || ""}
@@ -285,16 +300,16 @@ export function FilterSidebar({ makes, bodyTypes, currentFilters, isMobile, onCl
         </FilterSection>
 
         {/* Kilometers */}
-        <FilterSection 
-          title={tf("kilometers")} 
-          icon={Gauge} 
-          isOpen={openSections.includes("km")} 
+        <FilterSection
+          title={tf("kilometers")}
+          icon={Gauge}
+          isOpen={openSections.includes("km")}
           onToggle={() => toggleSection("km")}
         >
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1.5">
               <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">{tf("minKm")}</span>
-              <Input 
+              <Input
                 type="number"
                 placeholder="0"
                 value={currentFilters.minMileage || ""}
@@ -304,7 +319,7 @@ export function FilterSidebar({ makes, bodyTypes, currentFilters, isMobile, onCl
             </div>
             <div className="space-y-1.5">
               <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">{tf("maxKm")}</span>
-              <Input 
+              <Input
                 type="number"
                 placeholder="Any"
                 value={currentFilters.maxMileage || ""}
@@ -316,10 +331,10 @@ export function FilterSidebar({ makes, bodyTypes, currentFilters, isMobile, onCl
         </FilterSection>
 
         {/* Fuel Type */}
-        <FilterSection 
-          title={tf("fuelType")} 
-          icon={Fuel} 
-          isOpen={openSections.includes("fuel")} 
+        <FilterSection
+          title={tf("fuelType")}
+          icon={Fuel}
+          isOpen={openSections.includes("fuel")}
           onToggle={() => toggleSection("fuel")}
         >
           <div className="grid grid-cols-1 gap-2.5">
@@ -329,8 +344,8 @@ export function FilterSidebar({ makes, bodyTypes, currentFilters, isMobile, onCl
                 onClick={() => handleFilterChange("fuelType", currentFilters.fuelType === type.key ? null : type.key)}
                 className={cn(
                   "flex items-center justify-between px-4 py-2.5 rounded-xl text-sm font-bold transition-all border-2",
-                  currentFilters.fuelType === type.key 
-                    ? "bg-[#4B0082] border-[#4B0082] text-white shadow-md shadow-[#4B0082]/20" 
+                  currentFilters.fuelType === type.key
+                    ? "bg-[#4B0082] border-[#4B0082] text-white shadow-md shadow-[#4B0082]/20"
                     : "bg-white border-slate-100 text-slate-600 hover:border-slate-200"
                 )}
               >
@@ -345,10 +360,10 @@ export function FilterSidebar({ makes, bodyTypes, currentFilters, isMobile, onCl
         </FilterSection>
 
         {/* Transmission */}
-        <FilterSection 
-          title={tf("transmission")} 
-          icon={Settings2} 
-          isOpen={openSections.includes("trans")} 
+        <FilterSection
+          title={tf("transmission")}
+          icon={Settings2}
+          isOpen={openSections.includes("trans")}
           onToggle={() => toggleSection("trans")}
         >
           <div className="grid grid-cols-2 gap-2.5">
@@ -358,8 +373,8 @@ export function FilterSidebar({ makes, bodyTypes, currentFilters, isMobile, onCl
                 onClick={() => handleFilterChange("transmission", currentFilters.transmission === type.key ? null : type.key)}
                 className={cn(
                   "py-2.5 rounded-xl text-xs font-black transition-all border-2",
-                  currentFilters.transmission === type.key 
-                    ? "bg-[#4B0082] border-[#4B0082] text-white" 
+                  currentFilters.transmission === type.key
+                    ? "bg-[#4B0082] border-[#4B0082] text-white"
                     : "bg-white border-slate-100 text-slate-600 hover:border-slate-200"
                 )}
               >
@@ -370,10 +385,10 @@ export function FilterSidebar({ makes, bodyTypes, currentFilters, isMobile, onCl
         </FilterSection>
 
         {/* Drivetrain */}
-        <FilterSection 
-          title={tf("drivetrain")} 
-          icon={Lock} 
-          isOpen={openSections.includes("drive")} 
+        <FilterSection
+          title={tf("drivetrain")}
+          icon={Lock}
+          isOpen={openSections.includes("drive")}
           onToggle={() => toggleSection("drive")}
         >
           <div className="flex flex-wrap gap-2">
@@ -383,8 +398,8 @@ export function FilterSidebar({ makes, bodyTypes, currentFilters, isMobile, onCl
                 onClick={() => handleFilterChange("drivetrain", currentFilters.drivetrain === type.key ? null : type.key)}
                 className={cn(
                   "px-4 py-2 rounded-xl text-[11px] font-black border-2 transition-all",
-                  currentFilters.drivetrain === type.key 
-                    ? "bg-[#4B0082]/10 border-[#4B0082] text-[#4B0082]" 
+                  currentFilters.drivetrain === type.key
+                    ? "bg-[#4B0082]/10 border-[#4B0082] text-[#4B0082]"
                     : "bg-slate-50 border-slate-50 text-slate-600 hover:border-slate-200 hover:bg-white"
                 )}
               >
@@ -395,10 +410,10 @@ export function FilterSidebar({ makes, bodyTypes, currentFilters, isMobile, onCl
         </FilterSection>
 
         {/* Colour */}
-        <FilterSection 
-          title={tf("colour")} 
-          icon={Palette} 
-          isOpen={openSections.includes("colour")} 
+        <FilterSection
+          title={tf("colour")}
+          icon={Palette}
+          isOpen={openSections.includes("colour")}
           onToggle={() => toggleSection("colour")}
         >
           <div className="flex flex-wrap gap-3">
@@ -423,54 +438,54 @@ export function FilterSidebar({ makes, bodyTypes, currentFilters, isMobile, onCl
 
         {/* Toggle Option */}
         <div className="p-5 mt-2 border-t border-slate-100">
-           <button 
-             onClick={() => handleFilterChange("available", currentFilters.available === "true" ? null : "true")}
-             className={cn(
-               "w-full flex items-center justify-between p-3 rounded-2xl border-2 transition-all group",
-               currentFilters.available === "true" 
-                 ? "bg-[#4B0082]/5 border-[#4B0082] shadow-sm" 
-                 : "bg-slate-50/50 border-transparent hover:border-slate-200"
-             )}
-           >
-              <div className="flex items-center gap-3">
-                <div className={cn(
-                  "size-8 rounded-xl flex items-center justify-center transition-all",
-                  currentFilters.available === "true" ? "bg-[#4B0082] text-white" : "bg-white text-slate-500 shadow-sm border border-slate-100"
-                )}>
-                  <Eye className="size-4" />
-                </div>
-                <div className="text-left">
-                  <p className={cn("text-[13px] font-black tracking-tight", currentFilters.available === "true" ? "text-[#4B0082]" : "text-slate-800")}>
-                    {tf("availableOnly")}
-                  </p>
-                  <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">
-                    {tf("hideSold")}
-                  </p>
-                </div>
-              </div>
+          <button
+            onClick={() => handleFilterChange("available", currentFilters.available === "true" ? null : "true")}
+            className={cn(
+              "w-full flex items-center justify-between p-3 rounded-2xl border-2 transition-all group",
+              currentFilters.available === "true"
+                ? "bg-[#4B0082]/5 border-[#4B0082] shadow-sm"
+                : "bg-slate-50/50 border-transparent hover:border-slate-200"
+            )}
+          >
+            <div className="flex items-center gap-3">
               <div className={cn(
-                "relative h-6 w-11 rounded-full p-1 transition-colors",
-                currentFilters.available === "true" ? "bg-[#4B0082]" : "bg-slate-300"
+                "size-8 rounded-xl flex items-center justify-center transition-all",
+                currentFilters.available === "true" ? "bg-[#4B0082] text-white" : "bg-white text-slate-500 shadow-sm border border-slate-100"
               )}>
-                <div className={cn(
-                   "size-4 rounded-full bg-white transition-transform duration-200 shadow-sm",
-                   currentFilters.available === "true" ? "translate-x-5" : "translate-x-0"
-                )} />
+                <Eye className="size-4" />
               </div>
-           </button>
+              <div className="text-left">
+                <p className={cn("text-[13px] font-black tracking-tight", currentFilters.available === "true" ? "text-[#4B0082]" : "text-slate-800")}>
+                  {tf("availableOnly")}
+                </p>
+                <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">
+                  {tf("hideSold")}
+                </p>
+              </div>
+            </div>
+            <div className={cn(
+              "relative h-6 w-11 rounded-full p-1 transition-colors",
+              currentFilters.available === "true" ? "bg-[#4B0082]" : "bg-slate-300"
+            )}>
+              <div className={cn(
+                "size-4 rounded-full bg-white transition-transform duration-200 shadow-sm",
+                currentFilters.available === "true" ? "translate-x-5" : "translate-x-0"
+              )} />
+            </div>
+          </button>
         </div>
       </div>
 
       {/* Mobile Actions */}
       {isMobile && (
         <div className="p-4 border-t border-slate-100 bg-white grid grid-cols-2 gap-3">
-          <button 
+          <button
             onClick={clearFilters}
             className="h-11 rounded-xl border border-slate-200 font-bold text-slate-600 active:scale-95 transition-all text-sm"
           >
             {tf("reset")}
           </button>
-          <button 
+          <button
             onClick={onClose}
             className="h-11 rounded-xl bg-[#4B0082] text-white font-black active:scale-95 transition-all shadow-md shadow-[#4B0082]/10 text-sm"
           >

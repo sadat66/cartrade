@@ -159,6 +159,12 @@
       "automatic": "Automatic",
       "manual": "Manual"
     },
+    "drivetrains": {
+      "fwd": "FWD",
+      "rwd": "RWD",
+      "awd": "AWD",
+      "4wd": "4WD"
+    },
     "colours": {
       "white": "White",
       "black": "Black",

@@ -39,6 +39,9 @@ model Listing {
   year        Int
   mileage     Int?
   bodyType    String?  // Sedan, SUV, Ute, etc.
+  transmission String?  // Automatic, Manual
+  drivetrain   String?  // FWD, RWD, AWD, 4WD
+  color        String?  // White, Black, Silver, etc.
   location    String?  // e.g. "Dhanmondi, Dhaka"
   latitude    Float?   // for map pin (Dhaka city)
   longitude   Float?   // for map pin (Dhaka city)
