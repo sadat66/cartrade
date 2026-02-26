@@ -3,38 +3,67 @@ import Image from "next/image";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Heart } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { routing } from "@/i18n/routing";
 import { resolveListing } from "@/lib/listing-images";
 import type { Locale } from "@/i18n/config";
+import type { Listing, SavedListing } from "@prisma/client";
 
 import { Breadcrumb } from "@/components/shared/breadcrumb";
 
 type Props = { params: Promise<{ locale: string }> };
 
 export default async function SavedListingsPage({ params }: Props) {
-  const { locale } = await params;
+  let locale: string;
+  try {
+    const resolvedParams = await params;
+    locale = resolvedParams.locale;
+  } catch (error) {
+    console.error("Failed to resolve params in SavedListingsPage:", error);
+    locale = routing.defaultLocale;
+  }
+  
   const validLocale: Locale =
     locale && routing.locales.includes(locale as Locale)
       ? (locale as Locale)
       : routing.defaultLocale;
-  const user = await getCurrentUser();
+  
+  let user;
+  try {
+    user = await getCurrentUser();
+  } catch (error) {
+    console.error("Failed to get user in SavedListingsPage:", error);
+    return null;
+  }
+  
   if (!user) return null;
-  const t = await getTranslations({ locale: validLocale });
+  
+  let t;
+  try {
+    t = await getTranslations({ locale: validLocale });
+  } catch (error) {
+    console.error("Failed to get translations in SavedListingsPage:", error);
+    return null;
+  }
 
-  const saved = await prisma.savedListing.findMany({
-    where: { userId: user.id },
-    include: {
-      listing: true,
-    },
-    orderBy: { createdAt: "desc" },
-  });
-  const savedWithResolved = saved.map((item) => ({
-    ...item,
-    listing: resolveListing(item.listing),
-  }));
+  let savedWithResolved: (SavedListing & { listing: Listing })[] = [];
+  try {
+    const saved = await prisma.savedListing.findMany({
+      where: { userId: user.id },
+      include: {
+        listing: true,
+      },
+      orderBy: { createdAt: "desc" },
+    });
+    savedWithResolved = saved.map((item) => ({
+      ...item,
+      listing: resolveListing(item.listing),
+    }));
+  } catch (error) {
+    console.error("Failed to fetch saved listings:", error);
+    savedWithResolved = [];
+  }
 
   return (
     <div className="container mx-auto px-4 md:px-6 py-6 pt-8 lg:pt-14 space-y-6">
@@ -61,7 +90,7 @@ export default async function SavedListingsPage({ params }: Props) {
         </p>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {savedWithResolved.map((item: (typeof savedWithResolved)[number]) => {
+          {savedWithResolved.map((item) => {
             const { listing } = item;
             return (
             <Link key={listing.id} href={`/cars/${listing.id}`}>
