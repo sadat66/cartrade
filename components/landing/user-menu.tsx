@@ -84,6 +84,11 @@ export function UserMenu({ user }: { user: NonNullable<CurrentUser> }) {
         <DropdownMenuSeparator className="mx-1 bg-slate-100" />
         <DropdownMenuGroup className="p-1">
           <DropdownMenuItem asChild className="rounded-lg focus:bg-slate-50 cursor-pointer py-2.5 px-3">
+            <Link href="/seller/listings" className="flex items-center font-bold text-slate-700 text-sm">
+              Manage your ad or draft
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild className="rounded-lg focus:bg-slate-50 cursor-pointer py-2.5 px-3">
             <Link href="/profile" className="flex items-center font-bold text-slate-700 text-sm">
               {t("dashboard.nav.profile")}
             </Link>

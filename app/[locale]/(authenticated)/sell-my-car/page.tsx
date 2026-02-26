@@ -15,7 +15,7 @@ export default async function NewListingPage({ params }: Props) {
       ? (locale as Locale)
       : routing.defaultLocale;
   const user = await getCurrentUser();
-  if (!user) redirect({ href: "/login?next=/sell/new", locale: validLocale });
+  if (!user) redirect({ href: "/login?next=/sell-my-car", locale: validLocale });
   const t = await getTranslations({ locale: validLocale });
 
   return (
@@ -25,7 +25,7 @@ export default async function NewListingPage({ params }: Props) {
           <Breadcrumb
             items={[
               { label: t("cars.breadcrumb.home"), href: "/" },
-              { label: t("dashboard.myListings.title"), href: "/sell" },
+              { label: t("dashboard.myListings.title"), href: "/seller/listings" },
               { label: t("dashboard.addListing.title") }
             ]}
           />

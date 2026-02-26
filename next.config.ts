@@ -18,6 +18,25 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: '/en/sell/new',
+        destination: '/en/sell-my-car',
+        permanent: true,
+      },
+      {
+        source: '/en/sell',
+        destination: '/en/seller/listings',
+        permanent: true,
+      },
+      {
+        source: '/en/buy',
+        destination: '/en/cars',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default withNextIntl(nextConfig);

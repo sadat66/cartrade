@@ -198,7 +198,7 @@ export async function DashboardOverview({ user, locale }: Props) {
             </CardHeader>
             <CardFooter>
               <Button className="w-full bg-[#3D0066] hover:bg-[#2A0045] text-white rounded-xl font-bold transition-all shadow-md active:scale-[0.98]" asChild>
-                <Link href="/sell/new">{t("promo.getOffer")}</Link>
+                <Link href="/sell-my-car">{t("promo.getOffer")}</Link>
               </Button>
             </CardFooter>
           </Card>

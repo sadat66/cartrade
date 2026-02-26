@@ -30,8 +30,8 @@ export function NavbarClient({ user, translations: t }: NavbarClientProps) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const navLinks = [
-        { href: "/buy", label: t.buy },
-        { href: user ? "/sell" : "/login?next=/sell", label: t.sell },
+        { href: "/cars", label: t.buy },
+        { href: user ? "/sell-my-car" : "/login?next=/sell-my-car", label: t.sell },
         { href: "/dealerships", label: t.dealership },
         { href: "/why-cartrade", label: t.whyCartrade },
     ];
@@ -93,7 +93,7 @@ export function NavbarClient({ user, translations: t }: NavbarClientProps) {
                         {user ? (
                             <div className="flex items-center gap-3">
                                 <Button asChild className="hidden md:flex bg-[#ff385c] hover:bg-[#e03150] text-white rounded-full px-6 font-bold shadow-lg shadow-pink-900/10 transition-all active:scale-95">
-                                    <Link href="/sell">{t.sellMyCar}</Link>
+                                    <Link href="/sell-my-car">{t.sellMyCar}</Link>
                                 </Button>
                                 <UserMenu user={user} />
                             </div>
@@ -106,7 +106,7 @@ export function NavbarClient({ user, translations: t }: NavbarClientProps) {
                                     {t.login}
                                 </Link>
                                 <Button asChild className="hidden md:flex bg-[#ff385c] hover:bg-[#e03150] text-white rounded-full px-6 font-bold shadow-lg shadow-pink-900/10 transition-all active:scale-95">
-                                    <Link href="/login?next=/sell">{t.sellMyCar}</Link>
+                                    <Link href="/login?next=/sell-my-car">{t.sellMyCar}</Link>
                                 </Button>
                                 <Button variant="ghost" size="icon" asChild className="text-slate-700 hover:bg-slate-100 lg:hidden">
                                     <Link href="/login">
@@ -161,7 +161,7 @@ export function NavbarClient({ user, translations: t }: NavbarClientProps) {
                                     {t.login}
                                 </Link>
                                 <Button asChild className="bg-[#ff385c] hover:bg-[#e03150] text-white rounded-full w-full py-6 text-lg shadow-lg shadow-pink-900/10 transition-all active:scale-95">
-                                    <Link href="/login?next=/sell" onClick={() => setIsMenuOpen(false)}>
+                                    <Link href="/login?next=/sell-my-car" onClick={() => setIsMenuOpen(false)}>
                                         {t.sellMyCar}
                                     </Link>
                                 </Button>
@@ -169,7 +169,7 @@ export function NavbarClient({ user, translations: t }: NavbarClientProps) {
                         ) : (
                             <div className="flex flex-col gap-4 pt-4">
                                 <Button asChild className="bg-[#ff385c] hover:bg-[#e03150] text-white rounded-full w-full py-6 text-lg shadow-lg shadow-pink-900/10 transition-all active:scale-95">
-                                    <Link href="/sell" onClick={() => setIsMenuOpen(false)}>
+                                    <Link href="/sell-my-car" onClick={() => setIsMenuOpen(false)}>
                                         {t.sellMyCar}
                                     </Link>
                                 </Button>
