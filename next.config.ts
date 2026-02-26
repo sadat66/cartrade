@@ -16,6 +16,11 @@ const nextConfig: NextConfig = {
         hostname: "zwroadjmnejlrxmvghlz.supabase.co",
         pathname: "/storage/v1/object/public/**",
       },
+      {
+        protocol: "https",
+        hostname: "i.pravatar.cc",
+        pathname: "/**",
+      },
     ],
   },
   async redirects() {
