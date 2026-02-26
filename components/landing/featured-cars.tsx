@@ -19,6 +19,8 @@ type Listing = {
   mileage: number | null;
   price: any;
   imageUrls: string[];
+  transmission?: string | null;
+  drivetrain?: string | null;
 };
 
 export function FeaturedCars({
@@ -31,12 +33,12 @@ export function FeaturedCars({
   activeBodyType: string;
 }) {
   const currentBodyType = activeBodyType;
-  
+
   const [canScrollPrev, setCanScrollPrev] = React.useState(false);
   const [canScrollNext, setCanScrollNext] = React.useState(false);
 
-  const [emblaRef, emblaApi] = useEmblaCarousel({ 
-    align: "start", 
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    align: "start",
     containScroll: "trimSnaps",
     dragFree: true
   });
@@ -69,35 +71,34 @@ export function FeaturedCars({
         <div className="relative">
           {/* Embla Viewport */}
           <AnimatePresence mode="wait">
-            <motion.div 
+            <motion.div
               key={currentBodyType}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.3, ease: "easeOut" }}
-              className="overflow-hidden" 
+              className="overflow-hidden"
               ref={emblaRef}
             >
               <div className="flex gap-4 py-6 min-h-[400px]">
                 {listings.length > 0 ? (
                   listings.map((car, index) => (
                     <div key={car.id} className="flex-[0_0_85%] sm:flex-[0_0_45%] lg:flex-[0_0_23.5%] min-w-0">
-                      <ListingCard 
+                      <ListingCard
                         listing={{
                           ...car,
                           price: Number(car.price),
                           isDepositTaken: car.title.length % 7 === 0,
-                          transmission: "Automatic",
                           weeklyEstimate: Math.round(Number(car.price) / 200),
                           interestRate: 10.02
-                        }} 
+                        }}
                       />
                     </div>
                   ))
                 ) : (
                   <div className="flex flex-col items-center justify-center w-full py-12 text-center bg-slate-50/50 rounded-2xl border border-dashed border-slate-200">
                     <div className="size-16 bg-slate-100 rounded-full flex items-center justify-center mb-4 text-slate-400">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></svg>
                     </div>
                     <h3 className="text-xl font-bold text-slate-800">No {currentBodyType}s found</h3>
                     <p className="text-slate-500 mt-2 max-w-sm">We don't have any cars in this category right now. Please check back later or try a different size.</p>
@@ -111,13 +112,13 @@ export function FeaturedCars({
           {canScrollNext && (
             <div className="absolute top-0 right-0 bottom-0 w-24 bg-gradient-to-l from-white to-transparent pointer-events-none z-10 hidden lg:block" />
           )}
-          
+
           {/* Navigation Buttons */}
           <button
             onClick={scrollPrev}
             className={cn(
-               "absolute -left-5 top-1/2 -translate-y-1/2 z-30 size-11 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-800 shadow-xl hover:bg-slate-50 transition-all opacity-0 group-hover:opacity-100 hidden md:flex",
-               !canScrollPrev && "md:hidden"
+              "absolute -left-5 top-1/2 -translate-y-1/2 z-30 size-11 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-800 shadow-xl hover:bg-slate-50 transition-all opacity-0 group-hover:opacity-100 hidden md:flex",
+              !canScrollPrev && "md:hidden"
             )}
           >
             <ChevronLeft className="size-6" />

@@ -8,11 +8,11 @@ import { getTranslations } from "next-intl/server";
 import { routing } from "@/i18n/routing";
 import { resolveListing } from "@/lib/listing-images";
 import type { Locale } from "@/i18n/config";
-import type { Listing, SavedListing } from "@prisma/client";
-
 import { Breadcrumb } from "@/components/shared/breadcrumb";
 
 type Props = { params: Promise<{ locale: string }> };
+
+import { MySavedGrid } from "./my-saved-grid";
 
 export default async function SavedListingsPage({ params }: Props) {
   let locale: string;
@@ -23,12 +23,12 @@ export default async function SavedListingsPage({ params }: Props) {
     console.error("Failed to resolve params in SavedListingsPage:", error);
     locale = routing.defaultLocale;
   }
-  
+
   const validLocale: Locale =
     locale && routing.locales.includes(locale as Locale)
       ? (locale as Locale)
       : routing.defaultLocale;
-  
+
   let user;
   try {
     user = await getCurrentUser();
@@ -36,9 +36,9 @@ export default async function SavedListingsPage({ params }: Props) {
     console.error("Failed to get user in SavedListingsPage:", error);
     return null;
   }
-  
+
   if (!user) return null;
-  
+
   let t;
   try {
     t = await getTranslations({ locale: validLocale });
@@ -47,7 +47,7 @@ export default async function SavedListingsPage({ params }: Props) {
     return null;
   }
 
-  let savedWithResolved: (SavedListing & { listing: Listing })[] = [];
+  let formattedListings: any[] = [];
   try {
     const saved = await prisma.savedListing.findMany({
       where: { userId: user.id },
@@ -56,80 +56,50 @@ export default async function SavedListingsPage({ params }: Props) {
       },
       orderBy: { createdAt: "desc" },
     });
-    savedWithResolved = saved.map((item) => ({
-      ...item,
-      listing: resolveListing(item.listing),
-    }));
+    formattedListings = saved.map((item: any) => {
+      const listing = resolveListing(item.listing);
+      return {
+        id: listing.id,
+        title: listing.title,
+        make: listing.make,
+        model: listing.model,
+        year: listing.year,
+        mileage: listing.mileage,
+        price: Number(listing.price),
+        imageUrls: listing.imageUrls,
+        status: listing.status,
+        bodyType: listing.bodyType,
+        location: listing.location,
+        createdAt: item.createdAt.toISOString()
+      };
+    });
   } catch (error) {
     console.error("Failed to fetch saved listings:", error);
-    savedWithResolved = [];
   }
 
   return (
-    <div className="container mx-auto px-4 md:px-6 py-6 pt-8 lg:pt-14 space-y-6">
+    <div className="container mx-auto px-4 md:px-6 py-6 pt-8 lg:pt-14 space-y-8 min-h-[80vh]">
       <Breadcrumb
         items={[
           { label: t("cars.breadcrumb.home"), href: "/" },
           { label: t("dashboard.saved.title") }
         ]}
       />
-      <div>
-        <h1 className="text-2xl font-bold">{t("dashboard.saved.title")}</h1>
-        <p className="text-muted-foreground">
-          {t("dashboard.saved.carCount", { count: savedWithResolved.length })}
+
+      <div className="flex flex-col gap-1">
+        <h1 className="text-3xl font-black text-slate-900 tracking-tight">{t("dashboard.saved.title")}</h1>
+        <p className="text-sm font-bold text-slate-500">
+          {t("dashboard.saved.carCount", { count: formattedListings.length })}
         </p>
       </div>
 
-      {savedWithResolved.length === 0 ? (
-        <p className="text-muted-foreground">
-          {t("dashboard.saved.empty")}{" "}
-          <Link href="/" className="font-medium text-primary underline">
-            {t("dashboard.saved.featuredCars")}
-          </Link>{" "}
-          {t("dashboard.saved.andClickHeart")}
-        </p>
-      ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {savedWithResolved.map((item) => {
-            const { listing } = item;
-            return (
-            <Link key={listing.id} href={`/cars/${listing.id}`}>
-              <Card className="overflow-hidden transition-shadow hover:shadow-md">
-                <div className="relative aspect-[4/3] bg-muted">
-                  {listing.imageUrls[0] ? (
-                    <Image
-                      src={listing.imageUrls[0]}
-                      alt={listing.title}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 640px) 100vw, 33vw"
-                    />
-                  ) : (
-                    <div className="flex h-full items-center justify-center text-muted-foreground">
-                      {t("common.noImage")}
-                    </div>
-                  )}
-                  <span className="absolute right-2 top-2 rounded-full bg-background/80 p-1.5">
-                    <Heart className="size-4 fill-red-500 text-red-500" />
-                  </span>
-                </div>
-                <CardContent className="p-4">
-                  <p className="font-semibold">{listing.title}</p>
-                  <p className="text-muted-foreground text-sm">
-                    {listing.make} {listing.model} · {listing.year}
-                  </p>
-                </CardContent>
-                <CardFooter className="p-4 pt-0">
-                  <span className="font-bold">
-                    ${Number(listing.price).toLocaleString()}
-                  </span>
-                </CardFooter>
-              </Card>
-            </Link>
-          );
-          })}
-        </div>
-      )}
+      <MySavedGrid
+        listings={formattedListings}
+        noImageLabel={t("common.noImage")}
+        emptyTitle={t("dashboard.saved.title")}
+        emptySubtitle={t("dashboard.saved.empty")}
+        browseLabel={t("dashboard.saved.featuredCars")}
+      />
     </div>
   );
 }

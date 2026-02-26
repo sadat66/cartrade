@@ -18,7 +18,8 @@ type ListingCardProps = {
     price: unknown;
     imageUrls: string[];
     isDepositTaken?: boolean;
-    transmission?: string;
+    transmission?: string | null;
+    drivetrain?: string | null;
     weeklyEstimate?: number;
     interestRate?: number;
   };
@@ -27,12 +28,12 @@ type ListingCardProps = {
 
 export function ListingCard({ listing, kmLabel }: ListingCardProps) {
   const t = useTranslations("listing");
-  const tc = useTranslations("cars.transmissions");
+  const tc = useTranslations("cars");
   const tcom = useTranslations("common");
-  
+
   const price = typeof listing.price === "number" ? listing.price : Number(listing.price);
   const activeKmLabel = kmLabel || tcom("km") || "km";
-  
+
   return (
     <div className="group relative flex h-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition-all hover:shadow-md">
       {/* Absolute Badge */}
@@ -66,11 +67,25 @@ export function ListingCard({ listing, kmLabel }: ListingCardProps) {
           </h3>
         </Link>
         <p className="text-[11px] font-medium text-slate-500 mt-0.5">
-          {listing.title.split('-')[1]?.trim() || t("variantFallback")}
+          {listing.title.split('-')[1]?.trim() || (listing.drivetrain ? `(${listing.drivetrain.toUpperCase()})` : t("variantFallback"))}
         </p>
-        
+
         <div className="mt-2 text-[12px] font-medium text-slate-400">
-          {listing.mileage?.toLocaleString() || "0"} {activeKmLabel} <span className="mx-1">•</span> {listing.transmission ? (tc.has(listing.transmission.toLowerCase()) ? tc(listing.transmission.toLowerCase()) : listing.transmission) : tc("automatic")}
+          {listing.mileage?.toLocaleString() || "0"} {activeKmLabel}
+          <span className="mx-1">•</span>
+          {listing.transmission
+            ? (tc.has(`transmissions.${listing.transmission.toLowerCase()}`)
+              ? tc(`transmissions.${listing.transmission.toLowerCase()}`)
+              : listing.transmission)
+            : tc("transmissions.automatic")}
+          {listing.drivetrain && (
+            <>
+              <span className="mx-1">•</span>
+              {tc.has(`drivetrains.${listing.drivetrain.toLowerCase()}`)
+                ? tc(`drivetrains.${listing.drivetrain.toLowerCase()}`)
+                : listing.drivetrain}
+            </>
+          )}
         </div>
 
         <div className="mt-4">

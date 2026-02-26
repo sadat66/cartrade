@@ -37,6 +37,10 @@ const BODY_TYPE_KEYS = [
   "unique",
 ] as const;
 
+const TRANSMISSION_KEYS = ["automatic", "manual"] as const;
+const DRIVETRAIN_KEYS = ["fwd", "rwd", "awd", "4wd"] as const;
+const COLOR_KEYS = ["white", "black", "silver", "blue", "red"] as const;
+
 function FormLoadingOverlay() {
   const { pending } = useFormStatus();
   if (!pending) return null;
@@ -59,7 +63,11 @@ export function NewListingForm() {
   const router = useRouter();
   const t = useTranslations("common.toast");
   const tHero = useTranslations("hero");
+  const tc = useTranslations("cars");
   const [bodyType, setBodyType] = useState<string>("");
+  const [transmission, setTransmission] = useState<string>("");
+  const [drivetrain, setDrivetrain] = useState<string>("");
+  const [color, setColor] = useState<string>("");
   const [previewUrls, setPreviewUrls] = useState<(string | null)[]>([null, null, null]);
   const [clearPhotoKeys, setClearPhotoKeys] = useState([0, 0, 0]);
   const [photoSizes, setPhotoSizes] = useState<number[]>([0, 0, 0]);
@@ -237,6 +245,65 @@ export function NewListingForm() {
               </SelectContent>
             </Select>
             <input type="hidden" name="bodyType" value={bodyType} />
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label htmlFor="transmission" className="text-sm font-medium">
+                {tc("filters.transmission")}
+              </label>
+              <Select value={transmission || "none"} onValueChange={(v) => setTransmission(v === "none" ? "" : v)}>
+                <SelectTrigger id="transmission" className={cn("mt-1", !transmission && "text-muted-foreground")}>
+                  <SelectValue placeholder={tc("filters.transmission")} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">{tc("filters.transmission")}</SelectItem>
+                  {TRANSMISSION_KEYS.map((key) => (
+                    <SelectItem key={key} value={key}>
+                      {tc(`transmissions.${key}`)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <input type="hidden" name="transmission" value={transmission} />
+            </div>
+            <div>
+              <label htmlFor="drivetrain" className="text-sm font-medium">
+                {tc("filters.drivetrain")}
+              </label>
+              <Select value={drivetrain || "none"} onValueChange={(v) => setDrivetrain(v === "none" ? "" : v)}>
+                <SelectTrigger id="drivetrain" className={cn("mt-1", !drivetrain && "text-muted-foreground")}>
+                  <SelectValue placeholder={tc("filters.drivetrain")} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">{tc("filters.drivetrain")}</SelectItem>
+                  {DRIVETRAIN_KEYS.map((key) => (
+                    <SelectItem key={key} value={key}>
+                      {tc(`drivetrains.${key}`)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <input type="hidden" name="drivetrain" value={drivetrain} />
+            </div>
+          </div>
+          <div>
+            <label htmlFor="color" className="text-sm font-medium">
+              {tc("filters.colour")}
+            </label>
+            <Select value={color || "none"} onValueChange={(v) => setColor(v === "none" ? "" : v)}>
+              <SelectTrigger id="color" className={cn("mt-1", !color && "text-muted-foreground")}>
+                <SelectValue placeholder={tc("filters.colour")} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none">{tc("filters.colour")}</SelectItem>
+                {COLOR_KEYS.map((key) => (
+                  <SelectItem key={key} value={key}>
+                    {tc(`colours.${key}`)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <input type="hidden" name="color" value={color} />
           </div>
           <div>
             <label htmlFor="description" className="text-sm font-medium">
