@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
+import { useTranslations } from "next-intl";
 
 type Vehicle = {
     id: string;
@@ -46,6 +47,7 @@ type Dealership = {
 };
 
 export function DealershipProfileClient({ dealership }: { dealership: Dealership }) {
+    const t = useTranslations("dealership.profile");
     const [search, setSearch] = useState("");
     const [sortBy, setSortBy] = useState<"newest" | "price-low" | "price-high">("newest");
 
@@ -96,8 +98,8 @@ export function DealershipProfileClient({ dealership }: { dealership: Dealership
                     <Breadcrumb
                         className="text-white/80 [&_span]:text-white [&_a]:text-white/80 [&_a:hover]:text-white font-semibold"
                         items={[
-                            { label: "Home", href: "/" },
-                            { label: "Dealerships", href: "/dealerships" },
+                            { label: t("home"), href: "/" },
+                            { label: t("dealerships"), href: "/dealerships" },
                             { label: dealership.name },
                         ]}
                     />
@@ -127,7 +129,7 @@ export function DealershipProfileClient({ dealership }: { dealership: Dealership
                                 </h1>
                                 <span className="inline-flex items-center rounded-full bg-green-50 px-2.5 py-1 text-xs font-bold text-green-700 ring-1 ring-inset ring-green-600/20 flex-shrink-0">
                                     <span className="w-1.5 h-1.5 rounded-full bg-green-500 mr-1.5 animate-pulse" />
-                                    Verified
+                                    {t("verified")}
                                 </span>
                             </div>
 
@@ -159,7 +161,7 @@ export function DealershipProfileClient({ dealership }: { dealership: Dealership
                                 )}
                                 <span className="flex items-center gap-1.5 bg-slate-50 px-3 py-1.5 rounded-full">
                                     <Car className="size-4 text-[#ff385c]" />
-                                    {dealership._count.vehicles} vehicles
+                                    {t("vehiclesCount", { count: dealership._count.vehicles })}
                                 </span>
                             </div>
                         </div>
@@ -169,7 +171,7 @@ export function DealershipProfileClient({ dealership }: { dealership: Dealership
                 {/* Catalog Section */}
                 <div className="mb-8">
                     <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6">
-                        <h2 className="text-xl font-black text-slate-900">Vehicle Catalog</h2>
+                        <h2 className="text-xl font-black text-slate-900">{t("vehicleCatalog")}</h2>
                         <div className="flex items-center gap-3 w-full md:w-auto">
                             {/* Search */}
                             <div className="relative flex-1 md:w-64">
@@ -178,7 +180,7 @@ export function DealershipProfileClient({ dealership }: { dealership: Dealership
                                     type="text"
                                     value={search}
                                     onChange={(e) => setSearch(e.target.value)}
-                                    placeholder="Search vehicles..."
+                                    placeholder={t("searchPlaceholder")}
                                     className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#ff385c]/30 focus:border-[#ff385c] transition-all"
                                 />
                             </div>
@@ -188,9 +190,9 @@ export function DealershipProfileClient({ dealership }: { dealership: Dealership
                                 onChange={(e) => setSortBy(e.target.value as any)}
                                 className="px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#ff385c]/30 focus:border-[#ff385c]"
                             >
-                                <option value="newest">Newest</option>
-                                <option value="price-low">Price: Low to High</option>
-                                <option value="price-high">Price: High to Low</option>
+                                <option value="newest">{t("sortNewest")}</option>
+                                <option value="price-low">{t("sortPriceLow")}</option>
+                                <option value="price-high">{t("sortPriceHigh")}</option>
                             </select>
                         </div>
                     </div>
@@ -199,12 +201,12 @@ export function DealershipProfileClient({ dealership }: { dealership: Dealership
                         <div className="text-center py-20 bg-white rounded-2xl border border-slate-200">
                             <Car className="size-12 mx-auto text-slate-300 mb-4" />
                             <h3 className="text-lg font-bold text-slate-700">
-                                {search ? "No vehicles match your search" : "No vehicles available"}
+                                {search ? t("noSearchMatch") : t("noVehicles")}
                             </h3>
                             <p className="text-sm text-slate-500 mt-1">
                                 {search
-                                    ? "Try a different search term"
-                                    : "This dealership hasn't listed any vehicles yet"}
+                                    ? t("tryDifferentSearch")
+                                    : t("noVehiclesDesc")}
                             </p>
                         </div>
                     ) : (
@@ -235,14 +237,14 @@ export function DealershipProfileClient({ dealership }: { dealership: Dealership
                                                         ? "bg-blue-500 text-white"
                                                         : "bg-white/90 backdrop-blur-sm text-slate-700"
                                                     }`}>
-                                                    {vehicle.condition === "certified" ? "Certified Pre-Owned" : vehicle.condition}
+                                                    {vehicle.condition === "certified" ? t("certifiedPreOwned") : t(`condition.${vehicle.condition}`)}
                                                 </span>
                                             </div>
                                         )}
                                         {vehicle.imageUrls?.length > 1 && (
                                             <div className="absolute bottom-3 right-3">
                                                 <span className="bg-black/50 backdrop-blur-sm text-white rounded-full px-2 py-0.5 text-xs">
-                                                    +{vehicle.imageUrls.length - 1} photos
+                                                    {t("extraPhotos", { count: vehicle.imageUrls.length - 1 })}
                                                 </span>
                                             </div>
                                         )}
