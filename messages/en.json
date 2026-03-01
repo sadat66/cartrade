@@ -231,7 +231,8 @@
     "enterEmail": "Enter your email address",
     "emailPasswordRequired": "Email and password required",
     "checkEmailReset": "Check your email for the password reset link.",
-    "accountCreated": "Account created. Check your email to confirm your account."
+    "accountCreated": "Account created. Check your email to confirm your account.",
+    "accountAlreadyExists": "An account with this email already exists. Please log in instead."
   },
   "dashboard": {
     "nav": {

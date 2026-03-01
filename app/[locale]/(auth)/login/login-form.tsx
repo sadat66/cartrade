@@ -10,12 +10,12 @@ import { useTranslations } from "next-intl";
 
 import { Link } from "@/i18n/navigation";
 
-export function LoginForm({ 
-  next = "/dashboard", 
+export function LoginForm({
+  next = "/dashboard",
   authError = false,
-  initialIsSignUp = false 
-}: { 
-  next?: string; 
+  initialIsSignUp = false
+}: {
+  next?: string;
   authError?: boolean;
   initialIsSignUp?: boolean;
 }) {
@@ -50,7 +50,7 @@ export function LoginForm({
 
     if (isForgotPassword) {
       if (!email) {
-      setError(t("login.enterEmail"));
+        setError(t("login.enterEmail"));
         setLoading(false);
         return;
       }
@@ -74,10 +74,18 @@ export function LoginForm({
       return;
     }
     if (isSignUp) {
-      const { error: err } = await supabase.auth.signUp({ email, password });
+      const { data, error: err } = await supabase.auth.signUp({ email, password });
       if (err) {
         setError(err.message);
         toast.error(err.message);
+        setLoading(false);
+        return;
+      }
+      // Supabase returns a user with empty identities when the email already exists
+      if (data?.user?.identities?.length === 0) {
+        const msg = t("login.accountAlreadyExists");
+        setError(msg);
+        toast.error(msg);
         setLoading(false);
         return;
       }
@@ -119,8 +127,8 @@ export function LoginForm({
       {!isForgotPassword && (
         <div>
           <label htmlFor="password" className="text-sm font-medium text-slate-700">
-          {t("login.password")}
-        </label>
+            {t("login.password")}
+          </label>
           <Input
             id="password"
             name="password"

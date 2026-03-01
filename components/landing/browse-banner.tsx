@@ -13,7 +13,7 @@ export function BrowseBanner() {
   return (
     <section className="pb-24 pt-4 overflow-hidden">
       <div className="container mx-auto px-4 md:px-6">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, scale: 0.98 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
@@ -22,10 +22,10 @@ export function BrowseBanner() {
         >
           {/* Main Content Layout */}
           <div className="flex flex-col md:flex-row items-center justify-between w-full h-full gap-8">
-            
+
             {/* Left Column: Image Area */}
             <div className="w-full md:w-5/12 flex items-center justify-center md:justify-start">
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.2, duration: 0.8 }}
@@ -35,6 +35,7 @@ export function BrowseBanner() {
                   src="/banner-images/Browse_more_cars.png"
                   alt="Browse more cars"
                   fill
+                  sizes="(min-width: 768px) 40vw, 100vw"
                   className="object-contain"
                   priority
                 />
@@ -43,7 +44,7 @@ export function BrowseBanner() {
 
             {/* Right Column: Text & CTA Area */}
             <div className="w-full md:w-7/12 flex flex-col items-center text-center z-10 px-2 lg:px-8">
-              <motion.h2 
+              <motion.h2
                 initial={{ opacity: 0, y: 10 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3, duration: 0.6 }}
@@ -51,8 +52,8 @@ export function BrowseBanner() {
               >
                 {t("title")}
               </motion.h2>
-              
-              <motion.p 
+
+              <motion.p
                 initial={{ opacity: 0, y: 10 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4, duration: 0.6 }}
@@ -60,15 +61,15 @@ export function BrowseBanner() {
               >
                 {t("subtitle")}
               </motion.p>
-              
+
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5, duration: 0.6 }}
               >
-                <Button 
-                    asChild
-                    className="bg-[#3D0066] hover:bg-[#2d004d] text-white rounded-2xl px-12 py-7 text-lg lg:text-xl font-black shadow-2xl shadow-purple-900/30 transition-all hover:scale-105 active:scale-95"
+                <Button
+                  asChild
+                  className="bg-[#3D0066] hover:bg-[#2d004d] text-white rounded-2xl px-12 py-7 text-lg lg:text-xl font-black shadow-2xl shadow-purple-900/30 transition-all hover:scale-105 active:scale-95"
                 >
                   <Link href="/cars">
                     {t("button")}
