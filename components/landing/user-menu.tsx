@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { LogOut } from "lucide-react";
+import { LogOut, Building2, Plus } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { signOut } from "@/app/actions/auth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -39,7 +39,14 @@ function getColorFromSeed(seed: string) {
   return `hsl(${h}, 65%, 45%)`;
 }
 
-export function UserMenu({ user }: { user: NonNullable<CurrentUser> }) {
+type DealershipInfo = {
+  id: string;
+  name: string;
+  slug: string;
+  logoUrl: string | null;
+} | null;
+
+export function UserMenu({ user, dealership }: { user: NonNullable<CurrentUser>; dealership?: DealershipInfo }) {
   const [mounted, setMounted] = useState(false);
   const t = useTranslations();
 
@@ -68,7 +75,7 @@ export function UserMenu({ user }: { user: NonNullable<CurrentUser> }) {
           {user.image ? (
             <AvatarImage src={user.image} alt={user.name ?? undefined} />
           ) : null}
-          <AvatarFallback 
+          <AvatarFallback
             className="text-lg text-white font-bold"
             style={{ backgroundColor: userColor }}
           >
@@ -76,12 +83,47 @@ export function UserMenu({ user }: { user: NonNullable<CurrentUser> }) {
           </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-60 p-1 rounded-xl shadow-2xl border-slate-200">
+      <DropdownMenuContent align="end" className="w-64 p-1 rounded-xl shadow-2xl border-slate-200">
         <div className="flex flex-col space-y-0.5 p-3 px-4">
           <p className="text-sm font-black text-slate-900 truncate">{user.name || t("common.user")}</p>
           <p className="text-[11px] font-bold text-slate-500 truncate">{user.email}</p>
         </div>
         <DropdownMenuSeparator className="mx-1 bg-slate-100" />
+
+        {/* Dealership Profile Switching Section */}
+        <div className="p-1">
+          {dealership ? (
+            <DropdownMenuItem asChild className="rounded-lg focus:bg-purple-50 cursor-pointer py-3 px-3">
+              <Link href="/dealership/manage" className="flex items-center gap-3 font-bold text-sm">
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#3D0066] to-[#6B21A8] flex items-center justify-center flex-shrink-0">
+                  {dealership.logoUrl ? (
+                    <img src={dealership.logoUrl} alt="" className="w-full h-full object-cover rounded-lg" />
+                  ) : (
+                    <Building2 className="size-4 text-white" />
+                  )}
+                </div>
+                <div className="min-w-0">
+                  <p className="text-slate-800 truncate">{dealership.name}</p>
+                  <p className="text-[10px] font-semibold text-purple-600">Switch to Dealership</p>
+                </div>
+              </Link>
+            </DropdownMenuItem>
+          ) : (
+            <DropdownMenuItem asChild className="rounded-lg focus:bg-purple-50 cursor-pointer py-3 px-3">
+              <Link href="/dealership/create" className="flex items-center gap-3 font-bold text-sm text-purple-700">
+                <div className="w-8 h-8 rounded-lg bg-purple-100 flex items-center justify-center flex-shrink-0">
+                  <Plus className="size-4 text-purple-600" />
+                </div>
+                <div>
+                  <p className="text-slate-800">Open a Dealership</p>
+                  <p className="text-[10px] font-semibold text-purple-500">Create your dealership profile</p>
+                </div>
+              </Link>
+            </DropdownMenuItem>
+          )}
+        </div>
+        <DropdownMenuSeparator className="mx-1 bg-slate-100" />
+
         <DropdownMenuGroup className="p-1">
           <DropdownMenuItem asChild className="rounded-lg focus:bg-slate-50 cursor-pointer py-2.5 px-3">
             <Link href="/seller/listings" className="flex items-center font-bold text-slate-700 text-sm">

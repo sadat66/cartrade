@@ -47,7 +47,10 @@
     "messages": "Messages",
     "profile": "Profile",
     "logOut": "Log out",
-    "language": "Language"
+    "language": "Language",
+    "switchToDealership": "Switch to Dealership",
+    "openDealership": "Open a Dealership",
+    "createDealershipProfile": "Create your dealership profile"
   },
   "footer": {
     "rights": "© {year} Cartrade. All rights reserved.",

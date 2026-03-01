@@ -10,8 +10,16 @@ import type { CurrentUser } from "@/lib/auth";
 import { UserMenu } from "./user-menu";
 import { LocaleSwitcher } from "@/components/shared/locale-switcher";
 
+type DealershipInfo = {
+    id: string;
+    name: string;
+    slug: string;
+    logoUrl: string | null;
+} | null;
+
 interface NavbarClientProps {
     user: CurrentUser | null;
+    dealership?: DealershipInfo;
     translations: {
         buy: string;
         sell: string;
@@ -26,7 +34,7 @@ interface NavbarClientProps {
     };
 }
 
-export function NavbarClient({ user, translations: t }: NavbarClientProps) {
+export function NavbarClient({ user, dealership, translations: t }: NavbarClientProps) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const navLinks = [
@@ -95,7 +103,7 @@ export function NavbarClient({ user, translations: t }: NavbarClientProps) {
                                 <Button asChild className="hidden md:flex bg-[#ff385c] hover:bg-[#e03150] text-white rounded-full px-6 font-bold shadow-lg shadow-pink-900/10 transition-all active:scale-95">
                                     <Link href="/sell-my-car">{t.sellMyCar}</Link>
                                 </Button>
-                                <UserMenu user={user} />
+                                <UserMenu user={user} dealership={dealership} />
                             </div>
                         ) : (
                             <div className="flex items-center gap-3">

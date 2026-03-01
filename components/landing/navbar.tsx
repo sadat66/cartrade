@@ -1,6 +1,7 @@
 import { getCurrentUser } from "@/lib/auth";
 import { getTranslations } from "next-intl/server";
 import type { Locale } from "@/i18n/config";
+import { prisma } from "@/lib/db";
 import { NavbarClient } from "./navbar-client";
 
 export async function Navbar({ locale }: { locale: Locale }) {
@@ -9,6 +10,19 @@ export async function Navbar({ locale }: { locale: Locale }) {
     user = await getCurrentUser();
   } catch (error) {
     console.error("Failed to get user in Navbar:", error);
+  }
+
+  // Fetch user's dealership if logged in
+  let dealership = null;
+  if (user) {
+    try {
+      dealership = await prisma.dealership.findFirst({
+        where: { ownerId: user.id },
+        select: { id: true, name: true, slug: true, logoUrl: true },
+      });
+    } catch (error) {
+      console.error("Failed to fetch dealership in Navbar:", error);
+    }
   }
 
   let translations;
@@ -43,5 +57,5 @@ export async function Navbar({ locale }: { locale: Locale }) {
     };
   }
 
-  return <NavbarClient user={user} translations={translations} />;
+  return <NavbarClient user={user} dealership={dealership} translations={translations} />;
 }

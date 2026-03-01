@@ -47,7 +47,10 @@
     "messages": "মেসেজ",
     "profile": "প্রোফাইল",
     "logOut": "লগ আউট",
-    "language": "ভাষা"
+    "language": "ভাষা",
+    "switchToDealership": "ডিলারশিপে যান",
+    "openDealership": "ডিলারশিপ খুলুন",
+    "createDealershipProfile": "আপনার ডিলারশিপ প্রোফাইল তৈরি করুন"
   },
   "footer": {
     "rights": "© {year} কারট্রেড। সর্বস্বত্ব সংরক্ষিত।",
