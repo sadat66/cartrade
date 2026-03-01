@@ -11,17 +11,17 @@ export type CurrentUser = Awaited<ReturnType<typeof getCurrentUser>>;
 export const getCurrentUser = cache(async () => {
   try {
     const supabase = await createClient();
-    const {
-      data: { user: authUser },
-      error: authError,
-    } = await supabase.auth.getUser();
+    const { data, error: authError } = await supabase.auth.getUser();
 
-    if (authError) {
-      console.warn("Supabase auth error:", authError);
+    if (authError || !data?.user) {
+      if (authError) {
+        // Only log warning for expected auth failures (like expired session)
+        console.warn("Supabase auth session invalid or expired:", authError.message);
+      }
       return null;
     }
 
-    if (!authUser) return null;
+    const authUser = data.user;
 
     try {
       // Optimistically check for user in DB

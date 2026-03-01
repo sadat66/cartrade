@@ -37,11 +37,15 @@ export async function updateSession(
     }
   );
 
-  // try {
-  //   await supabase.auth.getUser();
-  // } catch (error) {
-  //   console.warn("Supabase auth check failed in middleware:", error);
-  // }
+  try {
+    // This will refresh the session if needed and set/clear cookies accordingly.
+    // It is important to call this in middleware to ensure the cookie state is synced
+    // before the layout and pages render.
+    await supabase.auth.getUser();
+  } catch (error) {
+    // We catch but don't rethrow, to let the request continue as unauthenticated
+    console.warn("Supabase auth check failed in middleware:", (error as Error).message);
+  }
 
   return response;
 }
