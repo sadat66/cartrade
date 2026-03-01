@@ -52,8 +52,8 @@ export async function createDealership(formData: FormData) {
             console.error("Error uploading dealership logo:", uploadError);
             return { error: "Error uploading logo" };
         }
-        const { data } = supabase.storage.from("profile-pictures").getPublicUrl(filePath);
-        logoUrl = data.publicUrl;
+        // Store path only (not full URL) for easy DB migration
+        logoUrl = filePath;
     }
 
     const dealership = await prisma.dealership.create({
@@ -103,8 +103,8 @@ export async function updateDealership(formData: FormData) {
             .from("profile-pictures")
             .upload(filePath, logoFile, { upsert: true });
         if (!uploadError) {
-            const { data } = supabase.storage.from("profile-pictures").getPublicUrl(filePath);
-            logoUrl = data.publicUrl;
+            // Store path only (not full URL) for easy DB migration
+            logoUrl = filePath;
         }
     }
 

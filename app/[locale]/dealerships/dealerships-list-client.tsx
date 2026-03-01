@@ -6,6 +6,7 @@ import {
 import { Link } from "@/i18n/navigation";
 import useEmblaCarousel from "embla-carousel-react";
 import { useTranslations } from "next-intl";
+import { getListingImageUrl } from "@/lib/listing-images";
 import { cn } from "@/lib/utils";
 
 type Vehicle = {
@@ -69,7 +70,7 @@ function VehicleCarousel({ vehicles, dealershipSlug, t }: { vehicles: Vehicle[],
                                 <div className="relative aspect-[4/3] w-full overflow-hidden bg-slate-100">
                                     {vehicle.imageUrls[0] ? (
                                         <img
-                                            src={vehicle.imageUrls[0]}
+                                            src={getListingImageUrl(vehicle.imageUrls[0])}
                                             alt={vehicle.title}
                                             className="h-full w-full object-cover group-hover/vcard:scale-105 transition-transform duration-500"
                                         />
@@ -200,7 +201,7 @@ export function DealershipsListClient({ dealerships }: { dealerships: Dealership
                                     <div className="flex items-center gap-4 mb-4">
                                         <div className="w-14 h-14 rounded-xl border-2 border-slate-100 bg-white overflow-hidden flex items-center justify-center flex-shrink-0">
                                             {dealership.logoUrl ? (
-                                                <img src={dealership.logoUrl} alt="" className="w-full h-full object-cover" />
+                                                <img src={getListingImageUrl(dealership.logoUrl)} alt="" className="w-full h-full object-cover" />
                                             ) : (
                                                 <Building2 className="size-6 text-slate-300" />
                                             )}

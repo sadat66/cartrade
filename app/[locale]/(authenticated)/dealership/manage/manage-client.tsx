@@ -133,7 +133,7 @@ export function DealershipManageClient({ dealership }: { dealership: Dealership 
                         <div className="absolute inset-0 opacity-20 bg-[url('/grid.svg')] bg-[size:20px_20px]" />
                         {dealership.coverUrl && (
                             <img
-                                src={dealership.coverUrl}
+                                src={getListingImageUrl(dealership.coverUrl)}
                                 alt=""
                                 className="w-full h-full object-cover opacity-60"
                             />
@@ -146,7 +146,7 @@ export function DealershipManageClient({ dealership }: { dealership: Dealership 
                             {/* Logo */}
                             <div className="w-24 h-24 rounded-xl border-4 border-white bg-white shadow-xl overflow-hidden flex items-center justify-center flex-shrink-0 -mt-20 md:-mt-24">
                                 {dealership.logoUrl ? (
-                                    <img src={dealership.logoUrl} alt={dealership.name} className="w-full h-full object-cover" />
+                                    <img src={getListingImageUrl(dealership.logoUrl)} alt={dealership.name} className="w-full h-full object-cover" />
                                 ) : (
                                     <Building2 className="size-10 text-slate-200" />
                                 )}
