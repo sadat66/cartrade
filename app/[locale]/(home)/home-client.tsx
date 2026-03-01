@@ -7,6 +7,7 @@ import { FeaturedCars } from "@/components/landing/featured-cars";
 import { BudgetSection } from "@/components/landing/budget-section";
 import { NewCarsSection } from "@/components/landing/new-cars-section";
 import { Testimonials } from "@/components/landing/testimonials";
+import { BrowseBanner } from "@/components/landing/browse-banner";
 
 type Listing = {
   id: string;
@@ -52,6 +53,7 @@ export default function HomeClient({
           <BudgetSection listings={initialListings} />
           <NewCarsSection listings={initialListings.slice(0, 10)} />
           <Testimonials />
+          <BrowseBanner />
         </section>
       </main>
     </div>

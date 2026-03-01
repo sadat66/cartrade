@@ -342,5 +342,10 @@
       "role": "Reliable Commuter",
       "content": "The filtering options are top-notch. I found a fuel-efficient car for my daily commute within my strict budget!"
     }
+  },
+  "browseBanner": {
+    "title": "Find your own car",
+    "subtitle": "With unbeatable quality and the peace of mind of 7-day returns, there's simply no better way to buy a used car. Start your search today.",
+    "button": "Browse all cars"
   }
 }
