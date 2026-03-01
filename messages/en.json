@@ -436,7 +436,12 @@
       "noVehicles": "No vehicles available",
       "noVehiclesDesc": "This dealership hasn't listed any vehicles yet",
       "certified": "Certified Pre-Owned",
-      "photosCount": "+{count} photos"
+      "photosCount": "+{count} photos",
+      "condition": {
+        "new": "New",
+        "used": "Used",
+        "certified": "Certified Pre-Owned"
+      }
     }
   }
 }
