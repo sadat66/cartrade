@@ -15,12 +15,12 @@ export function FormSidebar({ currentStep, steps, listingStrength }: FormSidebar
   const tDashboard = useTranslations("dashboard");
 
   return (
-    <div className="hidden lg:flex lg:col-span-4 flex-col gap-8 sticky top-24">
+    <div className="flex flex-col gap-8">
       <div className="space-y-4">
-        <h1 className="text-4xl font-black text-slate-900 tracking-tight leading-none mb-4">
+        <h1 className="text-3xl font-black text-slate-900 tracking-tight leading-tight">
           {tDashboard("addListing.title")}
         </h1>
-        <p className="text-slate-500 font-medium text-lg leading-relaxed">
+        <p className="text-slate-400 font-bold text-sm leading-relaxed uppercase tracking-widest">
           {tDashboard("addListing.subtitle")}
         </p>
       </div>

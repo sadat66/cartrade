@@ -19,7 +19,15 @@ const STEPS = [
   { id: 5, title: "Review" },
 ];
 
-export function useNewListingForm() {
+export function useNewListingForm({ 
+  onSuccess,
+  action,
+  initialData 
+}: { 
+  onSuccess?: (id: string) => void,
+  action?: (fd: FormData) => Promise<{ error?: string, listingId?: string, vehicleId?: string }>,
+  initialData?: Partial<{ dealershipId: string }>
+} = {}) {
   const router = useRouter();
   const t = useTranslations("common.toast");
   
@@ -37,6 +45,8 @@ export function useNewListingForm() {
     transmission: "",
     drivetrain: "",
     color: "",
+    condition: "used",
+    ...initialData
   });
   
   const updateField = useCallback((field: string, value: any) => {
@@ -114,14 +124,20 @@ export function useNewListingForm() {
 
   const [state, formAction] = useActionState(
     async (_prev: { error?: string }, fd: FormData) => {
-      const result = await createListing(fd);
+      const result = action ? await action(fd) : await createListing(fd);
       if (result.error) {
         toast.error(result.error);
         return { error: result.error };
       }
-      if (result.listingId) {
+      const res = result as any;
+      const successId = res.listingId || res.vehicleId;
+      if (successId) {
         toast.success(t("listingCreated"));
-        router.push("/cars/" + result.listingId);
+        if (onSuccess) {
+          onSuccess(successId);
+        } else {
+          router.push("/cars/" + successId);
+        }
       }
       return {};
     },

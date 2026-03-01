@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import {
     Building2, MapPin, Clock, Phone, Car, Plus, Pencil, Trash2,
     Eye, Package, Settings, ChevronRight, ImageIcon, Tag, Gauge,
-    Palette, ArrowLeft, X
+    Palette, ArrowLeft, X, Loader2
 } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
@@ -14,6 +14,7 @@ import {
     addDealershipVehicle,
     deleteDealershipVehicle,
 } from "@/app/actions/dealership";
+import { NewListingModal } from "@/components/sell-car/new-listing-modal";
 
 type Vehicle = {
     id: string;
@@ -54,29 +55,10 @@ type Dealership = {
 export function DealershipManageClient({ dealership }: { dealership: Dealership }) {
     const router = useRouter();
     const [activeTab, setActiveTab] = useState<"catalog" | "settings">("catalog");
-    const [showAddVehicle, setShowAddVehicle] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [showEditDealership, setShowEditDealership] = useState(false);
 
-    const handleAddVehicle = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        setIsSubmitting(true);
-        setError(null);
-
-        const formData = new FormData(e.currentTarget);
-        formData.set("dealershipId", dealership.id);
-        const result = await addDealershipVehicle(formData);
-
-        if (result && "error" in result) {
-            setError(result.error ?? null);
-            setIsSubmitting(false);
-        } else {
-            setShowAddVehicle(false);
-            setIsSubmitting(false);
-            router.refresh();
-        }
-    };
 
     const handleDeleteVehicle = async (vehicleId: string) => {
         if (!confirm("Are you sure you want to remove this vehicle?")) return;
@@ -224,13 +206,19 @@ export function DealershipManageClient({ dealership }: { dealership: Dealership 
                 {activeTab === "catalog" && (
                     <div className="space-y-6">
                         {/* Add Vehicle Button */}
-                        <Button
-                            onClick={() => setShowAddVehicle(true)}
-                            className="bg-gradient-to-r from-[#ff385c] to-[#e03150] hover:from-[#e03150] hover:to-[#cc2b47] text-white rounded-xl px-6 py-5 font-bold shadow-lg shadow-pink-500/25 transition-all"
-                        >
-                            <Plus className="size-5 mr-2" />
-                            Add Vehicle
-                        </Button>
+                        <NewListingModal 
+                            title="Add Car to Catalog"
+                            subtitle={`New inventory entry for ${dealership.name}`}
+                            action={addDealershipVehicle}
+                            initialData={{ dealershipId: dealership.id }}
+                            onSuccess={() => router.refresh()}
+                            trigger={
+                                <Button className="bg-[#ff385c] hover:bg-[#e03150] text-white rounded-xl px-6 py-5 font-bold shadow-lg shadow-pink-500/25 transition-all active:scale-95">
+                                    <Plus className="size-5 mr-2" />
+                                    Add Vehicle
+                                </Button>
+                            }
+                        />
 
                         {/* Vehicle Grid */}
                         {dealership.vehicles.length === 0 ? (
@@ -437,108 +425,6 @@ export function DealershipManageClient({ dealership }: { dealership: Dealership 
                     </div>
                 )}
 
-                {/* Add Vehicle Modal */}
-                {showAddVehicle && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
-                        <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
-                            <div className="sticky top-0 bg-white border-b border-slate-100 px-6 py-4 flex items-center justify-between rounded-t-2xl">
-                                <h2 className="text-lg font-black text-slate-900">Add Vehicle</h2>
-                                <button
-                                    onClick={() => { setShowAddVehicle(false); setError(null); }}
-                                    className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
-                                >
-                                    <X className="size-5 text-slate-500" />
-                                </button>
-                            </div>
-                            <form onSubmit={handleAddVehicle} className="p-6 space-y-4">
-                                <div className="grid grid-cols-2 gap-4">
-                                    <FormField label="Title *" name="title" placeholder="e.g. 2023 Toyota Corolla" required />
-                                    <FormField label="Make *" name="make" placeholder="e.g. Toyota" required />
-                                    <FormField label="Model *" name="model" placeholder="e.g. Corolla" required />
-                                    <FormField label="Year *" name="year" type="number" placeholder="e.g. 2023" required />
-                                    <FormField label="Price (৳) *" name="price" type="number" placeholder="e.g. 2500000" required />
-                                    <FormField label="Mileage (km)" name="mileage" type="number" placeholder="e.g. 15000" />
-                                    <div className="space-y-1.5">
-                                        <label className="text-xs font-bold text-slate-600">Body Type</label>
-                                        <select
-                                            name="bodyType"
-                                            className="w-full px-3 py-2.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#ff385c]/30 focus:border-[#ff385c]"
-                                        >
-                                            <option value="">Select</option>
-                                            <option value="Sedan">Sedan</option>
-                                            <option value="SUV">SUV</option>
-                                            <option value="Hatchback">Hatchback</option>
-                                            <option value="Pickup">Pickup</option>
-                                            <option value="Coupe">Coupe</option>
-                                            <option value="Van">Van</option>
-                                        </select>
-                                    </div>
-                                    <div className="space-y-1.5">
-                                        <label className="text-xs font-bold text-slate-600">Transmission</label>
-                                        <select
-                                            name="transmission"
-                                            className="w-full px-3 py-2.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#ff385c]/30 focus:border-[#ff385c]"
-                                        >
-                                            <option value="">Select</option>
-                                            <option value="Automatic">Automatic</option>
-                                            <option value="Manual">Manual</option>
-                                        </select>
-                                    </div>
-                                    <FormField label="Color" name="color" placeholder="e.g. White" />
-                                    <div className="space-y-1.5">
-                                        <label className="text-xs font-bold text-slate-600">Condition</label>
-                                        <select
-                                            name="condition"
-                                            className="w-full px-3 py-2.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#ff385c]/30 focus:border-[#ff385c]"
-                                        >
-                                            <option value="used">Used</option>
-                                            <option value="new">New</option>
-                                            <option value="certified">Certified Pre-Owned</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div className="space-y-1.5">
-                                    <label className="text-xs font-bold text-slate-600">Description</label>
-                                    <textarea
-                                        name="description"
-                                        rows={3}
-                                        placeholder="Additional details about this vehicle..."
-                                        className="w-full px-3 py-2.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#ff385c]/30 focus:border-[#ff385c] resize-none"
-                                    />
-                                </div>
-                                {/* Photo uploads */}
-                                <div className="space-y-1.5">
-                                    <label className="text-xs font-bold text-slate-600">Photos (up to 5)</label>
-                                    <div className="grid grid-cols-5 gap-2">
-                                        {[1, 2, 3, 4, 5].map((i) => (
-                                            <label
-                                                key={i}
-                                                className="aspect-square rounded-lg border-2 border-dashed border-slate-200 bg-slate-50 flex items-center justify-center cursor-pointer hover:border-[#ff385c]/30 hover:bg-pink-50/50 transition-all"
-                                            >
-                                                <ImageIcon className="size-5 text-slate-300" />
-                                                <input type="file" name={`photo${i}`} accept="image/*" className="hidden" />
-                                            </label>
-                                        ))}
-                                    </div>
-                                </div>
-
-                                {error && (
-                                    <div className="rounded-lg bg-red-50 border border-red-200 px-3 py-2 text-sm text-red-600 font-medium">
-                                        {error}
-                                    </div>
-                                )}
-
-                                <Button
-                                    type="submit"
-                                    disabled={isSubmitting}
-                                    className="w-full bg-gradient-to-r from-[#ff385c] to-[#e03150] hover:from-[#e03150] hover:to-[#cc2b47] text-white rounded-xl py-5 font-bold shadow-lg shadow-pink-500/25"
-                                >
-                                    {isSubmitting ? "Adding…" : "Add Vehicle"}
-                                </Button>
-                            </form>
-                        </div>
-                    </div>
-                )}
             </div>
         </div>
     );
@@ -553,25 +439,6 @@ function InfoItem({ icon, label, value }: { icon: React.ReactNode; label: string
                 <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">{label}</span>
                 <p className="text-sm font-semibold text-slate-800">{value}</p>
             </div>
-        </div>
-    );
-}
-
-function FormField({
-    label, name, type = "text", placeholder, required = false
-}: {
-    label: string; name: string; type?: string; placeholder: string; required?: boolean;
-}) {
-    return (
-        <div className="space-y-1.5">
-            <label className="text-xs font-bold text-slate-600">{label}</label>
-            <input
-                name={name}
-                type={type}
-                placeholder={placeholder}
-                required={required}
-                className="w-full px-3 py-2.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#ff385c]/30 focus:border-[#ff385c] transition-all"
-            />
         </div>
     );
 }

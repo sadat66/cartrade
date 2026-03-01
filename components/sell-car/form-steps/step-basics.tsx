@@ -65,6 +65,21 @@ export function StepVehicleBasics({ data, onChange }: {
           placeholder="2022"
           required
         />
+        {data.dealershipId && (
+          <FormSelect 
+            name="condition"
+            label="Condition"
+            description="Condition of the car."
+            options={["new", "used", "certified"]}
+            value={data.condition || "used"}
+            onValueChange={(v) => onChange("condition", v)}
+            placeholder="Select"
+            required
+          />
+        )}
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <FormSelect 
           name="bodyType"
           label="Body Type"
@@ -75,6 +90,7 @@ export function StepVehicleBasics({ data, onChange }: {
           placeholder={tHero("anyBodyType")}
           required
         />
+        {!data.dealershipId && <div />} {/* Spacer if only bodyType is visible */}
       </div>
     </StepContainer>
   );
