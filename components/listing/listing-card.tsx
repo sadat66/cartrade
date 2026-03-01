@@ -3,6 +3,7 @@ import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 import { Heart, Info } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { getListingImageUrl } from "@/lib/listing-images";
 
 const PLACEHOLDER_IMAGE =
   "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=400&q=80";
@@ -51,7 +52,7 @@ export function ListingCard({ listing, kmLabel }: ListingCardProps) {
       {/* Image Section */}
       <Link href={`/cars/${listing.id}`} className="block relative aspect-[4/3] w-full shrink-0 overflow-hidden bg-slate-100">
         <Image
-          src={listing.imageUrls[0] || PLACEHOLDER_IMAGE}
+          src={getListingImageUrl(listing.imageUrls[0]) || PLACEHOLDER_IMAGE}
           alt={listing.title}
           fill
           className="object-cover"

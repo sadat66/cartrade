@@ -200,8 +200,7 @@ export async function addDealershipVehicle(formData: FormData) {
                 .from("profile-pictures")
                 .upload(filePath, file, { upsert: true });
             if (!uploadError) {
-                const { data } = supabase.storage.from("profile-pictures").getPublicUrl(filePath);
-                imageUrls.push(data.publicUrl);
+                imageUrls.push(filePath);
             }
         }
         if (imageUrls.length > 0) {

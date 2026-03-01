@@ -237,7 +237,7 @@ export function DealershipProfileClient({ dealership }: { dealership: Dealership
                                                         ? "bg-blue-500 text-white"
                                                         : "bg-white/90 backdrop-blur-sm text-slate-700"
                                                     }`}>
-                                                    {vehicle.condition === "certified" ? t("certifiedPreOwned") : t(`condition.${vehicle.condition}`)}
+                                                    {vehicle.condition ? t(`condition.${vehicle.condition}`) : ''}
                                                 </span>
                                             </div>
                                         )}

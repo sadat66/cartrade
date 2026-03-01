@@ -8,6 +8,7 @@ import {
     Eye, Package, Settings, ChevronRight, ImageIcon, Tag, Gauge,
     Palette, ArrowLeft, X, Loader2
 } from "lucide-react";
+import { getListingImageUrl } from "@/lib/listing-images";
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import {
@@ -368,7 +369,7 @@ export function DealershipManageClient({ dealership }: { dealership: Dealership 
                                     <div className="aspect-[16/10] bg-slate-100 relative overflow-hidden">
                                         {vehicle.imageUrls?.[0] ? (
                                             <img
-                                                src={vehicle.imageUrls[0]}
+                                                src={getListingImageUrl(vehicle.imageUrls[0])}
                                                 alt={vehicle.title}
                                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                             />

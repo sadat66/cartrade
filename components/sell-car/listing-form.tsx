@@ -96,7 +96,7 @@ export function ListingForm({ mode = "page", onSuccess, action, initialData }: L
   };
 
   const stepsToRender = formData.dealershipId 
-    ? STEPS.filter(s => s.id !== 4) // Skip Location for Dealerships
+    ? STEPS.filter((s: { id: number }) => s.id !== 4) // Skip Location for Dealerships
     : STEPS;
 
   const totalSteps = stepsToRender.length;
@@ -121,7 +121,7 @@ export function ListingForm({ mode = "page", onSuccess, action, initialData }: L
       >
         <div className="sr-only" aria-hidden="true">
           {Object.entries(formData).map(([key, value]) => (
-            <input key={key} type="hidden" name={key} value={value as string} />
+            <input key={key} type="hidden" name={key} value={value === null || value === undefined ? "" : String(value)} />
           ))}
         </div>
 
@@ -156,7 +156,7 @@ export function ListingForm({ mode = "page", onSuccess, action, initialData }: L
                           totalPhotoOk={totalPhotoOk}
                         />
                       );
-                      case 4: return <StepLocation />;
+                      case 4: return <StepLocation data={formData} onChange={updateField} />;
                       case 5: return <StepSummary data={formData} />;
                       default: return null;
                     }
@@ -217,7 +217,7 @@ export function ListingForm({ mode = "page", onSuccess, action, initialData }: L
             >
               <div className="sr-only" aria-hidden="true">
                 {Object.entries(formData).map(([key, value]) => (
-                  <input key={key} type="hidden" name={key} value={value as string} />
+                  <input key={key} type="hidden" name={key} value={value === null || value === undefined ? "" : String(value)} />
                 ))}
               </div>
 
@@ -243,7 +243,7 @@ export function ListingForm({ mode = "page", onSuccess, action, initialData }: L
                         totalPhotoOk={totalPhotoOk}
                       />
                     );
-                    case 4: return <StepLocation />;
+                    case 4: return <StepLocation data={formData} onChange={updateField} />;
                     case 5: return <StepSummary data={formData} />;
                     default: return null;
                   }

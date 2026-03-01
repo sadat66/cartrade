@@ -30,6 +30,7 @@ type LocationPickerProps = {
   namePrefix?: string; // for form field names, e.g. "" gives "location", "latitude", "longitude"
   className?: string;
   mapHeight?: string;
+  onLocationChange?: (location: string, lat: number | null, lng: number | null) => void;
 };
 
 export function LocationPicker({
@@ -39,6 +40,7 @@ export function LocationPicker({
   namePrefix = "",
   className,
   mapHeight = "280px",
+  onLocationChange,
 }: LocationPickerProps) {
   const [location, setLocation] = useState(defaultLocation ?? "");
   const [lat, setLat] = useState<number | null>(defaultLat);
@@ -55,7 +57,8 @@ export function LocationPicker({
     setLng(area.lng);
     setQuery("");
     setOpen(false);
-  }, []);
+    onLocationChange?.(area.label, area.lat, area.lng);
+  }, [onLocationChange]);
 
   const handleMapClick = useCallback((newLat: number, newLng: number) => {
     const nearest = findNearestArea(newLat, newLng);
@@ -63,7 +66,8 @@ export function LocationPicker({
     setLat(newLat);
     setLng(newLng);
     setOpen(false);
-  }, []);
+    onLocationChange?.(nearest.label, newLat, newLng);
+  }, [onLocationChange]);
 
   const handleClear = useCallback(() => {
     setLocation("");
@@ -71,7 +75,8 @@ export function LocationPicker({
     setLng(null);
     setQuery("");
     setOpen(false);
-  }, []);
+    onLocationChange?.("", null, null);
+  }, [onLocationChange]);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -96,7 +101,13 @@ export function LocationPicker({
               const v = e.target.value;
               setQuery(v);
               setOpen(true);
-              if (!v) setLocation("");
+              if (!v) {
+                setLocation("");
+                onLocationChange?.("", null, null);
+              } else {
+                setLocation(v);
+                onLocationChange?.(v, lat, lng);
+              }
             }}
             onFocus={() => setOpen(true)}
             className={cn(

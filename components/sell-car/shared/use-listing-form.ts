@@ -19,6 +19,25 @@ const STEPS = [
   { id: 5, title: "Review" },
 ];
 
+interface ListingFormData {
+  title: string;
+  make: string;
+  model: string;
+  year: string;
+  mileage: string;
+  price: string;
+  description: string;
+  bodyType: string;
+  transmission: string;
+  drivetrain: string;
+  color: string;
+  condition: string;
+  location: string;
+  latitude: string | number;
+  longitude: string | number;
+  dealershipId?: string;
+}
+
 export function useNewListingForm({ 
   onSuccess,
   action,
@@ -33,7 +52,7 @@ export function useNewListingForm({
   
   const [currentStep, setCurrentStep] = useState(1);
   
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<ListingFormData>({
     title: "",
     make: "",
     model: "",
@@ -46,18 +65,31 @@ export function useNewListingForm({
     drivetrain: "",
     color: "",
     condition: "used",
-    ...initialData
+    location: "",
+    latitude: "" as string | number,
+    longitude: "" as string | number,
+    ...Object.fromEntries(
+      Object.entries(initialData || {}).map(([k, v]) => [k, v === null || v === undefined ? "" : v])
+    )
   });
   
   const updateField = useCallback((field: string, value: any) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+    // Sanitize value: convert null/undefined to empty string to avoid React warnings
+    const sanitizedValue = (value === null || value === undefined) ? "" : value;
+    setFormData((prev) => ({ ...prev, [field]: sanitizedValue }));
   }, []);
 
   const [previewUrls, setPreviewUrls] = useState<(string | null)[]>([null, null, null]);
+  const [photos, setPhotos] = useState<(File | null)[]>([null, null, null]);
   const [clearPhotoKeys, setClearPhotoKeys] = useState([0, 0, 0]);
   const [photoSizes, setPhotoSizes] = useState<number[]>([0, 0, 0]);
 
   const removePhoto = useCallback((index: number) => {
+    setPhotos((prev) => {
+      const next = [...prev];
+      next[index] = null;
+      return next;
+    });
     setPreviewUrls((prev) => {
       const next = [...prev];
       if (next[index]) URL.revokeObjectURL(next[index]!);
@@ -93,6 +125,11 @@ export function useNewListingForm({
         e.target.value = "";
         return;
       }
+      setPhotos((prev) => {
+        const next = [...prev];
+        next[index] = file;
+        return next;
+      });
       setPreviewUrls((prev) => {
         const next = [...prev];
         if (next[index]) URL.revokeObjectURL(next[index]!);
@@ -124,7 +161,29 @@ export function useNewListingForm({
 
   const [state, formAction] = useActionState(
     async (_prev: { error?: string }, fd: FormData) => {
-      const result = action ? await action(fd) : await createListing(fd);
+      // Construct a fresh FormData to ensure absolute data transparency
+      const submissionData = new FormData();
+      
+      // 1. Copy original form fields (captures things like Step 5 hidden inputs or metadata)
+      fd.forEach((value, key) => {
+        submissionData.append(key, value);
+      });
+
+      // 2. Force Sync our managed state (ensures Step 1-4 data is preserved)
+      Object.entries(formData).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          submissionData.set(key, String(value));
+        }
+      });
+
+      // 3. Synchronize Photo Binaries
+      photos.forEach((file, i) => {
+        if (file) {
+          submissionData.set(`photo${i + 1}`, file);
+        }
+      });
+
+      const result = action ? await action(submissionData) : await createListing(submissionData);
       if (result.error) {
         toast.error(result.error);
         return { error: result.error };

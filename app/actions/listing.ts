@@ -41,6 +41,11 @@ export async function createListing(formData: FormData) {
   const drivetrain = (formData.get("drivetrain") as string)?.trim() || null;
   const color = (formData.get("color") as string)?.trim() || null;
 
+  console.log("CreateListing debug - formData keys:", Array.from(formData.keys()));
+  console.log("CreateListing debug - title:", formData.get("title"));
+  console.log("CreateListing debug - location:", formData.get("location"));
+  console.log("CreateListing debug - coords:", formData.get("latitude"), formData.get("longitude"));
+
   if (!title || !make || !model || !year || price <= 0) {
     return { error: "Title, make, model, year and price are required" };
   }

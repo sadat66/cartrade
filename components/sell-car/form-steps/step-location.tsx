@@ -5,7 +5,7 @@ import { LocationPicker } from "@/components/listing/location-picker";
 import { MapPin } from "lucide-react";
 import { StepContainer, StepHeader } from "./ui";
 
-export function StepLocation() {
+export function StepLocation({ data, onChange }: { data: any; onChange: (field: string, value: any) => void }) {
   return (
     <StepContainer>
       <StepHeader 
@@ -17,7 +17,17 @@ export function StepLocation() {
 
       <FormField label="Exact Location" description="Pin where the car is located.">
         <div className="space-y-4 pt-2">
-          <LocationPicker mapHeight="420px" />
+          <LocationPicker 
+            mapHeight="420px" 
+            defaultLocation={data.location}
+            defaultLat={data.latitude ? Number(data.latitude) : null}
+            defaultLng={data.longitude ? Number(data.longitude) : null}
+            onLocationChange={(loc, lat, lng) => {
+              onChange("location", loc);
+              onChange("latitude", lat);
+              onChange("longitude", lng);
+            }}
+          />
           <p className="text-[11px] font-medium text-slate-400 flex items-center gap-2">
             <span className="size-1.5 rounded-full bg-[#3D0066]" />
             Location is protected until verified.
