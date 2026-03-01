@@ -20,28 +20,16 @@ export default async function NewListingPage({ params }: Props) {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC]">
-      <div className="container mx-auto px-4 md:px-6 py-6 pt-8 lg:pt-14 space-y-6">
-        <div className="mx-auto max-w-2xl space-y-6">
+      <div className="container mx-auto px-4 md:px-6 py-6 lg:py-12">
+        <div className="mb-10 animate-in fade-in-0 slide-in-from-bottom-2 duration-300">
           <Breadcrumb
             items={[
               { label: t("cars.breadcrumb.home"), href: "/" },
-              { label: t("dashboard.myListings.title"), href: "/seller/listings" },
-              { label: t("dashboard.addListing.title") }
+              { label: t("dashboard.addListing.title") },
             ]}
           />
-
-          <div className="animate-in fade-in-0 slide-in-from-bottom-2 duration-300">
-            <h1 className="text-3xl font-black text-slate-900 tracking-tight">
-              {t("dashboard.addListing.title")}
-            </h1>
-            <p className="mt-1.5 text-sm font-medium text-slate-500">
-              {t("dashboard.addListing.subtitle")}
-            </p>
-          </div>
-          <div className="animate-in fade-in-0 slide-in-from-bottom-2 duration-300 fill-mode-both" style={{ animationDelay: "80ms" }}>
-            <NewListingForm />
-          </div>
         </div>
+        <NewListingForm />
       </div>
     </div>
   );
