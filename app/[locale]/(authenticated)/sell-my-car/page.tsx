@@ -1,6 +1,6 @@
 import { redirect } from "@/i18n/navigation";
 import { getCurrentUser } from "@/lib/auth";
-import { NewListingForm } from "./new-listing-form";
+import { ListingForm } from "@/components/sell-car/listing-form";
 import { getTranslations } from "next-intl/server";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { routing } from "@/i18n/routing";
@@ -29,7 +29,7 @@ export default async function NewListingPage({ params }: Props) {
             ]}
           />
         </div>
-        <NewListingForm />
+        <ListingForm />
       </div>
     </div>
   );

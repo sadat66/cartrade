@@ -25,6 +25,7 @@ import { getConversationsForUser } from "@/app/actions/conversation";
 import { prisma } from "@/lib/db";
 import { resolveListing } from "@/lib/listing-images";
 import { cn } from "@/lib/utils";
+import { NewListingModal } from "@/components/sell-car/new-listing-modal";
 
 type Props = {
   user: NonNullable<CurrentUser>;
@@ -102,12 +103,16 @@ export async function DashboardOverview({ user, locale }: Props) {
                  <Settings className="size-5" />
               </Link>
            </Button>
-           <Button asChild className="h-12 rounded-2xl bg-[#3D0066] hover:bg-[#2A0045] text-white font-bold px-8 shadow-2xl shadow-purple-900/10 active:scale-95 transition-all">
-              <Link href="/sell-my-car">
-                 <Plus className="size-4 mr-2" />
-                 Create New Listing
-              </Link>
-           </Button>
+           <NewListingModal 
+              title={t("dashboard.addListing.title")}
+              subtitle={t("dashboard.addListing.subtitle")}
+              trigger={
+                 <Button className="h-12 rounded-2xl bg-[#3D0066] hover:bg-[#2A0045] text-white font-bold px-8 shadow-2xl shadow-purple-900/10 active:scale-95 transition-all">
+                   <Plus className="size-4 mr-2" />
+                   {t("dashboard.addListing.title")}
+                 </Button>
+              }
+           />
         </div>
       </section>
 
@@ -159,10 +164,18 @@ export async function DashboardOverview({ user, locale }: Props) {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                  {resolvedUserListings.length === 0 ? (
-                    <div className="col-span-2 py-16 text-center bg-slate-50/50 rounded-[2.5rem] border border-dashed border-slate-200">
-                       <p className="text-slate-400 font-bold mb-4">Start your commercial journey here.</p>
-                       <Button asChild className="bg-[#3D0066] rounded-xl"><Link href="/sell-my-car">Post Your First Ad</Link></Button>
-                    </div>
+                     <div className="col-span-2 py-16 text-center bg-slate-50/50 rounded-[2.5rem] border border-dashed border-slate-200">
+                        <p className="text-slate-400 font-bold mb-4">Start your commercial journey here.</p>
+                        <NewListingModal 
+                           title={t("dashboard.addListing.title")}
+                           subtitle={t("dashboard.addListing.subtitle")}
+                           trigger={
+                              <Button className="bg-[#3D0066] rounded-xl px-10 h-12 font-bold shadow-lg shadow-purple-900/10 active:scale-95 transition-all">
+                                 Post Your First Ad
+                              </Button>
+                           }
+                        />
+                     </div>
                  ) : (
                     resolvedUserListings.map((listing) => (
                        <Link key={listing.id} href={`/cars/${listing.id}`} className="block group">

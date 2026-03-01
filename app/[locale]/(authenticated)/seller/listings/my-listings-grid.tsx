@@ -25,6 +25,7 @@ import { cn } from "@/lib/utils";
 import { Car, ExternalLink, Pencil, Search, ChevronLeft, ChevronRight } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { NewListingModal } from "@/components/sell-car/new-listing-modal";
 
 type Listing = {
   id: string;
@@ -44,8 +45,9 @@ type Listing = {
 type Props = {
   listings: Listing[];
   noImageLabel: string;
-  addListingHref: string;
   addListingLabel: string;
+  addListingTitle: string;
+  addListingSubtitle: string;
   createFirstLabel: string;
 };
 
@@ -54,8 +56,9 @@ const ITEMS_PER_PAGE = 5;
 export function MyListingsGrid({
   listings,
   noImageLabel,
-  addListingHref,
   addListingLabel,
+  addListingTitle,
+  addListingSubtitle,
   createFirstLabel,
 }: Props) {
   const [searchQuery, setSearchQuery] = useState("");
@@ -94,20 +97,30 @@ export function MyListingsGrid({
         <h2 className="mt-4 text-lg font-semibold text-foreground">No listings yet</h2>
         <p className="mt-1 max-w-sm text-sm text-muted-foreground">
           {createFirstLabel}{" "}
-          <Link
-            href={addListingHref}
-            className="font-medium text-primary underline underline-offset-2 transition-colors hover:no-underline"
-          >
-            {addListingLabel}
-          </Link>
+          <NewListingModal 
+            title={addListingTitle}
+            subtitle={addListingSubtitle}
+            trigger={
+              <Link
+                href="#"
+                onClick={(e) => e.preventDefault()}
+                className="font-medium text-primary underline underline-offset-2 transition-colors hover:no-underline"
+              >
+                {addListingLabel}
+              </Link>
+            }
+          />
           .
         </p>
-        <Link
-          href={addListingHref}
-          className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#3D0066] px-6 py-3 text-sm font-bold text-white shadow-lg shadow-purple-900/10 transition-all hover:bg-[#2A0045] active:scale-95"
-        >
-          {addListingLabel}
-        </Link>
+        <NewListingModal 
+          title={addListingTitle}
+          subtitle={addListingSubtitle}
+          trigger={
+            <Button className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#3D0066] px-6 py-3 text-sm font-bold text-white shadow-lg shadow-purple-900/10 transition-all hover:bg-[#2A0045] active:scale-95">
+              {addListingLabel}
+            </Button>
+          }
+        />
       </div>
     );
   }
