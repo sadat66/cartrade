@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 import {
   DHAKA_AREAS,
   DHAKA_BOUNDS,
@@ -13,6 +14,14 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
 const DHAKA_ZOOM = 12;
+
+const MapComponent = dynamic(
+  () => import("./location-map").then((m) => m.LocationMap),
+  { 
+    ssr: false,
+    loading: () => <div className="animate-pulse rounded-[2rem] bg-slate-100 w-full h-[420px]" />
+  }
+);
 
 type LocationPickerProps = {
   defaultLocation?: string | null;
@@ -36,35 +45,9 @@ export function LocationPicker({
   const [lng, setLng] = useState<number | null>(defaultLng);
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
-  const [MapComponent, setMapComponent] = useState<React.ComponentType<{
-    lat: number | null;
-    lng: number | null;
-    onMapClick: (lat: number, lng: number) => void;
-    onMarkerMove?: (lat: number, lng: number) => void;
-    height: string;
-  }> | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const suggestions = findAreaByQuery(query || location).slice(0, 8);
-
-  useEffect(() => {
-    setMapComponent(() => {
-      return function MapLoader(props: {
-        lat: number | null;
-        lng: number | null;
-        onMapClick: (lat: number, lng: number) => void;
-        onMarkerMove?: (lat: number, lng: number) => void;
-        height: string;
-      }) {
-        const [MapInner, setMapInner] = useState<React.ComponentType<typeof props> | null>(null);
-        useEffect(() => {
-          import("./location-map").then((m) => setMapInner(() => m.LocationMap));
-        }, []);
-        if (!MapInner) return <div className="animate-pulse rounded-lg bg-muted" style={{ height: props.height }} />;
-        return <MapInner {...props} />;
-      };
-    });
-  }, []);
 
   const handleSelectArea = useCallback((area: DhakaArea) => {
     setLocation(area.label);
@@ -100,80 +83,71 @@ export function LocationPicker({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const latNum = lat ?? DHAKA_CENTER.lat;
-  const lngNum = lng ?? DHAKA_CENTER.lng;
-
   return (
-    <div className={cn("space-y-3", className)} ref={containerRef}>
+    <div className={cn("space-y-4", className)} ref={containerRef}>
       <div className="relative z-20">
-        <label htmlFor="location-input" className="text-sm font-medium">
-          Location (Dhaka)
-        </label>
-        <div className="mt-1 flex gap-2">
-          <div className="relative flex-1">
-            <Input
-              id="location-input"
-              type="text"
-              placeholder="Search area (e.g. Gulshan, Dhanmondi)"
-              value={open ? (query || location) : location}
-              onChange={(e) => {
-                const v = e.target.value;
-                setQuery(v);
-                setOpen(true);
-                if (!v) setLocation("");
-              }}
-              onFocus={() => setOpen(true)}
-              className="pr-8"
-              autoComplete="off"
-            />
-            {location && (
-              <button
-                type="button"
-                onClick={handleClear}
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                aria-label="Clear location"
-              >
-                ×
-              </button>
+        <div className="relative">
+          <Input
+            id="location-input"
+            type="text"
+            placeholder="Search neighborhood (e.g. Gulshan, Banani)"
+            value={open ? (query || location) : location}
+            onChange={(e) => {
+              const v = e.target.value;
+              setQuery(v);
+              setOpen(true);
+              if (!v) setLocation("");
+            }}
+            onFocus={() => setOpen(true)}
+            className={cn(
+              "h-13 rounded-2xl border-slate-200 bg-white px-5 text-base font-medium transition-all shadow-sm",
+              "focus:border-[#3D0066] focus:ring-4 focus:ring-purple-500/5 focus:shadow-[0_0_0_1px_#3D0066]",
+              "placeholder:text-slate-300"
             )}
-            {open && suggestions.length > 0 && (
-              <ul
-                className="absolute z-[1001] mt-1 max-h-48 w-full overflow-auto rounded-md border bg-popover py-1 shadow-md"
-                role="listbox"
-              >
-                {suggestions.map((area) => (
-                  <li
-                    key={area.label}
-                    role="option"
-                    tabIndex={0}
-                    className="cursor-pointer px-3 py-2 text-sm hover:bg-accent"
-                    onMouseDown={(e) => {
-                      e.preventDefault();
-                      handleSelectArea(area);
-                    }}
-                  >
-                    {area.label}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
+            autoComplete="off"
+          />
+          {location && (
+            <button
+              type="button"
+              onClick={handleClear}
+              className="absolute right-4 top-1/2 -translate-y-1/2 size-6 rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-900 flex items-center justify-center transition-colors"
+              aria-label="Clear location"
+            >
+              ×
+            </button>
+          )}
+          {open && suggestions.length > 0 && (
+            <ul
+              className="absolute z-[1001] mt-2 max-h-60 w-full overflow-auto rounded-2xl border border-slate-100 bg-white p-2 shadow-2xl animate-in fade-in-0 zoom-in-95 duration-200"
+              role="listbox"
+            >
+              {suggestions.map((area: DhakaArea) => (
+                <li
+                  key={area.label}
+                  role="option"
+                  tabIndex={0}
+                  className="cursor-pointer px-4 py-3 text-sm font-semibold text-slate-600 hover:bg-slate-50 hover:text-[#3D0066] rounded-xl transition-colors"
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    handleSelectArea(area);
+                  }}
+                >
+                  {area.label}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
-        <p className="mt-1 text-xs text-muted-foreground">
-          Type to search or click on the map to set location (Dhaka only).
-        </p>
       </div>
 
-      {MapComponent && (
-        <div className="relative z-0 rounded-lg overflow-hidden border">
-          <MapComponent
-            lat={lat}
-            lng={lng}
-            onMapClick={handleMapClick}
-            height={mapHeight}
-          />
-        </div>
-      )}
+      <div className="relative z-0 rounded-[2rem] overflow-hidden border-2 border-slate-100 shadow-2xl shadow-slate-200/50 bg-slate-50">
+        <MapComponent
+          lat={lat}
+          lng={lng}
+          onMapClick={handleMapClick}
+          height={mapHeight}
+        />
+      </div>
 
       <input type="hidden" name={namePrefix ? `${namePrefix}location` : "location"} value={location} readOnly />
       <input

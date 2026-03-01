@@ -88,16 +88,24 @@ export function LocationMap({
         mapRef.current = map;
         markerRef.current = marker;
 
-        requestAnimationFrame(() => {
-          map.invalidateSize();
-          setTimeout(() => map.invalidateSize(), 100);
+        // Force a resize check immediately
+        map.invalidateSize();
+        
+        // Use ResizeObserver to detect when the map container actually gets a size
+        // (e.g. when a parent 'hidden' class is removed)
+        const observer = new ResizeObserver(() => {
+          if (mapRef.current) {
+            mapRef.current.invalidateSize();
+          }
         });
+        observer.observe(el);
+        (map as any)._resizeObserver = observer;
       });
     }
 
     const raf = requestAnimationFrame(() => {
       initMap();
-      if (!mapRef.current) timeoutId = setTimeout(initMap, 150);
+      if (!mapRef.current) timeoutId = setTimeout(initMap, 200);
     });
 
     return () => {
@@ -105,7 +113,11 @@ export function LocationMap({
       cancelAnimationFrame(raf);
       if (timeoutId) clearTimeout(timeoutId);
       if (mapRef.current) {
-        mapRef.current.remove();
+        const map = mapRef.current;
+        if ((map as any)._resizeObserver) {
+          (map as any)._resizeObserver.disconnect();
+        }
+        map.remove();
         mapRef.current = null;
         markerRef.current = null;
       }
@@ -127,8 +139,8 @@ export function LocationMap({
   return (
     <div
       ref={containerRef}
-      className="w-full bg-muted"
-      style={{ height, minHeight: height }}
+      className="w-full bg-slate-100 border border-slate-200"
+      style={{ height, minHeight: height, borderRadius: '1.5rem' }}
     />
   );
 }
