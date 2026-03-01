@@ -436,7 +436,13 @@
       "noVehicles": "কোনো গাড়ি উপলব্ধ নেই",
       "noVehiclesDesc": "এই ডিলারশিপ এখনো কোনো গাড়ি লিস্ট করেনি",
       "certified": "সার্টিফাইড প্রি-ওনড",
-      "photosCount": "+{count} ছবি"
+      "certifiedPreOwned": "সার্টিফাইড প্রি-ওনড",
+      "photosCount": "+{count} ছবি",
+      "condition": {
+        "new": "নতুন",
+        "used": "ব্যবহৃত",
+        "certified": "সার্টিফাইড প্রি-ওনড"
+      }
     }
   }
 }
