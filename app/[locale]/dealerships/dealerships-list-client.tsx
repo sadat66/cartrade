@@ -5,7 +5,7 @@ import {
 } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import useEmblaCarousel from "embla-carousel-react";
-import { ListingCard } from "@/components/listing/listing-card";
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 
 type Vehicle = {
@@ -35,7 +35,8 @@ type Dealership = {
     updatedAt: string;
 };
 
-function VehicleCarousel({ vehicles, dealershipSlug }: { vehicles: Vehicle[], dealershipSlug: string }) {
+
+function VehicleCarousel({ vehicles, dealershipSlug, t }: { vehicles: Vehicle[], dealershipSlug: string, t: any }) {
     const [emblaRef, emblaApi] = useEmblaCarousel({
         align: "start",
         containScroll: "trimSnaps",
@@ -111,8 +112,8 @@ function VehicleCarousel({ vehicles, dealershipSlug }: { vehicles: Vehicle[], de
                                 <div className="size-14 rounded-full bg-white shadow-md flex items-center justify-center border border-slate-100 mb-4 group-hover/all:scale-110 group-hover/all:bg-[#ff385c] group-hover/all:text-white transition-all">
                                     <ArrowRight className="size-7" />
                                 </div>
-                                <span className="font-black text-slate-900 uppercase tracking-widest text-xs">View Full Catalog</span>
-                                <span className="text-[10px] text-slate-500 mt-2 font-bold">{vehicles.length}+ Vehicles</span>
+                                <span className="font-black text-slate-900 uppercase tracking-widest text-xs">{t("viewFullCatalog")}</span>
+                                <span className="text-[10px] text-slate-500 mt-2 font-bold">{t("vehiclesCount", { count: vehicles.length })}</span>
                             </Link>
                         </div>
                     )}
@@ -140,6 +141,7 @@ function VehicleCarousel({ vehicles, dealershipSlug }: { vehicles: Vehicle[], de
 }
 
 export function DealershipsListClient({ dealerships }: { dealerships: Dealership[] }) {
+    const t = useTranslations("dealership.list");
     const [search, setSearch] = useState("");
 
     const filtered = useMemo(() => {
@@ -156,9 +158,9 @@ export function DealershipsListClient({ dealerships }: { dealerships: Dealership
         return (
             <div className="text-center py-24">
                 <Store className="size-16 mx-auto text-slate-200 mb-6" />
-                <h2 className="text-xl font-bold text-slate-700">No dealerships yet</h2>
+                <h2 className="text-xl font-bold text-slate-700">{t("noDealershipsTitle")}</h2>
                 <p className="text-sm text-slate-500 mt-2 max-w-md mx-auto">
-                    Be the first to open a dealership! Create your dealership profile and start showcasing your vehicles.
+                    {t("noDealershipsDesc")}
                 </p>
             </div>
         );
@@ -173,7 +175,7 @@ export function DealershipsListClient({ dealerships }: { dealerships: Dealership
                     type="text"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    placeholder="Search dealerships by name or location..."
+                    placeholder={t("searchPlaceholder")}
                     className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#ff385c]/30 focus:border-[#ff385c] transition-all"
                 />
             </div>
@@ -182,8 +184,8 @@ export function DealershipsListClient({ dealerships }: { dealerships: Dealership
             {filtered.length === 0 ? (
                 <div className="text-center py-16 bg-white rounded-2xl border border-slate-200">
                     <Search className="size-10 mx-auto text-slate-300 mb-3" />
-                    <h3 className="text-lg font-bold text-slate-700">No dealerships found</h3>
-                    <p className="text-sm text-slate-500 mt-1">Try a different search term</p>
+                    <h3 className="text-lg font-bold text-slate-700">{t("noResultsTitle")}</h3>
+                    <p className="text-sm text-slate-500 mt-1">{t("noResultsDesc")}</p>
                 </div>
             ) : (
                 <div className="space-y-16">
@@ -207,7 +209,7 @@ export function DealershipsListClient({ dealerships }: { dealerships: Dealership
                                             <h2 className="text-lg font-black text-slate-900 group-hover/info:text-[#ff385c] transition-colors leading-tight">
                                                 {dealership.name}
                                             </h2>
-                                            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Official Partner</span>
+                                            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">{t("officialPartner")}</span>
                                         </div>
                                     </div>
 
@@ -230,12 +232,12 @@ export function DealershipsListClient({ dealerships }: { dealerships: Dealership
                                         )}
                                         <div className="flex items-center gap-2 font-bold text-slate-700">
                                             <Car className="size-3.5 text-[#ff385c]" />
-                                            {dealership._count.vehicles} Listings Available
+                                            {t("listingsAvailable", { count: dealership._count.vehicles })}
                                         </div>
                                     </div>
 
                                     <div className="flex items-center justify-between text-[#ff385c] font-black text-xs uppercase tracking-wider">
-                                        View Profile
+                                        {t("viewProfile")}
                                         <ChevronRight className="size-4 group-hover/info:translate-x-1 transition-transform" />
                                     </div>
                                 </Link>
@@ -246,12 +248,13 @@ export function DealershipsListClient({ dealerships }: { dealerships: Dealership
                                 <VehicleCarousel
                                     vehicles={dealership.vehicles}
                                     dealershipSlug={dealership.slug}
+                                    t={t}
                                 />
                             ) : (
                                 <div className="flex-1 w-full h-[320px] rounded-2xl bg-slate-50 border border-dashed border-slate-200 flex flex-col items-center justify-center text-center p-6">
                                     <Car className="size-10 text-slate-300 mb-3" />
-                                    <h3 className="font-bold text-slate-700">No inventory listed</h3>
-                                    <p className="text-xs text-slate-500 mt-1 max-w-[200px]">This dealership hasn't added any vehicles to their catalog yet.</p>
+                                    <h3 className="font-bold text-slate-700">{t("noInventory")}</h3>
+                                    <p className="text-xs text-slate-500 mt-1 max-w-[200px]">{t("noInventoryDesc")}</p>
                                 </div>
                             )}
                         </div>

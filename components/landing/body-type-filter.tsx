@@ -89,6 +89,7 @@ export function BodyTypeFilter({
                       src={type.image}
                       alt={type.label}
                       fill
+                      sizes="(min-width: 768px) 112px, 96px"
                       className={cn(
                         "object-contain object-bottom transition-transform duration-500",
                         isSelected ? "scale-110" : "group-hover:scale-105"

@@ -6,8 +6,10 @@ import { Building2, MapPin, Clock, Phone, FileText, Upload, ArrowLeft, Sparkles 
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { createDealership } from "@/app/actions/dealership";
+import { useTranslations } from "next-intl";
 
 export default function CreateDealershipPage() {
+    const t = useTranslations("dealership.create");
     const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -47,7 +49,7 @@ export default function CreateDealershipPage() {
                     className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-slate-700 mb-8 transition-colors"
                 >
                     <ArrowLeft className="size-4" />
-                    Back to Dashboard
+                    {t("backToDashboard")}
                 </Link>
 
                 {/* Header */}
@@ -56,10 +58,10 @@ export default function CreateDealershipPage() {
                         <Building2 className="size-8 text-white" />
                     </div>
                     <h1 className="text-3xl font-black text-slate-900 tracking-tight">
-                        Open Your Dealership
+                        {t("title")}
                     </h1>
                     <p className="mt-2 text-slate-500 text-lg">
-                        Create your dealership profile and start showcasing your vehicles
+                        {t("subtitle")}
                     </p>
                 </div>
 
@@ -78,7 +80,7 @@ export default function CreateDealershipPage() {
                                     ) : (
                                         <div className="text-center">
                                             <Upload className="size-6 mx-auto text-slate-400 group-hover:text-[#ff385c] transition-colors" />
-                                            <span className="text-xs text-slate-400 mt-1 block">Upload Logo</span>
+                                            <span className="text-xs text-slate-400 mt-1 block">{t("uploadLogo")}</span>
                                         </div>
                                     )}
                                 </div>
@@ -91,21 +93,21 @@ export default function CreateDealershipPage() {
                                     className="hidden"
                                 />
                             </label>
-                            <p className="text-xs text-slate-400">Optional – JPG, PNG, WebP</p>
+                            <p className="text-xs text-slate-400">{t("uploadHint")}</p>
                         </div>
 
                         {/* Dealership Name */}
                         <div className="space-y-2">
                             <label htmlFor="name" className="flex items-center gap-2 text-sm font-bold text-slate-700">
                                 <Building2 className="size-4 text-[#ff385c]" />
-                                Dealership Name <span className="text-red-500">*</span>
+                                {t("nameLabel")} <span className="text-red-500">*</span>
                             </label>
                             <input
                                 id="name"
                                 name="name"
                                 type="text"
                                 required
-                                placeholder="e.g. Premium Auto Gallery"
+                                placeholder={t("namePlaceholder")}
                                 className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#ff385c]/30 focus:border-[#ff385c] transition-all text-sm font-medium"
                             />
                         </div>
@@ -114,14 +116,14 @@ export default function CreateDealershipPage() {
                         <div className="space-y-2">
                             <label htmlFor="location" className="flex items-center gap-2 text-sm font-bold text-slate-700">
                                 <MapPin className="size-4 text-[#ff385c]" />
-                                Location <span className="text-red-500">*</span>
+                                {t("locationLabel")} <span className="text-red-500">*</span>
                             </label>
                             <input
                                 id="location"
                                 name="location"
                                 type="text"
                                 required
-                                placeholder="e.g. Dhanmondi, Dhaka"
+                                placeholder={t("locationPlaceholder")}
                                 className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#ff385c]/30 focus:border-[#ff385c] transition-all text-sm font-medium"
                             />
                         </div>
@@ -130,13 +132,13 @@ export default function CreateDealershipPage() {
                         <div className="space-y-2">
                             <label htmlFor="operatingHours" className="flex items-center gap-2 text-sm font-bold text-slate-700">
                                 <Clock className="size-4 text-[#ff385c]" />
-                                Operating Hours
+                                {t("hoursLabel")}
                             </label>
                             <input
                                 id="operatingHours"
                                 name="operatingHours"
                                 type="text"
-                                placeholder="e.g. Mon-Sat 9:00 AM – 6:00 PM"
+                                placeholder={t("hoursPlaceholder")}
                                 className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#ff385c]/30 focus:border-[#ff385c] transition-all text-sm font-medium"
                             />
                         </div>
@@ -145,13 +147,13 @@ export default function CreateDealershipPage() {
                         <div className="space-y-2">
                             <label htmlFor="phone" className="flex items-center gap-2 text-sm font-bold text-slate-700">
                                 <Phone className="size-4 text-[#ff385c]" />
-                                Phone Number
+                                {t("phoneLabel")}
                             </label>
                             <input
                                 id="phone"
                                 name="phone"
                                 type="tel"
-                                placeholder="e.g. +880 1XXX-XXXXXX"
+                                placeholder={t("phonePlaceholder")}
                                 className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#ff385c]/30 focus:border-[#ff385c] transition-all text-sm font-medium"
                             />
                         </div>
@@ -160,13 +162,13 @@ export default function CreateDealershipPage() {
                         <div className="space-y-2">
                             <label htmlFor="description" className="flex items-center gap-2 text-sm font-bold text-slate-700">
                                 <FileText className="size-4 text-[#ff385c]" />
-                                Description
+                                {t("descLabel")}
                             </label>
                             <textarea
                                 id="description"
                                 name="description"
                                 rows={4}
-                                placeholder="Tell buyers about your dealership – what makes you special?"
+                                placeholder={t("descPlaceholder")}
                                 className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#ff385c]/30 focus:border-[#ff385c] transition-all text-sm font-medium resize-none"
                             />
                         </div>
@@ -179,7 +181,6 @@ export default function CreateDealershipPage() {
                         </div>
                     )}
 
-                    {/* Submit */}
                     <Button
                         type="submit"
                         disabled={isSubmitting}
@@ -188,12 +189,12 @@ export default function CreateDealershipPage() {
                         {isSubmitting ? (
                             <span className="flex items-center gap-2">
                                 <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                                Creating Dealership…
+                                {t("submitting")}
                             </span>
                         ) : (
                             <span className="flex items-center gap-2">
                                 <Sparkles className="size-5" />
-                                Create Dealership
+                                {t("submitButton")}
                             </span>
                         )}
                     </Button>
