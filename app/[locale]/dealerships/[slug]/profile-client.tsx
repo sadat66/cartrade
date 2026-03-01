@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
+import { getListingImageUrl } from "@/lib/listing-images";
 import { useTranslations } from "next-intl";
 
 type Vehicle = {
@@ -85,7 +86,7 @@ export function DealershipProfileClient({ dealership }: { dealership: Dealership
                 </div>
                 {dealership.coverUrl && (
                     <img
-                        src={dealership.coverUrl}
+                        src={getListingImageUrl(dealership.coverUrl)}
                         alt="Cover"
                         className="w-full h-full object-cover opacity-40"
                     />
@@ -112,7 +113,7 @@ export function DealershipProfileClient({ dealership }: { dealership: Dealership
                         <div className="w-24 h-24 rounded-2xl border-4 border-white shadow-lg bg-white overflow-hidden flex items-center justify-center flex-shrink-0 -mt-16 md:-mt-20">
                             {dealership.logoUrl ? (
                                 <img
-                                    src={dealership.logoUrl}
+                                    src={getListingImageUrl(dealership.logoUrl)}
                                     alt={dealership.name}
                                     className="w-full h-full object-cover"
                                 />
@@ -220,7 +221,7 @@ export function DealershipProfileClient({ dealership }: { dealership: Dealership
                                     <div className="aspect-[16/10] bg-slate-100 relative overflow-hidden">
                                         {vehicle.imageUrls?.[0] ? (
                                             <img
-                                                src={vehicle.imageUrls[0]}
+                                                src={getListingImageUrl(vehicle.imageUrls[0])}
                                                 alt={vehicle.title}
                                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                             />
