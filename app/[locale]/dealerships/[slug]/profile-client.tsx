@@ -161,7 +161,7 @@ export function DealershipProfileClient({ dealership }: { dealership: Dealership
                                 )}
                                 <span className="flex items-center gap-1.5 bg-slate-50 px-3 py-1.5 rounded-full">
                                     <Car className="size-4 text-[#ff385c]" />
-                                    {t("vehiclesCount", { count: dealership._count.vehicles })}
+                                    {dealership._count.vehicles} {t("vehicles")}
                                 </span>
                             </div>
                         </div>
@@ -171,7 +171,7 @@ export function DealershipProfileClient({ dealership }: { dealership: Dealership
                 {/* Catalog Section */}
                 <div className="mb-8">
                     <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6">
-                        <h2 className="text-xl font-black text-slate-900">{t("vehicleCatalog")}</h2>
+                        <h2 className="text-xl font-black text-slate-900">{t("catalogTitle")}</h2>
                         <div className="flex items-center gap-3 w-full md:w-auto">
                             {/* Search */}
                             <div className="relative flex-1 md:w-64">
@@ -244,7 +244,7 @@ export function DealershipProfileClient({ dealership }: { dealership: Dealership
                                         {vehicle.imageUrls?.length > 1 && (
                                             <div className="absolute bottom-3 right-3">
                                                 <span className="bg-black/50 backdrop-blur-sm text-white rounded-full px-2 py-0.5 text-xs">
-                                                    {t("extraPhotos", { count: vehicle.imageUrls.length - 1 })}
+                                                    {t("photosCount", { count: vehicle.imageUrls.length - 1 })}
                                                 </span>
                                             </div>
                                         )}
