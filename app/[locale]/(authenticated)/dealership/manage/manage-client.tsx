@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
     Building2, MapPin, Clock, Phone, Car, Plus, Pencil, Trash2,
@@ -15,6 +15,15 @@ import {
     deleteDealershipVehicle,
 } from "@/app/actions/dealership";
 import { NewListingModal } from "@/components/sell-car/new-listing-modal";
+import { useTranslations } from "next-intl";
+import { Breadcrumb } from "@/components/shared/breadcrumb";
+import {
+    Sheet,
+    SheetContent,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger,
+} from "@/components/ui/sheet";
 
 type Vehicle = {
     id: string;
@@ -54,6 +63,7 @@ type Dealership = {
 
 export function DealershipManageClient({ dealership }: { dealership: Dealership }) {
     const router = useRouter();
+    const t = useTranslations();
     const [activeTab, setActiveTab] = useState<"catalog" | "settings">("catalog");
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -88,16 +98,16 @@ export function DealershipManageClient({ dealership }: { dealership: Dealership 
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100">
-            <div className="container mx-auto px-4 py-8 max-w-5xl">
-                {/* Back */}
-                <Link
-                    href="/dashboard"
-                    className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-slate-700 mb-6 transition-colors"
-                >
-                    <ArrowLeft className="size-4" />
-                    Dashboard
-                </Link>
+        <div className="min-h-screen bg-[#F8FAFC]">
+            <div className="container mx-auto px-4 md:px-6 py-6 pt-8 lg:pt-14 space-y-6">
+                {/* Breadcrumb */}
+                <Breadcrumb 
+                    items={[
+                        { label: t("cars.breadcrumb.home"), href: "/" },
+                        { label: t("dashboard.nav.dashboard"), href: "/dashboard" },
+                        { label: dealership.name }
+                    ]}
+                />
 
                 {/* Dealership Header Card */}
                 <div className="bg-white rounded-xl border border-slate-200 shadow-xl overflow-hidden mb-10 group/header">
@@ -134,23 +144,23 @@ export function DealershipManageClient({ dealership }: { dealership: Dealership 
                                     </span>
                                 </div>
                                 <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm font-bold text-slate-500">
-                                    <span className="flex items-center gap-2 hover:text-[#ff385c] transition-colors cursor-default">
-                                        <div className="size-8 rounded-lg bg-slate-50 flex items-center justify-center border border-slate-100">
-                                            <MapPin className="size-4 text-[#ff385c]" />
+                                    <span className="flex items-center gap-2 hover:text-[#3D0066] transition-colors cursor-default">
+                                        <div className="size-8 rounded-lg bg-slate-50 flex items-center justify-center border border-slate-100 font-bold">
+                                            <MapPin className="size-4 text-[#3D0066]" />
                                         </div>
                                         {dealership.location}
                                     </span>
                                     {dealership.phone && (
-                                        <span className="flex items-center gap-2 hover:text-[#ff385c] transition-colors cursor-default">
-                                            <div className="size-8 rounded-lg bg-slate-50 flex items-center justify-center border border-slate-100">
-                                                <Phone className="size-4 text-[#ff385c]" />
+                                        <span className="flex items-center gap-2 hover:text-[#3D0066] transition-colors cursor-default">
+                                            <div className="size-8 rounded-lg bg-slate-50 flex items-center justify-center border border-slate-100 font-bold">
+                                                <Phone className="size-4 text-[#3D0066]" />
                                             </div>
                                             {dealership.phone}
                                         </span>
                                     )}
-                                    <span className="flex items-center gap-2 hover:text-[#ff385c] transition-colors cursor-default">
-                                        <div className="size-8 rounded-lg bg-slate-50 flex items-center justify-center border border-slate-100">
-                                            <Car className="size-4 text-[#ff385c]" />
+                                    <span className="flex items-center gap-2 hover:text-[#3D0066] transition-colors cursor-default">
+                                        <div className="size-8 rounded-lg bg-slate-50 flex items-center justify-center border border-slate-100 font-bold">
+                                            <Car className="size-4 text-[#3D0066]" />
                                         </div>
                                         {dealership._count.vehicles} Listings
                                     </span>
@@ -161,64 +171,168 @@ export function DealershipManageClient({ dealership }: { dealership: Dealership 
                         {/* Actions */}
                         <div className="flex items-center gap-3 w-full md:w-auto">
                             <Link href={`/dealerships/${dealership.slug}`} className="flex-1 md:flex-none">
-                                <Button className="w-full rounded-xl gap-2 font-black text-xs uppercase tracking-widest bg-slate-900 hover:bg-black text-white px-6 py-5 shadow-lg shadow-slate-900/10">
+                                <Button className="w-full rounded-xl gap-2 font-black text-xs uppercase tracking-widest bg-[#3D0066] hover:bg-[#2A0045] text-white px-6 py-5 shadow-lg shadow-slate-900/10 cursor-pointer">
                                     <Eye className="size-4" />
                                     View Page
                                 </Button>
                             </Link>
-                            <Button
-                                variant="outline"
-                                onClick={() => setActiveTab("settings")}
-                                className="rounded-xl gap-2 font-black text-xs uppercase tracking-widest border-slate-200 hover:border-slate-300 px-6 py-5 text-slate-700"
-                            >
-                                <Settings className="size-4" />
-                                Edit Info
-                            </Button>
+                            <Sheet>
+                                <SheetTrigger asChild>
+                                    <Button
+                                        variant="outline"
+                                        className="rounded-xl gap-2 font-black text-xs uppercase tracking-widest border-slate-200 hover:border-slate-300 px-6 py-5 text-slate-700 transition-all hover:bg-slate-50 active:scale-95 cursor-pointer"
+                                    >
+                                        <Pencil className="size-4" />
+                                        Edit info
+                                    </Button>
+                                </SheetTrigger>
+                                <SheetContent className="w-full sm:max-w-xl overflow-y-auto p-8">
+                                    <SheetTitle className="text-2xl font-black text-slate-900 tracking-tight mb-8">Dealership Information</SheetTitle>
+
+                                    {showEditDealership ? (
+                                        <form onSubmit={handleUpdateDealership} className="space-y-6">
+                                            <div className="flex items-center justify-between mb-2">
+                                                <p className="text-sm font-bold text-[#3D0066]">Editing Mode</p>
+                                                <span className="size-2 rounded-full bg-amber-400 animate-pulse" />
+                                            </div>
+                                            <div className="space-y-2 group/input">
+                                                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1 group-focus-within/input:text-[#3D0066] transition-colors">Dealership Name</label>
+                                                <input
+                                                    name="name"
+                                                    type="text"
+                                                    defaultValue={dealership.name}
+                                                    className="w-full px-5 py-4 rounded-2xl border-2 border-slate-100 bg-slate-50 text-slate-900 focus:outline-none focus:ring-4 focus:ring-[#3D0066]/5 focus:border-[#3D0066] focus:bg-white transition-all text-sm font-bold placeholder:text-slate-300"
+                                                />
+                                            </div>
+                                            <div className="space-y-2 group/input">
+                                                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1 group-focus-within/input:text-[#3D0066] transition-colors">Location</label>
+                                                <input
+                                                    name="location"
+                                                    type="text"
+                                                    defaultValue={dealership.location}
+                                                    className="w-full px-5 py-4 rounded-2xl border-2 border-slate-100 bg-slate-50 text-slate-900 focus:outline-none focus:ring-4 focus:ring-[#3D0066]/5 focus:border-[#3D0066] focus:bg-white transition-all text-sm font-bold placeholder:text-slate-300"
+                                                />
+                                            </div>
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <div className="space-y-2 group/input">
+                                                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1 group-focus-within/input:text-[#3D0066] transition-colors">Operating Hours</label>
+                                                    <input
+                                                        name="operatingHours"
+                                                        type="text"
+                                                        defaultValue={dealership.operatingHours ?? ""}
+                                                        className="w-full px-5 py-4 rounded-2xl border-2 border-slate-100 bg-slate-50 text-slate-900 focus:outline-none focus:ring-4 focus:ring-[#3D0066]/5 focus:border-[#3D0066] focus:bg-white transition-all text-sm font-bold placeholder:text-slate-300"
+                                                    />
+                                                </div>
+                                                <div className="space-y-2 group/input">
+                                                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1 group-focus-within/input:text-[#3D0066] transition-colors">Phone</label>
+                                                    <input
+                                                        name="phone"
+                                                        type="tel"
+                                                        defaultValue={dealership.phone ?? ""}
+                                                        className="w-full px-5 py-4 rounded-2xl border-2 border-slate-100 bg-slate-50 text-slate-900 focus:outline-none focus:ring-4 focus:ring-[#3D0066]/5 focus:border-[#3D0066] focus:bg-white transition-all text-sm font-bold placeholder:text-slate-300"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className="space-y-2 group/input">
+                                                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1 group-focus-within/input:text-[#3D0066] transition-colors">Company Biography</label>
+                                                <textarea
+                                                    name="description"
+                                                    rows={5}
+                                                    defaultValue={dealership.description ?? ""}
+                                                    className="w-full px-5 py-4 rounded-2xl border-2 border-slate-100 bg-slate-50 text-slate-900 focus:outline-none focus:ring-4 focus:ring-[#3D0066]/5 focus:border-[#3D0066] focus:bg-white transition-all text-sm font-bold resize-none placeholder:text-slate-300 leading-relaxed"
+                                                />
+                                            </div>
+                                            {error && (
+                                                <div className="rounded-2xl bg-red-50 border-2 border-red-100 px-5 py-4 text-xs text-red-600 font-bold uppercase tracking-tight">
+                                                    {error}
+                                                </div>
+                                            )}
+                                            <div className="flex items-center gap-3 pt-4">
+                                                <Button
+                                                    type="submit"
+                                                    disabled={isSubmitting}
+                                                    className="flex-1 bg-[#3D0066] border-2 border-[#3D0066] hover:bg-[#2A0045] hover:border-[#2A0045] text-white rounded-xl py-6 font-black text-[10px] uppercase tracking-widest active:scale-[0.98] transition-all cursor-pointer"
+                                                >
+                                                    {isSubmitting ? (
+                                                        <Loader2 className="size-4 animate-spin mr-2" />
+                                                    ) : (
+                                                        <Package className="size-4 mr-2" />
+                                                    )}
+                                                    Update Identity
+                                                </Button>
+                                                <Button
+                                                    type="button"
+                                                    variant="ghost"
+                                                    onClick={() => setShowEditDealership(false)}
+                                                    className="rounded-xl font-black text-[10px] uppercase tracking-widest px-6 hover:bg-slate-100 text-slate-500 cursor-pointer"
+                                                >
+                                                    Dismiss
+                                                </Button>
+                                            </div>
+                                        </form>
+                                    ) : (
+                                        <div className="space-y-10">
+                                            <div className="flex items-center justify-between pb-6 border-b border-slate-100">
+                                                <div>
+                                                    <p className="text-[10px] font-black uppercase tracking-widest text-[#3D0066]">Account Status</p>
+                                                    <p className="text-sm font-bold text-slate-500">Merchant Partner Verified</p>
+                                                </div>
+                                                <Button
+                                                    variant="outline"
+                                                    onClick={() => setShowEditDealership(true)}
+                                                    className="rounded-xl gap-2 font-black text-[10px] uppercase tracking-widest border-2 border-[#3D0066]/20 text-[#3D0066] px-5 py-4 hover:bg-[#3D0066] hover:text-white transition-all shadow-none cursor-pointer"
+                                                >
+                                                    <Pencil className="size-3.5" />
+                                                    Edit
+                                                </Button>
+                                            </div>
+                                            <div className="grid gap-2">
+                                                <InfoItem icon={Building2} label="Legal Entity" value={dealership.name} />
+                                                <InfoItem icon={MapPin} label="Operational Zone" value={dealership.location} />
+                                                <InfoItem icon={Clock} label="Availability" value={dealership.operatingHours ?? "Not established"} />
+                                                <InfoItem icon={Phone} label="Direct Line" value={dealership.phone ?? "No contact"} />
+                                            </div>
+                                            {dealership.description && (
+                                                <div className="p-8 rounded-[2rem] bg-slate-50/50 border-2 border-slate-50 space-y-4">
+                                                    <span className="inline-flex items-center rounded-full bg-white px-3 py-1 text-[10px] font-black uppercase tracking-widest text-slate-400 border border-slate-100 shadow-sm">
+                                                        About the Merchant
+                                                    </span>
+                                                    <p className="text-sm leading-relaxed text-slate-600 font-bold tracking-tight">{dealership.description}</p>
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+                                </SheetContent>
+                            </Sheet>
                         </div>
                     </div>
                 </div>
 
-                {/* Tabs */}
-                <div className="flex gap-1 p-1 bg-slate-100 rounded-xl mb-8 w-fit">
-                    <button
-                        onClick={() => setActiveTab("catalog")}
-                        className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-bold transition-all ${activeTab === "catalog"
-                            ? "bg-white text-slate-900 shadow-sm"
-                            : "text-slate-500 hover:text-slate-700"
-                            }`}
-                    >
-                        <Package className="size-4" />
-                        Vehicle Catalog ({dealership.vehicles.length})
-                    </button>
-                    <button
-                        onClick={() => setActiveTab("settings")}
-                        className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-bold transition-all ${activeTab === "settings"
-                            ? "bg-white text-slate-900 shadow-sm"
-                            : "text-slate-500 hover:text-slate-700"
-                            }`}
-                    >
-                        <Settings className="size-4" />
-                        Settings
-                    </button>
+                {/* Catalog Section Header */}
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between py-6">
+                    <div>
+                        <h2 className="text-3xl font-black text-slate-900 tracking-tight">Catalog</h2>
+                        <p className="mt-1 text-sm font-medium text-slate-500">
+                            Manage your inventory · {dealership.vehicles.length} {dealership.vehicles.length === 1 ? 'listing' : 'listings'}
+                        </p>
+                    </div>
+                    <NewListingModal 
+                        title="Add Car to Catalog"
+                        subtitle={`New inventory entry for ${dealership.name}`}
+                        action={addDealershipVehicle}
+                        initialData={{ dealershipId: dealership.id }}
+                        onSuccess={() => router.refresh()}
+                        trigger={
+                            <Button className="bg-[#3D0066] hover:bg-[#2A0045] text-white rounded-xl px-6 py-5 font-bold shadow-lg shadow-purple-900/10 transition-all active:scale-95 cursor-pointer">
+                                <Plus className="size-5 mr-2" />
+                                Add New Catalog
+                            </Button>
+                        }
+                    />
                 </div>
 
-                {/* Catalog Tab */}
-                {activeTab === "catalog" && (
-                    <div className="space-y-6">
-                        {/* Add Vehicle Button */}
-                        <NewListingModal 
-                            title="Add Car to Catalog"
-                            subtitle={`New inventory entry for ${dealership.name}`}
-                            action={addDealershipVehicle}
-                            initialData={{ dealershipId: dealership.id }}
-                            onSuccess={() => router.refresh()}
-                            trigger={
-                                <Button className="bg-[#ff385c] hover:bg-[#e03150] text-white rounded-xl px-6 py-5 font-bold shadow-lg shadow-pink-500/25 transition-all active:scale-95">
-                                    <Plus className="size-5 mr-2" />
-                                    Add Vehicle
-                                </Button>
-                            }
-                        />
+                {/* Catalog Grid */}
+                <div className="space-y-6 pb-20">
 
                         {/* Vehicle Grid */}
                         {dealership.vehicles.length === 0 ? (
@@ -276,7 +390,7 @@ export function DealershipManageClient({ dealership }: { dealership: Dealership 
                                                         {vehicle.year} · {vehicle.make} {vehicle.model}
                                                     </p>
                                                 </div>
-                                                <span className="text-base font-black text-[#ff385c] whitespace-nowrap ml-2">
+                                                <span className="text-base font-black text-[#3D0066] whitespace-nowrap ml-2">
                                                     ৳{vehicle.price.toLocaleString()}
                                                 </span>
                                             </div>
@@ -307,7 +421,7 @@ export function DealershipManageClient({ dealership }: { dealership: Dealership 
                                             <div className="flex items-center gap-2 pt-2 border-t border-slate-100">
                                                 <button
                                                     onClick={() => handleDeleteVehicle(vehicle.id)}
-                                                    className="flex items-center gap-1.5 text-xs font-semibold text-red-500 hover:text-red-600 transition-colors px-2 py-1.5 rounded-lg hover:bg-red-50"
+                                                    className="flex items-center gap-1.5 text-xs font-semibold text-red-500 hover:text-red-600 transition-colors px-2 py-1.5 rounded-lg hover:bg-red-50 cursor-pointer"
                                                 >
                                                     <Trash2 className="size-3.5" />
                                                     Remove
@@ -318,126 +432,22 @@ export function DealershipManageClient({ dealership }: { dealership: Dealership 
                                 ))}
                             </div>
                         )}
-                    </div>
-                )}
-
-                {/* Settings Tab */}
-                {activeTab === "settings" && (
-                    <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8">
-                        {showEditDealership ? (
-                            <form onSubmit={handleUpdateDealership} className="space-y-5">
-                                <h2 className="text-lg font-bold text-slate-900 mb-4">Edit Dealership Info</h2>
-                                <div className="space-y-2">
-                                    <label className="text-sm font-bold text-slate-700">Dealership Name</label>
-                                    <input
-                                        name="name"
-                                        type="text"
-                                        defaultValue={dealership.name}
-                                        className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#ff385c]/30 focus:border-[#ff385c] transition-all text-sm font-medium"
-                                    />
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-sm font-bold text-slate-700">Location</label>
-                                    <input
-                                        name="location"
-                                        type="text"
-                                        defaultValue={dealership.location}
-                                        className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#ff385c]/30 focus:border-[#ff385c] transition-all text-sm font-medium"
-                                    />
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-sm font-bold text-slate-700">Operating Hours</label>
-                                    <input
-                                        name="operatingHours"
-                                        type="text"
-                                        defaultValue={dealership.operatingHours ?? ""}
-                                        className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#ff385c]/30 focus:border-[#ff385c] transition-all text-sm font-medium"
-                                    />
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-sm font-bold text-slate-700">Phone</label>
-                                    <input
-                                        name="phone"
-                                        type="tel"
-                                        defaultValue={dealership.phone ?? ""}
-                                        className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#ff385c]/30 focus:border-[#ff385c] transition-all text-sm font-medium"
-                                    />
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-sm font-bold text-slate-700">Description</label>
-                                    <textarea
-                                        name="description"
-                                        rows={4}
-                                        defaultValue={dealership.description ?? ""}
-                                        className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#ff385c]/30 focus:border-[#ff385c] transition-all text-sm font-medium resize-none"
-                                    />
-                                </div>
-                                {error && (
-                                    <div className="rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-600 font-medium">
-                                        {error}
-                                    </div>
-                                )}
-                                <div className="flex gap-3 pt-2">
-                                    <Button
-                                        type="submit"
-                                        disabled={isSubmitting}
-                                        className="bg-[#ff385c] hover:bg-[#e03150] text-white rounded-xl font-bold shadow-lg shadow-pink-500/25"
-                                    >
-                                        {isSubmitting ? "Saving…" : "Save Changes"}
-                                    </Button>
-                                    <Button
-                                        type="button"
-                                        variant="outline"
-                                        onClick={() => setShowEditDealership(false)}
-                                        className="rounded-xl font-bold"
-                                    >
-                                        Cancel
-                                    </Button>
-                                </div>
-                            </form>
-                        ) : (
-                            <div className="space-y-6">
-                                <div className="flex items-center justify-between">
-                                    <h2 className="text-lg font-bold text-slate-900">Dealership Information</h2>
-                                    <Button
-                                        variant="outline"
-                                        onClick={() => setShowEditDealership(true)}
-                                        className="rounded-xl gap-2 font-bold text-sm"
-                                    >
-                                        <Pencil className="size-4" />
-                                        Edit
-                                    </Button>
-                                </div>
-                                <div className="grid gap-4 md:grid-cols-2">
-                                    <InfoItem icon={<Building2 className="size-4 text-[#ff385c]" />} label="Name" value={dealership.name} />
-                                    <InfoItem icon={<MapPin className="size-4 text-[#ff385c]" />} label="Location" value={dealership.location} />
-                                    <InfoItem icon={<Clock className="size-4 text-[#ff385c]" />} label="Operating Hours" value={dealership.operatingHours ?? "Not set"} />
-                                    <InfoItem icon={<Phone className="size-4 text-[#ff385c]" />} label="Phone" value={dealership.phone ?? "Not set"} />
-                                </div>
-                                {dealership.description && (
-                                    <div>
-                                        <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Description</span>
-                                        <p className="text-sm text-slate-700 mt-1">{dealership.description}</p>
-                                    </div>
-                                )}
-                            </div>
-                        )}
-                    </div>
-                )}
-
+                </div>
             </div>
         </div>
     );
 }
 
 // Helper Components
-function InfoItem({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
+function InfoItem({ icon: Icon, label, value }: { icon: any; label: string; value: string }) {
     return (
-        <div className="flex items-start gap-3 p-3 rounded-xl bg-slate-50">
-            <div className="mt-0.5">{icon}</div>
-            <div>
-                <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">{label}</span>
-                <p className="text-sm font-semibold text-slate-800">{value}</p>
+        <div className="flex items-center gap-5 p-5 rounded-2xl hover:bg-slate-50/80 transition-all group/info">
+            <div className="size-12 rounded-xl bg-white border-2 border-slate-50 flex items-center justify-center shadow-sm group-hover/info:border-[#3D0066]/20 group-hover/info:text-[#3D0066] transition-all">
+                <Icon className="size-5" />
+            </div>
+            <div className="space-y-0.5">
+                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">{label}</span>
+                <p className="text-sm font-black text-slate-900 truncate">{value}</p>
             </div>
         </div>
     );
