@@ -2,11 +2,23 @@
 
 import React from "react";
 import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
 
-export const PageLoader = () => {
+export const PageLoader = ({ 
+  transparent = false,
+  className 
+}: { 
+  transparent?: boolean;
+  className?: string;
+}) => {
   return (
-    <div className="flex min-h-[calc(100vh-80px)] w-full items-center justify-center bg-[#F8FAFC]">
-      <div className="flex items-center gap-2">
+    <div className={cn(
+      "flex w-full items-center justify-center transition-opacity duration-300",
+      !transparent && "bg-white",
+      !className?.includes('h-') && "min-h-[400px] flex-1",
+      className
+    )}>
+      <div className="flex items-center gap-3">
         <motion.div
           animate={{
             y: ["0%", "-50%", "0%"],
