@@ -5,21 +5,20 @@ import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
-import { 
-  Facebook, 
-  Twitter, 
-  Instagram, 
-  Youtube, 
-  Linkedin, 
-  Mail, 
-  Phone, 
+import {
+  Facebook,
+  Twitter,
+  Instagram,
+  Youtube,
+  Linkedin,
+  Mail,
+  Phone,
   MapPin,
   ChevronDown
 } from "lucide-react";
 
-export function Footer() {
+export function Footer({ currentYear }: { currentYear: number }) {
   const t = useTranslations();
-  const currentYear = new Date().getFullYear();
   const [openSection, setOpenSection] = useState<string | null>(null);
 
   const toggleSection = (title: string) => {
@@ -68,7 +67,7 @@ export function Footer() {
       <div className="container mx-auto px-4 md:px-6">
         {/* Main Content Grid */}
         <div className="flex flex-col lg:flex-row lg:justify-between gap-10 mb-10">
-          
+
           {/* Brand & Social - High Contrast */}
           <div className="lg:max-w-xs space-y-5 flex flex-col items-center lg:items-start text-center lg:text-left order-2 lg:order-1">
             <Link href="/" className="inline-block transition-transform hover:scale-105">
@@ -104,7 +103,7 @@ export function Footer() {
           <div className="flex flex-col lg:flex-row gap-0 lg:gap-20 order-1 lg:order-2 w-full lg:w-auto">
             {footerSections.map((section) => (
               <div key={section.title} className="border-b border-slate-800 lg:border-none last:border-none">
-                <button 
+                <button
                   onClick={() => toggleSection(section.title)}
                   className="flex items-center justify-between w-full py-5 lg:py-0 lg:mb-5 lg:cursor-default lg:pointer-events-none group"
                 >
@@ -116,7 +115,7 @@ export function Footer() {
                     openSection === section.title && "rotate-180 text-[#ff385c]"
                   )} />
                 </button>
-                
+
                 <ul className={cn(
                   "overflow-hidden transition-all duration-300 ease-in-out lg:max-h-none",
                   openSection === section.title ? "max-h-60 pb-6" : "max-h-0 lg:max-h-none"
