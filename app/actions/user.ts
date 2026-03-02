@@ -67,6 +67,26 @@ export async function saveListing(listingId: string) {
     update: {},
   });
 
+  // Notify listing owner that someone saved their car
+  try {
+    const listing = await prisma.listing.findUnique({
+      where: { id: listingId },
+      select: { userId: true, title: true },
+    });
+    if (listing && listing.userId !== user.id) {
+      const { createNotification } = await import("./notification");
+      await createNotification({
+        userId: listing.userId,
+        type: "LISTING_SAVED",
+        title: "Someone saved your listing!",
+        body: `${user.name || "A user"} saved your listing "${listing.title}"`,
+        linkUrl: `/seller/listings`,
+      });
+    }
+  } catch (err) {
+    console.error("Failed to send save notification:", err);
+  }
+
   revalidatePath("/saved");
   revalidatePath("/cars/[id]", "page");
   return { success: true };

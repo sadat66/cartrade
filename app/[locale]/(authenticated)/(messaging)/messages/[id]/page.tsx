@@ -1,7 +1,7 @@
 import { redirect } from "@/i18n/navigation";
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
-import { getConversationWithMessages } from "@/app/actions/conversation";
+import { getConversationWithMessages, markMessagesAsRead } from "@/app/actions/conversation";
 import { getCurrentUser } from "@/lib/auth";
 import { MessageForm } from "./message-form";
 import { getTranslations } from "next-intl/server";
@@ -25,6 +25,9 @@ export default async function ConversationPage({ params }: Props) {
 
   const conv = await getConversationWithMessages(id);
   if (!conv) return redirect({ href: "/messages", locale: validLocale });
+
+  // Mark messages from the other party as read
+  await markMessagesAsRead(id);
 
   const t = await getTranslations({ locale: validLocale });
   const other = conv.buyerId === user.id ? conv.seller : conv.buyer;

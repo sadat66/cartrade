@@ -28,6 +28,24 @@ model User {
   conversationsAsSeller Conversation[] @relation("SellerConversations")
   sentMessages     Message[]           @relation("SentMessages")
   dealerships      Dealership[]
+  notifications    Notification[]
+}
+
+// In-app notifications
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String   // recipient
+  type      String   // NEW_MESSAGE | LISTING_SAVED
+  title     String
+  body      String
+  linkUrl   String?  // e.g. "/messages/abc" or "/seller/listings"
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, read])
+  @@index([userId, createdAt])
 }
 
 // Dealership profile – a user can own one or more dealerships

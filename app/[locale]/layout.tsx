@@ -19,18 +19,18 @@ export default async function LocaleLayout({ children, params }: Props) {
     console.error("Failed to resolve params in LocaleLayout:", error);
     locale = routing.defaultLocale;
   }
-  
+
   const validLocale: Locale =
     locale && routing.locales.includes(locale as Locale)
       ? (locale as Locale)
       : routing.defaultLocale;
-  
+
   try {
     setRequestLocale(validLocale);
   } catch (error) {
     console.error("Failed to set request locale:", error);
   }
-  
+
   // Safely import messages with error handling
   let messages: Record<string, unknown>;
   try {
@@ -49,14 +49,14 @@ export default async function LocaleLayout({ children, params }: Props) {
   }
 
   return (
-    <NextIntlClientProvider locale={validLocale} messages={messages}>
-      <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col">
+      <NextIntlClientProvider locale={validLocale} messages={messages}>
         <Navbar locale={validLocale} />
         <main className="flex-1">
           {children}
         </main>
         <Footer locale={validLocale} />
-      </div>
-    </NextIntlClientProvider>
+      </NextIntlClientProvider>
+    </div>
   );
 }
