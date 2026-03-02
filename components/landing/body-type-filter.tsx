@@ -40,37 +40,126 @@ export function BodyTypeFilter({
     }
   };
   const [indicatorProps, setIndicatorProps] = useState({ left: 0, width: 0, opacity: 0 });
+  const [scrollState, setScrollState] = useState({ canScrollLeft: false, canScrollRight: true, progress: 0 });
   const tabsRef = useRef<HTMLDivElement>(null);
   const activeTabRef = useRef<HTMLButtonElement>(null);
 
   const updateIndicator = useCallback(() => {
     if (activeTabRef.current && tabsRef.current) {
       const activeRect = activeTabRef.current.getBoundingClientRect();
-      const parentRect = tabsRef.current.getBoundingClientRect();
+      
       setIndicatorProps({
-        left: activeRect.left - parentRect.left,
+        left: activeTabRef.current.offsetLeft,
         width: activeRect.width,
         opacity: 1
       });
     }
   }, []);
 
+  const handleScroll = useCallback(() => {
+    if (tabsRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = tabsRef.current;
+      setScrollState({
+        canScrollLeft: scrollLeft > 10,
+        canScrollRight: scrollLeft < scrollWidth - clientWidth - 10,
+        progress: (scrollLeft / (scrollWidth - clientWidth)) * 100
+      });
+    }
+  }, []);
+
+  const scrollBy = (direction: 'left' | 'right') => {
+    if (tabsRef.current) {
+      const scrollAmount = tabsRef.current.clientWidth * 0.6;
+      tabsRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  // Center selected item when activeBodyType changes
   useEffect(() => {
-    const timer = setTimeout(updateIndicator, 50);
-    window.addEventListener('resize', updateIndicator);
+    if (activeTabRef.current && tabsRef.current) {
+      const tab = activeTabRef.current;
+      const container = tabsRef.current;
+      
+      const scrollLeft = tab.offsetLeft - (container.clientWidth / 2) + (tab.clientWidth / 2);
+      container.scrollTo({
+        left: scrollLeft,
+        behavior: 'smooth'
+      });
+      
+      // Update indicator after positioning
+      const timer = setTimeout(updateIndicator, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [activeBodyType, updateIndicator]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+        updateIndicator();
+        handleScroll();
+    }, 150);
+    window.addEventListener('resize', () => {
+        updateIndicator();
+        handleScroll();
+    });
     return () => {
       clearTimeout(timer);
       window.removeEventListener('resize', updateIndicator);
     };
-  }, [activeBodyType, updateIndicator]);
+  }, [updateIndicator, handleScroll]);
 
   return (
-    <div className="bg-white pt-12 pb-2">
-      <div className="container mx-auto px-4 md:px-6">
-        <h2 className="text-2xl font-extrabold text-[#1a1a1a] mb-10 tracking-tight">Looking for a specific size?</h2>
+    <section className="bg-white/50 backdrop-blur-3xl border-t border-slate-100/50 rounded-t-[2.5rem] md:rounded-t-none shadow-[0_-20px_40px_-20px_rgba(0,0,0,0.05)] relative z-10 mt-0 md:mt-0 pt-8 pb-2 md:py-16 overflow-hidden">
+      {/* Mobile Drawer Handle */}
+      <div className="flex justify-center mb-6 md:hidden">
+        <div className="w-10 h-1 rounded-full bg-slate-200/80 shadow-inner" />
+      </div>
 
-        <div className="relative border-b border-slate-100 mb-8">
-          <div ref={tabsRef} className="flex flex-wrap items-end gap-x-8 md:gap-x-12 relative pb-4">
+      <div className="container mx-auto px-6 md:px-8">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 md:mb-12 gap-2">
+           <div>
+              <h2 className="text-xl md:text-3xl font-black text-slate-900 tracking-tight leading-none mb-2">
+                Looking for a specific size?
+              </h2>
+           </div>
+
+           {/* Desktop Navigation */}
+           <div className="hidden md:flex items-center gap-3 pb-1">
+              <button 
+                onClick={() => scrollBy('left')}
+                className={cn(
+                    "size-10 rounded-full border-2 border-slate-100 flex items-center justify-center transition-all bg-white shadow-sm",
+                    scrollState.canScrollLeft ? "opacity-100 hover:border-[#3D0066] hover:text-[#3D0066]" : "opacity-20 cursor-not-allowed"
+                )}
+              >
+                <motion.svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" whileHover={{ x: -2 }}><path d="M12.5 15L7.5 10L12.5 5"/></motion.svg>
+              </button>
+              <button 
+                onClick={() => scrollBy('right')}
+                className={cn(
+                    "size-10 rounded-full border-2 border-slate-100 flex items-center justify-center transition-all bg-white shadow-sm",
+                    scrollState.canScrollRight ? "opacity-100 hover:border-[#3D0066] hover:text-[#3D0066]" : "opacity-20 cursor-not-allowed"
+                )}
+              >
+                <motion.svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" whileHover={{ x: 2 }}><path d="M7.5 5L12.5 10L7.5 15"/></motion.svg>
+              </button>
+           </div>
+        </div>
+
+        {/* Pro Horizontal Scroll Container */}
+        <div className="relative group/tabs">
+          <div 
+            ref={tabsRef} 
+            onScroll={handleScroll}
+            className={cn(
+                "flex items-end gap-10 md:gap-16 pb-3 overflow-x-auto overflow-y-hidden relative",
+                "snap-x snap-mandatory scroll-smooth custom-scrollbar-hide",
+                "px-4 md:px-0" // Centering affordance
+            )}
+            style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}
+          >
             {BODY_TYPES.map((type) => {
               const isSelected = activeBodyType === type.key;
               return (
@@ -80,25 +169,25 @@ export function BodyTypeFilter({
                   type="button"
                   onClick={() => onBodyTypeChange(type.key)}
                   className={cn(
-                    "flex flex-col items-center group relative min-w-[50px] transition-all duration-500 ease-out",
-                    isSelected ? "opacity-100 scale-105" : "opacity-35 hover:opacity-100 grayscale"
+                    "flex flex-col items-center shrink-0 snap-center group relative transition-all duration-700 ease-out",
+                    isSelected ? "opacity-100 scale-110 md:scale-105" : "opacity-30 grayscale hover:opacity-100 hover:grayscale-0"
                   )}
                 >
-                  <div className="relative h-14 w-24 md:h-16 md:w-28 mb-3">
+                  <div className="relative h-14 w-24 md:h-18 md:w-32 mb-1">
                     <Image
                       src={type.image}
                       alt={type.label}
                       fill
-                      sizes="(min-width: 768px) 112px, 96px"
+                      sizes="(min-width: 768px) 128px, 96px"
                       className={cn(
-                        "object-contain object-bottom transition-transform duration-500",
-                        isSelected ? "scale-110" : "group-hover:scale-105"
+                        "object-contain object-bottom transition-all duration-700",
+                        isSelected ? "scale-110 -translate-y-1" : "group-hover:scale-105 group-hover:-translate-y-0.5"
                       )}
                     />
                   </div>
                   <span className={cn(
-                    "text-[10px] md:text-[11px] font-black whitespace-nowrap uppercase tracking-widest transition-colors duration-500",
-                    isSelected ? "text-[#4B0082]" : "text-slate-900"
+                    "text-[10px] md:text-[11px] font-black whitespace-nowrap uppercase tracking-[0.2em] transition-all duration-500",
+                    isSelected ? "text-[#3D0066]" : "text-slate-900"
                   )}>
                     {type.label}
                   </span>
@@ -106,9 +195,12 @@ export function BodyTypeFilter({
               );
             })}
 
-            {/* Sliding Animated Indicator - The underline traversing the line */}
+            {/* Full Length Base Line */}
+            <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-slate-100/80 rounded-full" />
+
+            {/* Traveling Highlight Indicator */}
             <motion.div
-              className="absolute bottom-0 h-[4px] bg-[#4B0082] rounded-t-full z-10 shadow-[0_-2px_8px_rgba(75,0,130,0.3)]"
+              className="absolute bottom-0 h-0.5 bg-[#3D0066] rounded-full z-10"
               initial={false}
               animate={{
                 left: indicatorProps.left,
@@ -117,14 +209,14 @@ export function BodyTypeFilter({
               }}
               transition={{
                 type: "spring",
-                stiffness: 350,
+                stiffness: 400,
                 damping: 30,
-                mass: 1
+                mass: 0.8
               }}
             />
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

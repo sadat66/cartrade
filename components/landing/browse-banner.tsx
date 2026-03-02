@@ -2,9 +2,9 @@
 
 import React from "react";
 import Image from "next/image";
+import { ChevronRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
-import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 
 export function BrowseBanner() {
@@ -66,15 +66,15 @@ export function BrowseBanner() {
                 initial={{ opacity: 0, y: 10 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5, duration: 0.6 }}
+                className="flex justify-center"
               >
-                <Button
-                  asChild
-                  className="bg-[#3D0066] hover:bg-[#2d004d] text-white rounded-2xl px-12 py-7 text-lg lg:text-xl font-black shadow-2xl shadow-purple-900/30 transition-all hover:scale-105 active:scale-95"
+                <Link 
+                  href="/cars" 
+                  className="group flex items-center gap-3 bg-[#3D0066] text-white rounded-full px-10 py-5 text-xs font-black uppercase tracking-[0.3em] transition-all hover:bg-[#2A0045] shadow-2xl active:scale-95 whitespace-nowrap"
                 >
-                  <Link href="/cars">
-                    {t("button")}
-                  </Link>
-                </Button>
+                  {t("button")}
+                  <ChevronRight className="size-4 group-hover:translate-x-1 transition-transform" />
+                </Link>
               </motion.div>
             </div>
           </div>
