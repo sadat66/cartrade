@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { User, Menu, X, MessageSquare } from "lucide-react";
+import { User, Menu, X } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -10,6 +10,7 @@ import type { CurrentUser } from "@/lib/auth";
 import { UserMenu } from "./user-menu";
 import { LocaleSwitcher } from "@/components/shared/locale-switcher";
 import { NotificationBell } from "@/components/shared/notification-bell";
+import { MessageBadge } from "@/components/shared/message-badge";
 
 type DealershipInfo = {
     id: string;
@@ -82,11 +83,9 @@ export function NavbarClient({ user, dealership, translations: t }: NavbarClient
                     {/* Right Side Icons */}
                     <div className="flex items-center gap-2 md:gap-4">
                         {user && (
-                            <Button variant="ghost" size="icon" asChild className="text-slate-700 hover:bg-slate-100 hidden sm:flex">
-                                <Link href="/messages">
-                                    <MessageSquare className="size-5" />
-                                </Link>
-                            </Button>
+                            <div className="hidden sm:block">
+                                <MessageBadge />
+                            </div>
                         )}
 
                         {user && (

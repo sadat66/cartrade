@@ -153,3 +153,44 @@ export async function getConversationWithMessages(conversationId: string) {
 
   return conv ? { ...conv, listing: resolveListing(conv.listing) } : null;
 }
+
+export async function getUnreadMessageCount() {
+  const user = await getCurrentUser();
+  if (!user) return 0;
+
+  const count = await prisma.message.count({
+    where: {
+      readAt: null,
+      senderId: { not: user.id },
+      conversation: {
+        OR: [{ buyerId: user.id }, { sellerId: user.id }],
+      },
+    },
+  });
+
+  return count;
+}
+
+export async function markMessagesAsRead(conversationId: string) {
+  const user = await getCurrentUser();
+  if (!user) return;
+
+  // Verify user belongs to this conversation
+  const conv = await prisma.conversation.findFirst({
+    where: {
+      id: conversationId,
+      OR: [{ buyerId: user.id }, { sellerId: user.id }],
+    },
+  });
+  if (!conv) return;
+
+  // Mark all messages from the other party as read
+  await prisma.message.updateMany({
+    where: {
+      conversationId,
+      senderId: { not: user.id },
+      readAt: null,
+    },
+    data: { readAt: new Date() },
+  });
+}
