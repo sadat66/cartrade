@@ -51,6 +51,9 @@ export async function createListing(formData: FormData) {
   }
 
   const photoFiles = getPhotoFiles(formData);
+  if (photoFiles.length === 0) {
+    return { error: "At least one photo is required" };
+  }
   if (photoFiles.length > MAX_PHOTOS) {
     return { error: `Maximum ${MAX_PHOTOS} photos allowed` };
   }

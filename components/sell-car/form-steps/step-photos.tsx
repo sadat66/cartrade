@@ -49,7 +49,7 @@ export function StepPhotosPricing({
         required
       />
 
-      <FormField label="Full Description" id="description" description="Highlight status and service history.">
+      <FormField label="Full Description" id="description" description="Highlight status and service history." required>
         <textarea
           id="description"
           name="description"
@@ -57,12 +57,12 @@ export function StepPhotosPricing({
           value={data.description}
           onChange={(e) => onChange("description", e.target.value)}
           placeholder="e.g. Pristine condition, one owner..."
-          className="w-full min-h-[160px] rounded-2xl border-slate-200 bg-white px-5 py-4 text-base font-medium text-slate-900 transition-all duration-300 focus:border-[#3D0066] focus:outline-none focus:ring-4 focus:ring-purple-500/5 focus:shadow-[0_0_0_1px_#3D0066] placeholder:text-slate-300"
+          className="w-full min-h-[160px] rounded-2xl border-2 border-slate-200 bg-white px-5 py-4 text-base font-medium text-slate-900 transition-all duration-300 focus:border-[#3D0066] focus:outline-none focus:ring-4 focus:ring-purple-500/5 focus:shadow-[0_0_0_1px_#3D0066] placeholder:text-slate-300 hover:border-slate-300"
         />
       </FormField>
 
       <div className="space-y-4">
-        <p className="text-[13px] font-black uppercase tracking-wider text-slate-500">Vehicle Gallery (Max 3)</p>
+        <p className="text-[13px] font-black uppercase tracking-wider text-slate-500">Vehicle Gallery (Max 3) <span className="text-[#ff385c]">*</span></p>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
           {[0, 1, 2].map((i) => (
             <div key={i} className="group relative aspect-square rounded-[2rem] border-2 border-dashed border-slate-200 bg-slate-50 overflow-hidden transition-all hover:border-[#3D0066] hover:bg-white">
@@ -75,7 +75,9 @@ export function StepPhotosPricing({
                       <ImagePlus className="size-6" />
                     </div>
                     <span className="text-[11px] font-black uppercase tracking-widest text-slate-400 group-hover:text-slate-600 transition-colors">
-                      {i === 0 ? "Cover Photo" : "Add More"}
+                      {i === 0 ? (
+                        <>Cover Photo <span className="text-[#ff385c]">*</span></>
+                      ) : "Add More"}
                     </span>
                   </>
                 )}

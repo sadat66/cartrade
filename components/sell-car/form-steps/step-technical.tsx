@@ -40,6 +40,7 @@ export function StepTechnicalSpecs({ data, onChange }: {
           value={data.transmission}
           onValueChange={(v) => onChange("transmission", v)}
           placeholder={tc("filters.transmission")}
+          required
         />
         <FormSelect 
           name="drivetrain"
@@ -48,6 +49,7 @@ export function StepTechnicalSpecs({ data, onChange }: {
           value={data.drivetrain}
           onValueChange={(v) => onChange("drivetrain", v)}
           placeholder={tc("filters.drivetrain")}
+          required
         />
       </div>
       
@@ -58,6 +60,7 @@ export function StepTechnicalSpecs({ data, onChange }: {
         value={data.color}
         onValueChange={(v) => onChange("color", v)}
         placeholder={tc("filters.colour")}
+        required
       />
     </StepContainer>
   );

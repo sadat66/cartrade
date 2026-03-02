@@ -68,7 +68,8 @@ export function ListingForm({ mode = "page", onSuccess, action, initialData }: L
     if (formRef.current) {
       const currentStepContainer = formRef.current.querySelector(`[data-step="${currentStep}"]`);
       if (currentStepContainer) {
-        const inputs = currentStepContainer.querySelectorAll("input, select, textarea");
+        // 1. Standard HTML5 validation check for standard inputs
+        const inputs = currentStepContainer.querySelectorAll("input:not([type='hidden']), select, textarea");
         let stepIsValid = true;
         
         inputs.forEach((input: any) => {
@@ -79,6 +80,50 @@ export function ListingForm({ mode = "page", onSuccess, action, initialData }: L
         });
 
         if (!stepIsValid) return;
+
+        // 2. Custom validation for specific steps (especially for Radix Select components)
+        const stepMeta = stepsToRender[currentStep - 1];
+        
+        // Step 1: Vehicle Identity
+        if (stepMeta?.id === 1) {
+          const required = ["title", "make", "model", "year", "bodyType"];
+          const missing = required.filter(f => !formData[f as keyof typeof formData]);
+          if (missing.length > 0) {
+            toast.error("Please complete all vehicle identity fields");
+            return;
+          }
+        }
+
+        // Step 2: Technical Specs
+        if (stepMeta?.id === 2) {
+          const required = ["transmission", "color"];
+          const missing = required.filter(f => !formData[f as keyof typeof formData]);
+          if (missing.length > 0) {
+            toast.error("Please specify transmission and color");
+            return;
+          }
+        }
+
+        // Step 3: Photos & Pricing
+        if (stepMeta?.id === 3) {
+          const hasPhotos = previewUrls.some(v => v !== null);
+          if (!hasPhotos) {
+            toast.error("At least one photo is required");
+            return;
+          }
+          if (!formData.price || !formData.description) {
+            toast.error("Please set a price and description");
+            return;
+          }
+        }
+        
+        // Step 4: Location (required for private sellers)
+        if (stepMeta?.id === 4) {
+          if (!formData.location) {
+            toast.error("Please select a location");
+            return;
+          }
+        }
       }
     }
 
@@ -113,9 +158,35 @@ export function ListingForm({ mode = "page", onSuccess, action, initialData }: L
             handleNext();
             return;
           }
+          
+          // Final validation
+          const hasPhotos = previewUrls.some(v => v !== null);
+          if (!hasPhotos) {
+            e.preventDefault();
+            toast.error("At least one photo is required");
+            return;
+          }
+
           if (!totalPhotoOk && totalPhotoBytes > 0) {
             e.preventDefault();
             toast.error("Total photo size must be 10MB or less");
+            return;
+          }
+
+          // Comprehensive check for required fields that might have been skipped
+          const requiredFields = ["title", "make", "model", "year", "price", "description", "bodyType"];
+          const missingFields = requiredFields.filter(f => !formData[f as keyof typeof formData]);
+          
+          if (missingFields.length > 0) {
+            e.preventDefault();
+            toast.error("Please fill in all required fields (Basics, Price, Description, Photos)");
+            return;
+          }
+
+          if (!formData.dealershipId && !formData.location) {
+             e.preventDefault();
+             toast.error("Location is required for private sellers");
+             return;
           }
         }}
       >
@@ -203,15 +274,41 @@ export function ListingForm({ mode = "page", onSuccess, action, initialData }: L
               ref={formRef}
               action={formAction}
               className="space-y-4 md:space-y-8"
-              onSubmit={(e) => {
+                onSubmit={(e) => {
                 if (currentStep < totalSteps) {
                   e.preventDefault();
                   handleNext();
                   return;
                 }
+                
+                // Final validation
+                const hasPhotos = previewUrls.some(v => v !== null);
+                if (!hasPhotos) {
+                  e.preventDefault();
+                  toast.error("At least one photo is required");
+                  return;
+                }
+
                 if (!totalPhotoOk && totalPhotoBytes > 0) {
                   e.preventDefault();
                   toast.error("Total photo size must be 10MB or less");
+                  return;
+                }
+
+                // Comprehensive check for required fields that might have been skipped
+                const requiredFields = ["title", "make", "model", "year", "price", "description", "bodyType"];
+                const missingFields = requiredFields.filter(f => !formData[f as keyof typeof formData]);
+                
+                if (missingFields.length > 0) {
+                  e.preventDefault();
+                  toast.error("Please fill in all required fields (Basics, Price, Description, Photos)");
+                  return;
+                }
+
+                if (!formData.dealershipId && !formData.location) {
+                   e.preventDefault();
+                   toast.error("Location is required for private sellers");
+                   return;
                 }
               }}
             >
