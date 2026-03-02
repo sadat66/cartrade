@@ -66,7 +66,11 @@ export async function sendMessage(conversationId: string, content: string) {
 
   const conv = await prisma.conversation.findFirst({
     where: { id: conversationId },
-    select: { buyerId: true, sellerId: true },
+    select: {
+      buyerId: true,
+      sellerId: true,
+      listing: { select: { title: true } },
+    },
   });
   if (!conv) return { error: "Conversation not found" };
   if (conv.buyerId !== user.id && conv.sellerId !== user.id) {
@@ -83,6 +87,21 @@ export async function sendMessage(conversationId: string, content: string) {
       content: trimmed,
     },
   });
+
+  // Notify the other party
+  try {
+    const recipientId = conv.buyerId === user.id ? conv.sellerId : conv.buyerId;
+    const { createNotification } = await import("./notification");
+    await createNotification({
+      userId: recipientId,
+      type: "NEW_MESSAGE",
+      title: "New message received",
+      body: `${user.name || "Someone"} sent you a message about "${conv.listing.title}"`,
+      linkUrl: `/messages/${conversationId}`,
+    });
+  } catch (err) {
+    console.error("Failed to send message notification:", err);
+  }
 
   revalidatePath("/messages");
   revalidatePath(`/messages/${conversationId}`);
