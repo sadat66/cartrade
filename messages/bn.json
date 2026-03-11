@@ -132,6 +132,33 @@
       "home": "হোম",
       "cars": "গাড়ি"
     },
+    "aboutThisCar": "এই গাড়ি সম্পর্কে",
+    "showMore": "আরও দেখুন",
+    "showLess": "কম দেখুন",
+    "carDetails": "গাড়ির বিবরণ",
+    "tabs": {
+      "overview": "সংক্ষিপ্ত বিবরণ",
+      "features": "বৈশিষ্ট্য",
+      "specifications": "নির্দিষ্ট বিবরণ"
+    },
+    "specs": {
+      "vehicleDescription": "গাড়ির বিবরণ",
+      "powerplantType": "পাওয়ারপ্ল্যান্ট ধরন",
+      "costToInsure": "বীমা খরচ",
+      "bodyType": "বডি টাইপ",
+      "transmission": "ট্রান্সমিশন",
+      "engine": "ইঞ্জিন",
+      "fuelConsumptionCombined": "সম্মিলিত জ্বালানি খরচ⁺",
+      "registrationPlate": "রেজিস্ট্রেশন প্লেট",
+      "buildDate": "নির্মাণের তারিখ ⓘ",
+      "checkWithSeller": "বিক্রেতার সাথে যোগাযোগ করুন",
+      "batteryCapacity": "ব্যাটারি ক্যাপাসিটি",
+      "electricRange": "ইলেকট্রিক রেঞ্জ (WLTP)",
+      "acceleration": "০–১০০ কিমি/ঘণ্টা",
+      "topSpeed": "সর্বোচ্চ গতি"
+    },
+    "similarCarsInStock": "অনুরূপ পছন্দসমূহ",
+    "driveAway": "ড্রাইভ অ্যাওয়ে।",
     "controls": {
       "title": "আমাদের গাড়ি",
       "results": "{count}টি ফলাফল",

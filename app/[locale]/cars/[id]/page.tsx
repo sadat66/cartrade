@@ -6,11 +6,15 @@ import { getCurrentUser } from "@/lib/auth";
 import { getSavedListingIds } from "@/app/actions/user";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { ListingActions } from "./listing-actions";
+import { AboutThisCar } from "./about-this-car";
+import { CarDetailsTabs } from "./car-details-tabs";
+import { SimilarPicks } from "./similar-picks";
 import { getTranslations } from "next-intl/server";
 import { ListingLocationDisplay } from "@/components/listing/listing-location-display";
 import { resolveListing } from "@/lib/listing-images";
-import { Calendar, Gauge, MapPin, CarFront, FileText, BadgeCheck, Settings2, Shield, Palette } from "lucide-react";
+import { Calendar, Gauge, MapPin, CarFront, BadgeCheck, Settings2, Shield, Palette } from "lucide-react";
 
 export default async function ListingPage({
   params,
@@ -45,41 +49,48 @@ export default async function ListingPage({
   const isOwner = user?.id === resolvedListing.userId;
   const isLoggedIn = !!user;
 
+  const similarListings = await prisma.listing.findMany({
+    where: {
+      status: "active",
+      id: { not: id },
+      make: resolvedListing.make,
+      model: resolvedListing.model,
+    },
+    take: 8,
+    orderBy: { createdAt: "desc" },
+  });
+  const resolvedSimilar = similarListings.map((l) => {
+    const resolved = resolveListing(l);
+    return {
+      id: resolved.id,
+      title: resolved.title,
+      make: resolved.make,
+      model: resolved.model,
+      year: resolved.year,
+      mileage: resolved.mileage,
+      price: Number(resolved.price),
+      imageUrls: resolved.imageUrls,
+      isDepositTaken: false,
+      transmission: resolved.transmission,
+      drivetrain: resolved.drivetrain,
+    };
+  });
+
   return (
-    <div className="container mx-auto max-w-7xl px-4 py-8 md:px-6 lg:py-12 animate-in fade-in-0 duration-500">
+    <div className="container mx-auto  px-4 py-8 md:px-6 lg:py-12 animate-in fade-in-0 duration-500">
+
+      <Breadcrumb
+        items={[
+          { label: t("cars.breadcrumb.home"), href: "/" },
+          { label: t("cars.breadcrumb.cars"), href: "/cars" },
+          { label: resolvedListing.title },
+        ]}
+        className="mb-6"
+      />
 
       {/* Title Section */}
       <div className="mb-8">
-        <div className="flex items-center gap-2 mb-2">
-          <span className="inline-flex items-center rounded-full bg-green-50 px-2.5 py-0.5 text-xs font-semibold text-green-700 ring-1 ring-inset ring-green-600/20">
-            <BadgeCheck className="size-3.5 mr-1" />
-            Verified Listing
-          </span>
-        </div>
-        <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight text-slate-900">{resolvedListing.title}</h1>
-        <div className="flex flex-wrap items-center gap-4 mt-4 text-slate-600 font-medium text-sm md:text-base">
-          <span className="flex items-center gap-1.5 bg-slate-100 px-3 py-1.5 rounded-lg"><Calendar className="size-4 text-slate-500" /> {resolvedListing.year}</span>
-          <span className="flex items-center gap-1.5 bg-slate-100 px-3 py-1.5 rounded-lg"><Gauge className="size-4 text-slate-500" /> {resolvedListing.mileage?.toLocaleString() ?? "N/A"} km</span>
-          <span className="flex items-center gap-1.5 bg-slate-100 px-3 py-1.5 rounded-lg"><MapPin className="size-4 text-slate-500" /> {resolvedListing.location || "Location not specified"}</span>
-          {resolvedListing.transmission && (
-            <span className="flex items-center gap-1.5 bg-slate-100 px-3 py-1.5 rounded-lg">
-              <Settings2 className="size-4 text-slate-500" />
-              {t.has(`cars.transmissions.${resolvedListing.transmission.toLowerCase()}`) ? t(`cars.transmissions.${resolvedListing.transmission.toLowerCase()}`) : resolvedListing.transmission}
-            </span>
-          )}
-          {resolvedListing.drivetrain && (
-            <span className="flex items-center gap-1.5 bg-slate-100 px-3 py-1.5 rounded-lg">
-              <Shield className="size-4 text-slate-500" />
-              {t.has(`cars.drivetrains.${resolvedListing.drivetrain.toLowerCase()}`) ? t(`cars.drivetrains.${resolvedListing.drivetrain.toLowerCase()}`) : resolvedListing.drivetrain}
-            </span>
-          )}
-          {resolvedListing.color && (
-            <span className="flex items-center gap-1.5 bg-slate-100 px-3 py-1.5 rounded-lg">
-              <Palette className="size-4 text-slate-500" />
-              {t.has(`cars.colours.${resolvedListing.color.toLowerCase()}`) ? t(`cars.colours.${resolvedListing.color.toLowerCase()}`) : resolvedListing.color}
-            </span>
-          )}
-        </div>
+        <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900">{resolvedListing.title}</h1>
       </div>
 
       <div className="grid gap-10 lg:grid-cols-3">
@@ -125,34 +136,80 @@ export default async function ListingPage({
               </div>
             )}
           </div>
-
-          {/* Description Section */}
-          {resolvedListing.description && (
-            <Card className="border border-slate-200/60 shadow-md overflow-hidden bg-white/80 backdrop-blur-sm rounded-2xl">
-              <CardContent className="p-6 md:p-8">
-                <h2 className="text-2xl font-bold mb-6 text-slate-800 flex items-center gap-2">
-                  <FileText className="size-6 text-[#3D0066]" />
-                  {t("common.description")}
-                </h2>
-                <div className="prose prose-slate max-w-none text-slate-700 leading-relaxed whitespace-pre-wrap text-base md:text-lg">
-                  {resolvedListing.description}
-                </div>
-              </CardContent>
-            </Card>
+          <div className="flex flex-wrap items-center gap-4 mt-4 text-slate-600 font-medium text-sm md:text-base">
+          <span className="flex items-center gap-1.5 bg-slate-100 px-3 py-1.5 rounded-lg"><Calendar className="size-4 text-slate-500" /> {resolvedListing.year}</span>
+          <span className="flex items-center gap-1.5 bg-slate-100 px-3 py-1.5 rounded-lg"><Gauge className="size-4 text-slate-500" /> {resolvedListing.mileage?.toLocaleString() ?? "N/A"} km</span>
+          <span className="flex items-center gap-1.5 bg-slate-100 px-3 py-1.5 rounded-lg"><MapPin className="size-4 text-slate-500" /> {resolvedListing.location || "Location not specified"}</span>
+          {resolvedListing.transmission && (
+            <span className="flex items-center gap-1.5 bg-slate-100 px-3 py-1.5 rounded-lg">
+              <Settings2 className="size-4 text-slate-500" />
+              {t.has(`cars.transmissions.${resolvedListing.transmission.toLowerCase()}`) ? t(`cars.transmissions.${resolvedListing.transmission.toLowerCase()}`) : resolvedListing.transmission}
+            </span>
           )}
+          {resolvedListing.drivetrain && (
+            <span className="flex items-center gap-1.5 bg-slate-100 px-3 py-1.5 rounded-lg">
+              <Shield className="size-4 text-slate-500" />
+              {t.has(`cars.drivetrains.${resolvedListing.drivetrain.toLowerCase()}`) ? t(`cars.drivetrains.${resolvedListing.drivetrain.toLowerCase()}`) : resolvedListing.drivetrain}
+            </span>
+          )}
+          {resolvedListing.color && (
+            <span className="flex items-center gap-1.5 bg-slate-100 px-3 py-1.5 rounded-lg">
+              <Palette className="size-4 text-slate-500" />
+              {t.has(`cars.colours.${resolvedListing.color.toLowerCase()}`) ? t(`cars.colours.${resolvedListing.color.toLowerCase()}`) : resolvedListing.color}
+            </span>
+          )}
+        </div>
+
+          {/* About this car - no border, no shadow */}
+          {resolvedListing.description && (
+            <AboutThisCar
+              title={t("cars.aboutThisCar")}
+              description={resolvedListing.description}
+              showMoreLabel={t("cars.showMore")}
+              showLessLabel={t("cars.showLess")}
+            />
+          )}
+
+          {/* Car details - dummy Porsche Taycan content, no border, no shadow */}
+          <CarDetailsTabs
+            title={t("cars.carDetails")}
+            overviewLabel={t("cars.tabs.overview")}
+            featuresLabel={t("cars.tabs.features")}
+            specificationsLabel={t("cars.tabs.specifications")}
+            specLabels={{
+              vehicleDescription: t("cars.specs.vehicleDescription"),
+              powerplantType: t("cars.specs.powerplantType"),
+              costToInsure: t("cars.specs.costToInsure"),
+              bodyType: t("cars.specs.bodyType"),
+              transmission: t("cars.specs.transmission"),
+              engine: t("cars.specs.engine"),
+              fuelConsumptionCombined: t("cars.specs.fuelConsumptionCombined"),
+              registrationPlate: t("cars.specs.registrationPlate"),
+              buildDate: t("cars.specs.buildDate"),
+              checkWithSeller: t("cars.specs.checkWithSeller"),
+              batteryCapacity: t("cars.specs.batteryCapacity"),
+              electricRange: t("cars.specs.electricRange"),
+              acceleration: t("cars.specs.acceleration"),
+              topSpeed: t("cars.specs.topSpeed"),
+            }}
+          />
 
         </div>
 
         {/* Action Panel / Specifics (Right - 1/3) */}
         <div className="space-y-6 sticky top-28 pb-12 self-start">
 
-          <Card className="border-0 shadow-xl overflow-hidden rounded-3xl bg-white ring-1 ring-slate-200/50">
-            {/* Price Header */}
+          <Card className="border-0 py-0 shadow-xl overflow-hidden rounded-3xl bg-white ring-1 ring-slate-200/50">
+            {/* Price Header + Verified badge */}
             <div className="bg-slate-900 border-b-4 border-[#3D0066] text-white p-6 pb-8 shadow-sm">
               <p className="text-sm text-slate-400 font-bold uppercase tracking-wider mb-2">Asking Price</p>
               <div className="text-4xl lg:text-5xl font-extrabold tracking-tight">
                 ${Number(resolvedListing.price).toLocaleString()}
               </div>
+              <span className="inline-flex items-center gap-1.5 mt-3 rounded-full bg-green-500/20 px-2.5 py-1 text-xs font-semibold text-green-300 ring-1 ring-inset ring-green-400/30">
+                <BadgeCheck className="size-3.5" />
+                Verified Listing
+              </span>
             </div>
 
             <CardContent className="p-6 pt-8 space-y-8">
@@ -184,6 +241,28 @@ export default async function ListingPage({
                 )}
               </div>
 
+              {/* Seller - above action buttons */}
+              <div className="flex items-center gap-3 pt-2 border-t border-slate-100">
+                <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full border-2 border-slate-200 bg-slate-100">
+                  {resolvedListing.user.image ? (
+                    <Image
+                      src={resolvedListing.user.image || ""}
+                      alt={resolvedListing.user.name ?? t("common.seller")}
+                      fill
+                      className="object-cover"
+                    />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center bg-slate-700 text-sm font-bold text-white">
+                      {(resolvedListing.user.name ?? resolvedListing.user.email ?? "?").charAt(0).toUpperCase()}
+                    </div>
+                  )}
+                </div>
+                <div className="min-w-0">
+                  <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">{t("common.seller")}</p>
+                  <p className="text-sm font-bold text-slate-900 truncate">{resolvedListing.user.name ?? t("common.seller")}</p>
+                </div>
+              </div>
+
               {/* Action Buttons */}
               <ListingActions
                 listingId={resolvedListing.id}
@@ -195,42 +274,11 @@ export default async function ListingPage({
             </CardContent>
           </Card>
 
-          {/* Seller Card */}
-          <Card className="border-none shadow-md rounded-3xl overflow-hidden group hover:shadow-lg transition-transform hover:-translate-y-1 bg-gradient-to-br from-white to-slate-50 ring-1 ring-slate-200/50">
-            <CardContent className="p-6">
-              <div className="flex items-center gap-4">
-                <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-full border-4 border-white shadow-md bg-slate-100">
-                  {resolvedListing.user.image ? (
-                    <Image
-                      src={resolvedListing.user.image || ""}
-                      alt={resolvedListing.user.name ?? t("common.seller")}
-                      fill
-                      className="object-cover"
-                    />
-                  ) : (
-                    <div className="flex h-full w-full items-center justify-center bg-slate-800 text-xl font-bold text-white">
-                      {(resolvedListing.user.name ?? resolvedListing.user.email ?? "?").charAt(0).toUpperCase()}
-                    </div>
-                  )}
-                </div>
-                <div className="min-w-0">
-                  <p className="text-xs font-bold text-[#3D0066] uppercase tracking-wider mb-0.5">{t("common.seller")}</p>
-                  <h3 className="text-lg font-bold text-slate-900 group-hover:text-[#3D0066] transition-colors truncate">{resolvedListing.user.name ?? t("common.seller")}</h3>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
           {/* Location Card */}
           {(resolvedListing.location || resolvedListing.latitude != null || resolvedListing.longitude != null) && (
-            <Card className="border-none shadow-md rounded-3xl overflow-hidden ring-1 ring-slate-200/50">
-              <CardHeader className="bg-slate-50 border-b border-slate-100 pb-4 px-6 pt-5">
-                <h3 className="font-bold text-slate-800 flex items-center gap-2">
-                  <MapPin className="size-5 text-[#3D0066]" />
-                  Location
-                </h3>
-              </CardHeader>
-              <CardContent className="p-6 relative z-0">
+            <Card className="border-none px-0 shadow-none rounded-3xl overflow-hidden ">
+              
+              <CardContent className=" px-0 relative z-0">
                 <ListingLocationDisplay
                   location={resolvedListing.location}
                   latitude={resolvedListing.latitude}
@@ -242,6 +290,13 @@ export default async function ListingPage({
 
         </div>
       </div>
+
+      {resolvedSimilar.length > 0 && (
+        <SimilarPicks
+          title={t("cars.similarCarsInStock")}
+          listings={resolvedSimilar}
+        />
+      )}
     </div >
   );
 }

@@ -27,7 +27,7 @@ export function ListingLocationDisplay({
           <LocationMap
             lat={latitude}
             lng={longitude}
-            height="200px"
+            height="250px"
             interactive={false}
           />
         </div>

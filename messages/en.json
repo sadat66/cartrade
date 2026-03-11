@@ -132,6 +132,33 @@
       "home": "Home",
       "cars": "Cars"
     },
+    "aboutThisCar": "About this car",
+    "showMore": "Show more",
+    "showLess": "Show less",
+    "carDetails": "Car details",
+    "tabs": {
+      "overview": "Overview",
+      "features": "Features",
+      "specifications": "Specifications"
+    },
+    "specs": {
+      "vehicleDescription": "Vehicle description",
+      "powerplantType": "Powerplant type",
+      "costToInsure": "Cost to insure",
+      "bodyType": "Body type",
+      "transmission": "Transmission",
+      "engine": "Engine",
+      "fuelConsumptionCombined": "Fuel consumption combined⁺",
+      "registrationPlate": "Registration plate",
+      "buildDate": "Build date ⓘ",
+      "checkWithSeller": "Check with seller",
+      "batteryCapacity": "Battery capacity",
+      "electricRange": "Electric range (WLTP)",
+      "acceleration": "0–100 km/h",
+      "topSpeed": "Top speed"
+    },
+    "similarCarsInStock": "Similar picks",
+    "driveAway": "Drive away.",
     "controls": {
       "title": "Our cars",
       "results": "{count} results",
